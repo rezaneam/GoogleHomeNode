@@ -10,6 +10,14 @@
 #define Frequency 400000
 #define OLED_Address 0x3c
 
+// TODO: Adding Support for starting advertise by external button
+// TODO: Adding OLED display for Wireless and BLE status
+// TODO: Adding Support for BME280 Sensor
+// TODO: Adding Google Name & Keyword to the GATT
+// TODO: Adding support for Google Home welcome message
+// TODO: Adding Cloud service
+// TODO: Adding IFTT service
+
 SSD1306Wire Oled(OLED_Address, OLED_SDA_pin, OLED_SCL_pin);
 bool hasBleEvent = false;
 void setup()
