@@ -5,6 +5,7 @@ BLEServer *pServer;
 ble_events event;
 bool *phasEvent;
 bool isConnected = false;
+bool isAdvertising = false;
 
 hw_timer_t *timer = NULL;
 portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;
@@ -15,8 +16,9 @@ void IRAM_ATTR onStopAdvertise()
     if (!isConnected)
     {
         BLEstopAd();
-        Serial.println("BLE stopped advertising.");
         timerStop(timer);
+        event = ble_events::BLE_STOPPED;
+        *phasEvent = true;
     }
     portEXIT_CRITICAL_ISR(&timerMux);
 }
@@ -59,7 +61,6 @@ class CharacteristicCallbacks : public BLECharacteristicCallbacks
             std::string val = pCharacteristic->getValue();
             if (val == "1")
             {
-                event = ble_events::WIFI_START_SCAN;
                 *phasEvent = true;
             }
             return;
@@ -132,14 +133,21 @@ void BLEsetupAd()
 
 void BLEstartAd()
 {
+    if (isAdvertising)
+        return;
+    isAdvertising = true;
     BLEDevice::startAdvertising();
     Serial.println("BLE starts advertising");
     timerStart(timer);
+    event = ble_events::BLE_STARTED;
+    *phasEvent = true;
 }
 
 void BLEstopAd()
 {
     BLEDevice::getAdvertising()->stop();
+    isAdvertising = false;
+    Serial.println("BLE stopped advertising.");
 }
 
 void addCharacteristic(BLEService *pService, BLEUUID uuid, uint32_t properties, std::string value)

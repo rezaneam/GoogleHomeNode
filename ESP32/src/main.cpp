@@ -1,14 +1,4 @@
-#include <Arduino.h>
-#include <Wire.h>
-#include <stdlib.h>
-#include <string>
-#include <SSD1306.h>
-#include <Wireless.h>
-
-#define OLED_SDA_pin 5
-#define OLED_SCL_pin 4
-#define Frequency 400000
-#define OLED_Address 0x3c
+#include <main.h>
 
 // TODO: Adding Support for starting advertise by external button
 // TODO: Adding OLED display for Wireless and BLE status
@@ -18,8 +8,17 @@
 // TODO: Adding Cloud service
 // TODO: Adding IFTT service
 
-SSD1306Wire Oled(OLED_Address, OLED_SDA_pin, OLED_SCL_pin);
+SSD1306Wire Oled(OLED_Address, SDA_PIN, SCL_PIN);
 bool hasBleEvent = false;
+
+portMUX_TYPE mux = portMUX_INITIALIZER_UNLOCKED;
+void IRAM_ATTR handleExternalInterrupt()
+{
+  portENTER_CRITICAL_ISR(&mux);
+  BLEstartAd();
+  portEXIT_CRITICAL_ISR(&mux);
+}
+
 void setup()
 {
   // put your setup code here, to run once:
@@ -31,15 +30,15 @@ void setup()
   Oled.clear();
   Oled.setTextAlignment(TEXT_ALIGN_LEFT);
   Oled.setFont(ArialMT_Plain_16);
-  Oled.drawString(0, 0, "Initializing BLE");
-  Oled.display();
+  //Oled.drawString(0, 0, "Initializing BLE");
+  //Oled.drawIcon(OLEDDISPLAY_ICONS::BLE_ADVERTISING_ICON);
 
   Serial.println("Starting BLE");
   BLEinit(BLE_DEVICE_NAME, &hasBleEvent);
   BLEsetupAd();
-  BLEstartAd();
-  // delay(10000);
-  // ScanWirelessNodes();
+
+  pinMode(BLE_ADVERTISE_ENABLE_PIN, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(BLE_ADVERTISE_ENABLE_PIN), handleExternalInterrupt, FALLING);
 }
 
 void loop()
@@ -48,6 +47,18 @@ void loop()
   if (hasBleEvent)
     switch (BLEreadEvent())
     {
+    case ble_events::BLE_CONNECTED:
+      Oled.BLEconnected(true);
+      break;
+    case ble_events::BLE_DISCONNECT:
+      Oled.BLEconnected(false);
+      break;
+    case ble_events::BLE_STOPPED:
+      Oled.BLEadvertising(false);
+      break;
+    case ble_events::BLE_STARTED:
+      Oled.BLEadvertising(true);
+      break;
     case ble_events::WIFI_START_SCAN:
       WiFiScanNodes();
       break;
