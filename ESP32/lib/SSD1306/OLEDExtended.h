@@ -22,6 +22,8 @@ const unsigned char WiFi_connected_icon_img[] PROGMEM = {
     0xC0, 0x03, 0xE0, 0x07, 0x20, 0x04, 0x00, 0x00,
     0x80, 0x01, 0xC0, 0x03, 0xC0, 0x03, 0x80, 0x01};
 
+const int16_t Sensor_Area[] PROGMEM = {0, 16, 127, 63};
+
 enum OLEDDISPLAY_ICONS
 {
     BLE_ADVERTISING_ICON = 0,
@@ -52,4 +54,6 @@ public:
 
     // Show WiFi icon including the WiFi SSID if connected
     void WiFiconnected(bool isConnected, std::string ssid);
+
+    void RefressSensorArea(float temperature, float humidity, float pressure);
 };

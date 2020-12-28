@@ -67,10 +67,20 @@ void OLEDDisplayExtended::BLEconnected(bool isConnected)
     this->display();
 }
 
-void OLEDDisplayExtended::WiFiconnected(bool isConnected, std::string ssid) {
+void OLEDDisplayExtended::WiFiconnected(bool isConnected, std::string ssid)
+{
     this->clearIcon(WIFI_ICON);
     if (isConnected)
         this->drawIcon(WIFI_ICON);
 
+    this->display();
+}
+
+void OLEDDisplayExtended::RefressSensorArea(float temperature, float humidity, float pressure)
+{
+    this->clearArea(Sensor_Area[0], Sensor_Area[1], Sensor_Area[2], Sensor_Area[3]);
+    this->drawString(Sensor_Area[0], Sensor_Area[1], "T: " + String(temperature) + " C");
+    this->drawString(Sensor_Area[0], Sensor_Area[1] + 16, "H: " + String(humidity) + " %");
+    this->drawString(Sensor_Area[0], Sensor_Area[1] + 32, "P: " + String(pressure / 101325) + " atm");
     this->display();
 }

@@ -39,7 +39,8 @@
 /**************************************************************************/
 BME280::BME280()
     : _cs(-1), _mosi(-1), _miso(-1), _sck(-1)
-{ }
+{
+}
 
 /**************************************************************************/
 /*! 
@@ -49,7 +50,8 @@ BME280::BME280()
 /**************************************************************************/
 BME280::BME280(int8_t cspin)
     : _cs(cspin), _mosi(-1), _miso(-1), _sck(-1)
-{ }
+{
+}
 
 /**************************************************************************/
 /*! 
@@ -62,8 +64,8 @@ BME280::BME280(int8_t cspin)
 /**************************************************************************/
 BME280::BME280(int8_t cspin, int8_t mosipin, int8_t misopin, int8_t sckpin)
     : _cs(cspin), _mosi(mosipin), _miso(misopin), _sck(sckpin)
-{ }
-
+{
+}
 
 /**************************************************************************/
 /*!
@@ -74,9 +76,9 @@ BME280::BME280(int8_t cspin, int8_t mosipin, int8_t misopin, int8_t sckpin)
 /**************************************************************************/
 bool BME280::begin(TwoWire *theWire)
 {
-	_wire = theWire;
-	_i2caddr = BME280_ADDRESS;
-	return init();
+    _wire = theWire;
+    _i2caddr = BME280_ADDRESS;
+    return init();
 }
 
 /**************************************************************************/
@@ -88,9 +90,9 @@ bool BME280::begin(TwoWire *theWire)
 /**************************************************************************/
 bool BME280::begin(uint8_t addr)
 {
-	_i2caddr = addr;
-	_wire = &Wire;
-	return init();
+    _i2caddr = addr;
+    _wire = &Wire;
+    return init();
 }
 
 /**************************************************************************/
@@ -104,8 +106,8 @@ bool BME280::begin(uint8_t addr)
 bool BME280::begin(uint8_t addr, TwoWire *theWire)
 {
     _i2caddr = addr;
-	_wire = theWire;
-	return init();
+    _wire = theWire;
+    return init();
 }
 
 /**************************************************************************/
@@ -117,8 +119,8 @@ bool BME280::begin(uint8_t addr, TwoWire *theWire)
 bool BME280::begin(void)
 {
     _i2caddr = BME280_ADDRESS;
-	_wire = &Wire;
-	return init();
+    _wire = &Wire;
+    return init();
 }
 
 /**************************************************************************/
@@ -130,16 +132,22 @@ bool BME280::begin(void)
 bool BME280::init()
 {
     // init I2C or SPI sensor interface
-    if (_cs == -1) {
+    if (_cs == -1)
+    {
         // I2C
         //_wire -> begin();
-    } else {
+    }
+    else
+    {
         digitalWrite(_cs, HIGH);
         pinMode(_cs, OUTPUT);
-        if (_sck == -1) {
+        if (_sck == -1)
+        {
             // hardware SPI
             SPI.begin();
-        } else {
+        }
+        else
+        {
             // software SPI
             pinMode(_sck, OUTPUT);
             pinMode(_mosi, OUTPUT);
@@ -151,8 +159,16 @@ bool BME280::init()
 
     // check if sensor, i.e. the chip ID is correct
     if (chip_id != 0x60)
-        return false;
+    {
+        if (chip_id != 58)
+            Serial.println("BMP280 chip is found!");
+        else
+            Serial.println("Unknow chipId: " + String(chip_id));
 
+        return false;
+    }
+
+    Serial.println("BME280 chip is found");
     // reset the device using soft-reset
     // this makes sure the IIR is off, etc.
     write8(BME280_REGISTER_SOFTRESET, 0xB6);
@@ -162,7 +178,7 @@ bool BME280::init()
 
     // if chip is still reading calibration, delay
     while (isReadingCalibration())
-          delay(100);
+        delay(100);
 
     readCoefficients(); // read trimming parameters, see DS 4.2.2
 
@@ -187,29 +203,27 @@ bool BME280::init()
     @param duration the standby duration to use
 */
 /**************************************************************************/
-void BME280::setSampling(sensor_mode       mode,
-		 sensor_sampling   tempSampling,
-		 sensor_sampling   pressSampling,
-		 sensor_sampling   humSampling,
-		 sensor_filter     filter,
-		 standby_duration  duration) {
-    _measReg.mode     = mode;
-    _measReg.osrs_t   = tempSampling;
-    _measReg.osrs_p   = pressSampling;
-        
-    
-    _humReg.osrs_h    = humSampling;
-    _configReg.filter = filter;
-    _configReg.t_sb   = duration;
+void BME280::setSampling(sensor_mode mode,
+                         sensor_sampling tempSampling,
+                         sensor_sampling pressSampling,
+                         sensor_sampling humSampling,
+                         sensor_filter filter,
+                         standby_duration duration)
+{
+    _measReg.mode = mode;
+    _measReg.osrs_t = tempSampling;
+    _measReg.osrs_p = pressSampling;
 
-    
+    _humReg.osrs_h = humSampling;
+    _configReg.filter = filter;
+    _configReg.t_sb = duration;
+
     // you must make sure to also set REGISTER_CONTROL after setting the
     // CONTROLHUMID register, otherwise the values won't be applied (see DS 5.4.3)
     write8(BME280_REGISTER_CONTROLHUMID, _humReg.get());
     write8(BME280_REGISTER_CONFIG, _configReg.get());
     write8(BME280_REGISTER_CONTROL, _measReg.get());
 }
-
 
 /**************************************************************************/
 /*!
@@ -218,24 +232,25 @@ void BME280::setSampling(sensor_mode       mode,
     @returns the data byte read from the device
 */
 /**************************************************************************/
-uint8_t BME280::spixfer(uint8_t x) {
+uint8_t BME280::spixfer(uint8_t x)
+{
     // hardware SPI
     if (_sck == -1)
         return SPI.transfer(x);
 
     // software SPI
     uint8_t reply = 0;
-    for (int i=7; i>=0; i--) {
+    for (int i = 7; i >= 0; i--)
+    {
         reply <<= 1;
         digitalWrite(_sck, LOW);
-        digitalWrite(_mosi, x & (1<<i));
+        digitalWrite(_mosi, x & (1 << i));
         digitalWrite(_sck, HIGH);
         if (digitalRead(_miso))
             reply |= 1;
-        }
+    }
     return reply;
 }
-
 
 /**************************************************************************/
 /*!
@@ -244,24 +259,27 @@ uint8_t BME280::spixfer(uint8_t x) {
     @param value the value to write to the register
 */
 /**************************************************************************/
-void BME280::write8(byte reg, byte value) {
-    if (_cs == -1) {
-        _wire -> beginTransmission((uint8_t)_i2caddr);
-        _wire -> write((uint8_t)reg);
-        _wire -> write((uint8_t)value);
-        _wire -> endTransmission();
-    } else {
+void BME280::write8(byte reg, byte value)
+{
+    if (_cs == -1)
+    {
+        _wire->beginTransmission((uint8_t)_i2caddr);
+        _wire->write((uint8_t)reg);
+        _wire->write((uint8_t)value);
+        _wire->endTransmission();
+    }
+    else
+    {
         if (_sck == -1)
             SPI.beginTransaction(SPISettings(500000, MSBFIRST, SPI_MODE0));
         digitalWrite(_cs, LOW);
         spixfer(reg & ~0x80); // write, bit 7 low
         spixfer(value);
         digitalWrite(_cs, HIGH);
-    if (_sck == -1)
-        SPI.endTransaction(); // release the SPI bus
+        if (_sck == -1)
+            SPI.endTransaction(); // release the SPI bus
     }
 }
-
 
 /**************************************************************************/
 /*!
@@ -270,16 +288,20 @@ void BME280::write8(byte reg, byte value) {
     @returns the data byte read from the device
 */
 /**************************************************************************/
-uint8_t BME280::read8(byte reg) {
+uint8_t BME280::read8(byte reg)
+{
     uint8_t value;
-    
-    if (_cs == -1) {
-        _wire -> beginTransmission((uint8_t)_i2caddr);
-        _wire -> write((uint8_t)reg);
-        _wire -> endTransmission();
-        _wire -> requestFrom((uint8_t)_i2caddr, (byte)1);
-        value = _wire -> read();
-    } else {
+
+    if (_cs == -1)
+    {
+        _wire->beginTransmission((uint8_t)_i2caddr);
+        _wire->write((uint8_t)reg);
+        _wire->endTransmission();
+        _wire->requestFrom((uint8_t)_i2caddr, (byte)1);
+        value = _wire->read();
+    }
+    else
+    {
         if (_sck == -1)
             SPI.beginTransaction(SPISettings(500000, MSBFIRST, SPI_MODE0));
         digitalWrite(_cs, LOW);
@@ -292,7 +314,6 @@ uint8_t BME280::read8(byte reg) {
     return value;
 }
 
-
 /**************************************************************************/
 /*!
     @brief  Reads a 16 bit value over I2C or SPI
@@ -304,13 +325,16 @@ uint16_t BME280::read16(byte reg)
 {
     uint16_t value;
 
-    if (_cs == -1) {
-        _wire -> beginTransmission((uint8_t)_i2caddr);
-        _wire -> write((uint8_t)reg);
-        _wire -> endTransmission();
-        _wire -> requestFrom((uint8_t)_i2caddr, (byte)2);
-        value = (_wire -> read() << 8) | _wire -> read();
-    } else {
+    if (_cs == -1)
+    {
+        _wire->beginTransmission((uint8_t)_i2caddr);
+        _wire->write((uint8_t)reg);
+        _wire->endTransmission();
+        _wire->requestFrom((uint8_t)_i2caddr, (byte)2);
+        value = (_wire->read() << 8) | _wire->read();
+    }
+    else
+    {
         if (_sck == -1)
             SPI.beginTransaction(SPISettings(500000, MSBFIRST, SPI_MODE0));
         digitalWrite(_cs, LOW);
@@ -324,7 +348,6 @@ uint16_t BME280::read16(byte reg)
     return value;
 }
 
-
 /**************************************************************************/
 /*!
     @brief  Reads a signed 16 bit little endian value over I2C or SPI
@@ -332,11 +355,11 @@ uint16_t BME280::read16(byte reg)
     @returns the 16 bit data value read from the device
 */
 /**************************************************************************/
-uint16_t BME280::read16_LE(byte reg) {
+uint16_t BME280::read16_LE(byte reg)
+{
     uint16_t temp = read16(reg);
     return (temp >> 8) | (temp << 8);
 }
-
 
 /**************************************************************************/
 /*!
@@ -350,7 +373,6 @@ int16_t BME280::readS16(byte reg)
     return (int16_t)read16(reg);
 }
 
-
 /**************************************************************************/
 /*!
     @brief  Reads a signed little endian 16 bit value over I2C or SPI
@@ -363,7 +385,6 @@ int16_t BME280::readS16_LE(byte reg)
     return (int16_t)read16_LE(reg);
 }
 
-
 /**************************************************************************/
 /*!
     @brief  Reads a 24 bit value over I2C
@@ -375,18 +396,21 @@ uint32_t BME280::read24(byte reg)
 {
     uint32_t value;
 
-    if (_cs == -1) {
-        _wire -> beginTransmission((uint8_t)_i2caddr);
-        _wire -> write((uint8_t)reg);
-        _wire -> endTransmission();
-        _wire -> requestFrom((uint8_t)_i2caddr, (byte)3);
+    if (_cs == -1)
+    {
+        _wire->beginTransmission((uint8_t)_i2caddr);
+        _wire->write((uint8_t)reg);
+        _wire->endTransmission();
+        _wire->requestFrom((uint8_t)_i2caddr, (byte)3);
 
-        value = _wire -> read();
+        value = _wire->read();
         value <<= 8;
-        value |= _wire -> read();
+        value |= _wire->read();
         value <<= 8;
-        value |= _wire -> read();
-    } else {
+        value |= _wire->read();
+    }
+    else
+    {
         if (_sck == -1)
             SPI.beginTransaction(SPISettings(500000, MSBFIRST, SPI_MODE0));
         digitalWrite(_cs, LOW);
@@ -406,28 +430,27 @@ uint32_t BME280::read24(byte reg)
     return value;
 }
 
-
 /**************************************************************************/
 /*!
     @brief  Take a new measurement (only possible in forced mode)
 */
 /**************************************************************************/
 void BME280::takeForcedMeasurement()
-{   
+{
     // If we are in forced mode, the BME sensor goes back to sleep after each
     // measurement and we need to set it to forced mode once at this point, so
     // it will take the next measurement and then return to sleep again.
     // In normal mode simply does new measurements periodically.
-    if (_measReg.mode == MODE_FORCED) {
+    if (_measReg.mode == MODE_FORCED)
+    {
         // set to forced mode, i.e. "take next measurement"
         write8(BME280_REGISTER_CONTROL, _measReg.get());
         // wait until measurement has been completed, otherwise we would read
         // the values from the last measurement
         while (read8(BME280_REGISTER_STATUS) & 0x08)
-		delay(1);
+            delay(1);
     }
 }
-
 
 /**************************************************************************/
 /*!
@@ -453,8 +476,8 @@ void BME280::readCoefficients(void)
     _bme280_calib.dig_H1 = read8(BME280_REGISTER_DIG_H1);
     _bme280_calib.dig_H2 = readS16_LE(BME280_REGISTER_DIG_H2);
     _bme280_calib.dig_H3 = read8(BME280_REGISTER_DIG_H3);
-    _bme280_calib.dig_H4 = (read8(BME280_REGISTER_DIG_H4) << 4) | (read8(BME280_REGISTER_DIG_H4+1) & 0xF);
-    _bme280_calib.dig_H5 = (read8(BME280_REGISTER_DIG_H5+1) << 4) | (read8(BME280_REGISTER_DIG_H5) >> 4);
+    _bme280_calib.dig_H4 = (read8(BME280_REGISTER_DIG_H4) << 4) | (read8(BME280_REGISTER_DIG_H4 + 1) & 0xF);
+    _bme280_calib.dig_H5 = (read8(BME280_REGISTER_DIG_H5 + 1) << 4) | (read8(BME280_REGISTER_DIG_H5) >> 4);
     _bme280_calib.dig_H6 = (int8_t)read8(BME280_REGISTER_DIG_H6);
 }
 
@@ -466,11 +489,10 @@ void BME280::readCoefficients(void)
 /**************************************************************************/
 bool BME280::isReadingCalibration(void)
 {
-  uint8_t const rStatus = read8(BME280_REGISTER_STATUS);
+    uint8_t const rStatus = read8(BME280_REGISTER_STATUS);
 
-  return (rStatus & (1 << 0)) != 0;
+    return (rStatus & (1 << 0)) != 0;
 }
-
 
 /**************************************************************************/
 /*!
@@ -487,19 +509,21 @@ float BME280::readTemperature(void)
         return NAN;
     adc_T >>= 4;
 
-    var1 = ((((adc_T>>3) - ((int32_t)_bme280_calib.dig_T1 <<1))) *
-            ((int32_t)_bme280_calib.dig_T2)) >> 11;
-             
-    var2 = (((((adc_T>>4) - ((int32_t)_bme280_calib.dig_T1)) *
-              ((adc_T>>4) - ((int32_t)_bme280_calib.dig_T1))) >> 12) *
-            ((int32_t)_bme280_calib.dig_T3)) >> 14;
+    var1 = ((((adc_T >> 3) - ((int32_t)_bme280_calib.dig_T1 << 1))) *
+            ((int32_t)_bme280_calib.dig_T2)) >>
+           11;
+
+    var2 = (((((adc_T >> 4) - ((int32_t)_bme280_calib.dig_T1)) *
+              ((adc_T >> 4) - ((int32_t)_bme280_calib.dig_T1))) >>
+             12) *
+            ((int32_t)_bme280_calib.dig_T3)) >>
+           14;
 
     t_fine = var1 + var2;
 
     float T = (t_fine * 5 + 128) >> 8;
-    return T/100;
+    return T / 100;
 }
-
 
 /**************************************************************************/
 /*!
@@ -507,7 +531,8 @@ float BME280::readTemperature(void)
     @returns the pressure value (in Pascal) read from the device
 */
 /**************************************************************************/
-float BME280::readPressure(void) {
+float BME280::readPressure(void)
+{
     int64_t var1, var2, p;
 
     readTemperature(); // must be done first to get t_fine
@@ -519,24 +544,24 @@ float BME280::readPressure(void) {
 
     var1 = ((int64_t)t_fine) - 128000;
     var2 = var1 * var1 * (int64_t)_bme280_calib.dig_P6;
-    var2 = var2 + ((var1*(int64_t)_bme280_calib.dig_P5)<<17);
-    var2 = var2 + (((int64_t)_bme280_calib.dig_P4)<<35);
-    var1 = ((var1 * var1 * (int64_t)_bme280_calib.dig_P3)>>8) +
-           ((var1 * (int64_t)_bme280_calib.dig_P2)<<12);
-    var1 = (((((int64_t)1)<<47)+var1))*((int64_t)_bme280_calib.dig_P1)>>33;
+    var2 = var2 + ((var1 * (int64_t)_bme280_calib.dig_P5) << 17);
+    var2 = var2 + (((int64_t)_bme280_calib.dig_P4) << 35);
+    var1 = ((var1 * var1 * (int64_t)_bme280_calib.dig_P3) >> 8) +
+           ((var1 * (int64_t)_bme280_calib.dig_P2) << 12);
+    var1 = (((((int64_t)1) << 47) + var1)) * ((int64_t)_bme280_calib.dig_P1) >> 33;
 
-    if (var1 == 0) {
+    if (var1 == 0)
+    {
         return 0; // avoid exception caused by division by zero
     }
     p = 1048576 - adc_P;
-    p = (((p<<31) - var2)*3125) / var1;
-    var1 = (((int64_t)_bme280_calib.dig_P9) * (p>>13) * (p>>13)) >> 25;
+    p = (((p << 31) - var2) * 3125) / var1;
+    var1 = (((int64_t)_bme280_calib.dig_P9) * (p >> 13) * (p >> 13)) >> 25;
     var2 = (((int64_t)_bme280_calib.dig_P8) * p) >> 19;
 
-    p = ((p + var1 + var2) >> 8) + (((int64_t)_bme280_calib.dig_P7)<<4);
-    return (float)p/256;
+    p = ((p + var1 + var2) >> 8) + (((int64_t)_bme280_calib.dig_P7) << 4);
+    return (float)p / 256;
 }
-
 
 /**************************************************************************/
 /*!
@@ -544,32 +569,39 @@ float BME280::readPressure(void) {
     @returns the humidity value read from the device
 */
 /**************************************************************************/
-float BME280::readHumidity(void) {
+float BME280::readHumidity(void)
+{
     readTemperature(); // must be done first to get t_fine
 
     int32_t adc_H = read16(BME280_REGISTER_HUMIDDATA);
     if (adc_H == 0x8000) // value in case humidity measurement was disabled
         return NAN;
-        
+
     int32_t v_x1_u32r;
 
     v_x1_u32r = (t_fine - ((int32_t)76800));
 
     v_x1_u32r = (((((adc_H << 14) - (((int32_t)_bme280_calib.dig_H4) << 20) -
-                    (((int32_t)_bme280_calib.dig_H5) * v_x1_u32r)) + ((int32_t)16384)) >> 15) *
+                    (((int32_t)_bme280_calib.dig_H5) * v_x1_u32r)) +
+                   ((int32_t)16384)) >>
+                  15) *
                  (((((((v_x1_u32r * ((int32_t)_bme280_calib.dig_H6)) >> 10) *
-                      (((v_x1_u32r * ((int32_t)_bme280_calib.dig_H3)) >> 11) + ((int32_t)32768))) >> 10) +
-                    ((int32_t)2097152)) * ((int32_t)_bme280_calib.dig_H2) + 8192) >> 14));
+                      (((v_x1_u32r * ((int32_t)_bme280_calib.dig_H3)) >> 11) + ((int32_t)32768))) >>
+                     10) +
+                    ((int32_t)2097152)) *
+                       ((int32_t)_bme280_calib.dig_H2) +
+                   8192) >>
+                  14));
 
     v_x1_u32r = (v_x1_u32r - (((((v_x1_u32r >> 15) * (v_x1_u32r >> 15)) >> 7) *
-                               ((int32_t)_bme280_calib.dig_H1)) >> 4));
+                               ((int32_t)_bme280_calib.dig_H1)) >>
+                              4));
 
     v_x1_u32r = (v_x1_u32r < 0) ? 0 : v_x1_u32r;
     v_x1_u32r = (v_x1_u32r > 419430400) ? 419430400 : v_x1_u32r;
-    float h = (v_x1_u32r>>12);
-    return  h / 1024.0;
+    float h = (v_x1_u32r >> 12);
+    return h / 1024.0;
 }
-
 
 /**************************************************************************/
 /*!
@@ -593,7 +625,6 @@ float BME280::readAltitude(float seaLevel)
     return 44330.0 * (1.0 - pow(atmospheric / seaLevel, 0.1903));
 }
 
-
 /**************************************************************************/
 /*!
     Calculates the pressure at sea level (in hPa) from the specified altitude 
@@ -612,5 +643,5 @@ float BME280::seaLevelForAltitude(float altitude, float atmospheric)
     // at high altitude. See this thread for more information:
     //  http://forums.adafruit.com/viewtopic.php?f=22&t=58064
 
-    return atmospheric / pow(1.0 - (altitude/44330.0), 5.255);
+    return atmospheric / pow(1.0 - (altitude / 44330.0), 5.255);
 }

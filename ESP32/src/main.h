@@ -4,6 +4,7 @@
 #include <string>
 #include <SSD1306.h>
 #include <Wireless.h>
+#include <BME280.h>
 
 #define SDA_PIN 5
 #define SCL_PIN 4
