@@ -86,30 +86,47 @@ void BLEinit(std::string deviceName, bool *hasEvent)
 
     // System ID  - Read Only
     BLEService *pDeviceInfoService = pServer->createService(BLEUUID((uint16_t)SERVICE_UUID_DEVICE_INFORMATION));
-    addCharacteristic(pDeviceInfoService, BLEUUID((uint16_t)CHARACTERISTIC_UUID_SYSTEM_ID), BLECharacteristic::PROPERTY_READ, BLE_SYSTEM_ID);
-    addCharacteristic(pDeviceInfoService, BLEUUID((uint16_t)CHARACTERISTIC_UUID_MANUFACTURER), BLECharacteristic::PROPERTY_READ, BLE_MANUFACTURER);
-    addCharacteristic(pDeviceInfoService, BLEUUID((uint16_t)CHARACTERISTIC_UUID_MODEL_NUMBER), BLECharacteristic::PROPERTY_READ, BLE_MODEL_NUMBER);
-    addCharacteristic(pDeviceInfoService, BLEUUID((uint16_t)CHARACTERISTIC_UUID_FIRMWARE_REVISION), BLECharacteristic::PROPERTY_READ, BLE_FIRMWARE_REVISION);
-    addCharacteristic(pDeviceInfoService, BLEUUID((uint16_t)CHARACTERISTIC_UUID_HARDWARE_REVISION), BLECharacteristic::PROPERTY_READ, BLE_HARDWARE_REVISION);
-    addCharacteristic(pDeviceInfoService, BLEUUID((uint16_t)CHARACTERISTIC_UUID_SOFTWARE_REVISION), BLECharacteristic::PROPERTY_READ, BLE_SOFTWARE_REVISION);
+    addCharacteristic(pDeviceInfoService, CHARACTERISTIC_UUID_SYSTEM_ID, BLECharacteristic::PROPERTY_READ, BLE_SYSTEM_ID);
+    addCharacteristic(pDeviceInfoService, CHARACTERISTIC_UUID_MANUFACTURER, BLECharacteristic::PROPERTY_READ, BLE_MANUFACTURER);
+    addCharacteristic(pDeviceInfoService, CHARACTERISTIC_UUID_MODEL_NUMBER, BLECharacteristic::PROPERTY_READ, BLE_MODEL_NUMBER);
+    addCharacteristic(pDeviceInfoService, CHARACTERISTIC_UUID_FIRMWARE_REVISION, BLECharacteristic::PROPERTY_READ, BLE_FIRMWARE_REVISION);
+    addCharacteristic(pDeviceInfoService, CHARACTERISTIC_UUID_HARDWARE_REVISION, BLECharacteristic::PROPERTY_READ, BLE_HARDWARE_REVISION);
+    addCharacteristic(pDeviceInfoService, CHARACTERISTIC_UUID_SOFTWARE_REVISION, BLECharacteristic::PROPERTY_READ, BLE_SOFTWARE_REVISION);
 
     // Battery level - Read & Notify
     BLEService *pBatteryService = pServer->createService(BLEUUID((uint16_t)SERVICE_UUID_BATTERY));
-    addCharacteristic(pBatteryService, BLEUUID((uint16_t)CHARACTERISTIC_UUID_BATTERY_LEVEL), BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_NOTIFY, "100%");
+    BLEDescriptor batteryDescriptor(BLEUUID((uint16_t)DESCRIPTOR_UUID_BATTERY));
+    batteryDescriptor.setValue(DESCRIPTOR_VAL_BATTERY);
+    addCharacteristicWithDescriptior(pBatteryService, CHARACTERISTIC_UUID_BATTERY_LEVEL, BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_NOTIFY, "100%", &batteryDescriptor);
 
     // BME280 - Read & Notify
     BLEService *pSensorService = pServer->createService(BLEUUID((uint16_t)SERVICE_UUID_ENVIROMENTAL_SENSING));
-    addCharacteristic(pSensorService, BLEUUID((uint16_t)CHARACTERISTIC_UUID_PRESSURE), BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_NOTIFY, "N.A.");
-    addCharacteristic(pSensorService, BLEUUID((uint16_t)CHARACTERISTIC_UUID_TEMPERATURE), BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_NOTIFY, "N.A.");
-    addCharacteristic(pSensorService, BLEUUID((uint16_t)CHARACTERISTIC_UUID_HUMIDITY), BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_NOTIFY, "N.A.");
+    BLEDescriptor temperatureDescriptor(BLEUUID((uint16_t)DESCRIPTOR_UUID_TEMPERATURE));
+    temperatureDescriptor.setValue(DESCRIPTOR_VAL_TEMPEATURE);
+
+    BLEDescriptor humidityeDescriptor(BLEUUID((uint16_t)DESCRIPTOR_UUID_HUMIDITY));
+    humidityeDescriptor.setValue(DESCRIPTOR_VAL_HUMIDITY);
+
+    BLEDescriptor pressureDescriptor(BLEUUID((uint16_t)DESCRIPTOR_UUID_PRESSURE));
+    pressureDescriptor.setValue(DESCRIPTOR_VAL_PRESSURE);
+
+    addCharacteristicWithDescriptior(pSensorService, CHARACTERISTIC_UUID_PRESSURE, BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_NOTIFY, "N.A.", &pressureDescriptor);
+    addCharacteristicWithDescriptior(pSensorService, CHARACTERISTIC_UUID_TEMPERATURE, BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_NOTIFY, "N.A.", &temperatureDescriptor);
+    addCharacteristicWithDescriptior(pSensorService, CHARACTERISTIC_UUID_HUMIDITY, BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_NOTIFY, "N.A.", &humidityeDescriptor);
 
     // WiFi Configuration - Read, Notify, Write
     BLEService *pAutomationService = pServer->createService(BLEUUID((uint16_t)SERVICE_UUID_USER_DATA));
-    addCharacteristic(pAutomationService, BLEUUID((uint16_t)CHARACTERISTIC_UUID_WIFI_SSID_NAMES), BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_NOTIFY, "");
-    addCharacteristic(pAutomationService, BLEUUID((uint16_t)CHARACTERISTIC_UUID_WIFI_SCANNING), BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_NOTIFY | BLECharacteristic::PROPERTY_WRITE, BLE_WIFI_SCANNING_DEACTIVE);
-    addCharacteristic(pAutomationService, BLEUUID((uint16_t)CHARACTERISTIC_UUID_WIFI_SSID), BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_WRITE, "");
-    addCharacteristic(pAutomationService, BLEUUID((uint16_t)CHARACTERISTIC_UUID_WIFI_PASS), BLECharacteristic::PROPERTY_WRITE, "");
-    addCharacteristic(pAutomationService, BLEUUID((uint16_t)CHARACTERISTIC_UUID_WIFI_CONNECTION_STAT), BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_NOTIFY, BLE_WIFI_NOT_CONNECTED);
+    BLEDescriptor scanWiFiDescriptor(BLEUUID((uint16_t)DESCRIPTOR_UUID_WIFI_SCAN));
+    scanWiFiDescriptor.setValue(DESCRIPTOR_VAL_WIFI_SCAN);
+
+    BLEDescriptor connWiFiDescriptor(BLEUUID((uint16_t)DESCRIPTOR_UUID_WIFI_CONN));
+    connWiFiDescriptor.setValue(DESCRIPTOR_VAL_WIFI_CONN);
+
+    addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_WIFI_SSID_NAMES, BLECharacteristic::PROPERTY_READ, "");
+    addCharacteristicWithDescriptior(pAutomationService, CHARACTERISTIC_UUID_WIFI_SCANNING, BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_NOTIFY | BLECharacteristic::PROPERTY_WRITE, BLE_WIFI_SCANNING_DEACTIVE, &scanWiFiDescriptor);
+    addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_WIFI_SSID, BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_WRITE, "");
+    addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_WIFI_PASS, BLECharacteristic::PROPERTY_WRITE, "");
+    addCharacteristicWithDescriptior(pAutomationService, CHARACTERISTIC_UUID_WIFI_CONNECTION_STAT, BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_NOTIFY, BLE_WIFI_NOT_CONNECTED, &connWiFiDescriptor);
 
     pDeviceInfoService->start();
     pBatteryService->start();
@@ -151,9 +168,53 @@ void BLEstopAd()
     Serial.println("BLE stopped advertising.");
 }
 
+void addCharacteristicWithDescriptior(BLEService *pService, int uuid, uint32_t properties, std::string value, int descriptorUuid, std::string descriptiorValue)
+{
+    BLECharacteristic *pCharacteristic = pService->createCharacteristic(BLEUUID((uint16_t)uuid), properties);
+
+    BLEDescriptor descriptor(BLEUUID((uint16_t)descriptorUuid));
+    descriptor.setValue(descriptiorValue);
+
+    pCharacteristic->setCallbacks(new CharacteristicCallbacks());
+    pCharacteristic->setValue(value);
+    pCharacteristic->addDescriptor(&descriptor);
+    pCharacteristic->addDescriptor(new BLE2902());
+}
+
+void addCharacteristicWithDescriptior(BLEService *pService, BLEUUID uuid, uint32_t properties, std::string value, BLEUUID descriptorUuid, std::string descriptiorValue)
+{
+    BLECharacteristic *pCharacteristic = pService->createCharacteristic(uuid, properties);
+
+    BLEDescriptor descriptor(descriptorUuid);
+    descriptor.setValue(descriptiorValue);
+
+    pCharacteristic->setCallbacks(new CharacteristicCallbacks());
+    pCharacteristic->setValue(value);
+    pCharacteristic->addDescriptor(&descriptor);
+    pCharacteristic->addDescriptor(new BLE2902());
+}
+
+void addCharacteristicWithDescriptior(BLEService *pService, int uuid, uint32_t properties, std::string value, BLEDescriptor *pDescriptor)
+{
+    BLECharacteristic *pCharacteristic = pService->createCharacteristic(BLEUUID((uint16_t)uuid), properties);
+
+    pCharacteristic->setCallbacks(new CharacteristicCallbacks());
+    pCharacteristic->setValue(value);
+    pCharacteristic->addDescriptor(pDescriptor);
+    pCharacteristic->addDescriptor(new BLE2902());
+}
+
 void addCharacteristic(BLEService *pService, BLEUUID uuid, uint32_t properties, std::string value)
 {
     BLECharacteristic *pCharacteristic = pService->createCharacteristic(uuid, properties);
+
+    pCharacteristic->setCallbacks(new CharacteristicCallbacks());
+    pCharacteristic->setValue(value);
+}
+
+void addCharacteristic(BLEService *pService, int uuid, uint32_t properties, std::string value)
+{
+    BLECharacteristic *pCharacteristic = pService->createCharacteristic(BLEUUID((uint16_t)uuid), properties);
 
     pCharacteristic->setCallbacks(new CharacteristicCallbacks());
     pCharacteristic->setValue(value);
@@ -200,4 +261,20 @@ std::string BLEgetSSID()
 std::string BLEgetPassword()
 {
     return getCharacteristicValue(BLEUUID((uint16_t)SERVICE_UUID_USER_DATA), BLEUUID((uint16_t)CHARACTERISTIC_UUID_WIFI_PASS));
+}
+
+void UpdateSensorValues(float temperature, float humidity, float pressure)
+{
+    if (!isConnected)
+        return;
+    setCharacteristicValue(BLEUUID((uint16_t)SERVICE_UUID_ENVIROMENTAL_SENSING), BLEUUID((uint16_t)CHARACTERISTIC_UUID_TEMPERATURE), convertToString(temperature));
+    setCharacteristicValue(BLEUUID((uint16_t)SERVICE_UUID_ENVIROMENTAL_SENSING), BLEUUID((uint16_t)CHARACTERISTIC_UUID_HUMIDITY), convertToString(humidity));
+    setCharacteristicValue(BLEUUID((uint16_t)SERVICE_UUID_ENVIROMENTAL_SENSING), BLEUUID((uint16_t)CHARACTERISTIC_UUID_PRESSURE), convertToString(pressure));
+}
+
+std::string convertToString(float value)
+{
+    std::ostringstream sstream;
+    sstream << value;
+    return sstream.str();
 }

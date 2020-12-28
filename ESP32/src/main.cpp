@@ -1,8 +1,5 @@
 #include <main.h>
 
-// TODO: Adding OLED display for Wireless and BLE status
-// TODO: Adding OLED display for BME280 sensor
-// TODO: Adding Support for BME280 Sensor
 // TODO: Adding Google Name & Keyword to the GATT
 // TODO: Adding support for Google Home welcome message
 // TODO: Adding Cloud service
@@ -12,7 +9,7 @@
 // TODO: Code Clean up - Phase 2 (organizing the process)
 // TODO: Code Clean up - Phase 3 (using the event system)
 
-#define SENSOR_READ_INTERVAL 60
+#define SENSOR_READ_INTERVAL 10
 BME280 Sensor = BME280();
 hw_timer_t *sensorReadTimer = NULL;
 portMUX_TYPE sensorReadtimerMux = portMUX_INITIALIZER_UNLOCKED;
@@ -56,8 +53,6 @@ void setup()
   Oled.clear();
   Oled.setTextAlignment(TEXT_ALIGN_LEFT);
   Oled.setFont(ArialMT_Plain_16);
-  //Oled.drawString(0, 0, "Initializing BLE");
-  //Oled.drawIcon(OLEDDISPLAY_ICONS::BLE_ADVERTISING_ICON);
 
   Sensor.begin();
   Sensor.setSampling(BME280::sensor_mode::MODE_FORCED,
@@ -112,6 +107,7 @@ void loop()
     float temperature = Sensor.readTemperature();
     float humidity = Sensor.readHumidity();
     float pressure = Sensor.readPressure();
+    UpdateSensorValues(temperature, humidity, pressure);
     Oled.RefressSensorArea(temperature, humidity, pressure);
     readSenor = false;
   }
