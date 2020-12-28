@@ -1,12 +1,15 @@
 #include <main.h>
 
-// TODO: Adding Support for starting advertise by external button
 // TODO: Adding OLED display for Wireless and BLE status
+// TODO: Adding OLED display for BME280 sensor
 // TODO: Adding Support for BME280 Sensor
 // TODO: Adding Google Name & Keyword to the GATT
 // TODO: Adding support for Google Home welcome message
 // TODO: Adding Cloud service
 // TODO: Adding IFTT service
+// TODO: Code Clean up - Phase 1 (minimize the logic in the main.cpp)
+// TODO: Code Clean up - Phase 2 (organizing the process)
+// TODO: Code Clean up - Phase 3 (using the event system)
 
 SSD1306Wire Oled(OLED_Address, SDA_PIN, SCL_PIN);
 bool hasBleEvent = false;
