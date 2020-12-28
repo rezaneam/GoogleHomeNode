@@ -61,6 +61,7 @@ class CharacteristicCallbacks : public BLECharacteristicCallbacks
             std::string val = pCharacteristic->getValue();
             if (val == "1")
             {
+                event = ble_events::WIFI_START_SCAN;
                 *phasEvent = true;
             }
             return;
