@@ -51,8 +51,6 @@ void setup()
   Oled.init();
   //Oled.flipScreenVertically();
   Oled.clear();
-  Oled.setTextAlignment(TEXT_ALIGN_LEFT);
-  Oled.setFont(ArialMT_Plain_16);
 
   Sensor.begin();
   Sensor.setSampling(BME280::sensor_mode::MODE_FORCED,
@@ -94,9 +92,14 @@ void loop()
     case ble_events::WIFI_START_SCAN:
       WiFiScanNodes();
       break;
-
     case ble_events::WIFI_CONNECTION_CHANGED:
       WiFiConnect(BLEgetSSID(), BLEgetPassword());
+    case ble_events::WIFI_CONNECTED:
+      Oled.WiFiconnected(true, BLEgetSSID());
+      break;
+    case ble_events::WIFI_DISCONNECTED:
+      Oled.WiFiconnected(false);
+      break;
     default:
       break;
     }

@@ -235,6 +235,11 @@ void BLEsetSSIDs(std::string SSIDs)
 void BLEwirelessConnectionChanged(std::string status)
 {
     setCharacteristicValue(BLEUUID((uint16_t)SERVICE_UUID_USER_DATA), BLEUUID((uint16_t)CHARACTERISTIC_UUID_WIFI_CONNECTION_STAT), status);
+    if (status == BLE_WIFI_CONNECTED)
+        event = ble_events::WIFI_CONNECTED;
+    else
+        event = ble_events::WIFI_DISCONNECTED;
+    *phasEvent = true;
 }
 
 std::string getCharacteristicValue(BLEUUID serviceUuid, BLEUUID charateristicsUuid)

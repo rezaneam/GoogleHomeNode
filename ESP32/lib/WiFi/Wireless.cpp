@@ -44,13 +44,17 @@ bool WiFiConnect(std::string ssid, std::string password)
 {
     BLEwirelessConnectionChanged(BLE_WIFI_CONNECTING);
     WiFi.begin(ssid.c_str(), password.c_str());
-    while (WiFi.status() != WL_CONNECTED || WiFi.status() != WL_CONNECT_FAILED)
+    while (WiFi.status() != WL_CONNECTED && WiFi.status() != WL_CONNECT_FAILED)
         ;
     if (WiFi.status() == WL_CONNECTED)
     {
         BLEwirelessConnectionChanged(BLE_WIFI_CONNECTED);
+        Serial.println(WiFi.localIP());
+        Serial.println(WiFi.getHostname());
+        Serial.println(WiFi.gatewayIP());
         return true;
     }
+    Serial.println(WiFi.status());
     BLEwirelessConnectionChanged(BLE_WIFI_NOT_CONNECTED);
     return false;
 }

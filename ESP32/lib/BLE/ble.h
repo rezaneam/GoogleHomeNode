@@ -28,8 +28,8 @@
 #define CHARACTERISTIC_UUID_HUMIDITY 0x2A6F             // Humidity Measurements
 #define CHARACTERISTIC_UUID_WIFI_SSID_NAMES 0x2900      // Found WiFi names
 #define CHARACTERISTIC_UUID_WIFI_SCANNING 0x2901        // Scan Refresh - used for is WiFi scanning: 0 - Not scanning, 1 - scanning
-#define CHARACTERISTIC_UUID_WIFI_SSID 0x2902            // WiFi SSID Name
-#define CHARACTERISTIC_UUID_WIFI_PASS 0x2903            // WiFi SSID Password
+#define CHARACTERISTIC_UUID_WIFI_SSID 0x4902            // WiFi SSID Name
+#define CHARACTERISTIC_UUID_WIFI_PASS 0x4903            // WiFi SSID Password
 #define CHARACTERISTIC_UUID_WIFI_CONNECTION_STAT 0x2904 // WiFi Connection status: 0 Not connected, 1 Connecting, 2 Connected
 
 #define DESCRIPTOR_UUID_BATTERY 0x3900     // Discriptor for battery level
@@ -58,7 +58,7 @@
 #define BLE_SYSTEM_ID "Samira"
 #define BLE_MANUFACTURER "Espressif Systems"
 #define BLE_MODEL_NUMBER "Home Sensor"
-#define BLE_FIRMWARE_REVISION "v1"
+#define BLE_FIRMWARE_REVISION __DATE__
 #define BLE_HARDWARE_REVISION "v1"
 #define BLE_SOFTWARE_REVISION "v1"
 
@@ -69,7 +69,9 @@ enum ble_events
     BLE_STOPPED,
     BLE_STARTED,
     WIFI_START_SCAN,
-    WIFI_CONNECTION_CHANGED
+    WIFI_CONNECTION_CHANGED,
+    WIFI_CONNECTED,
+    WIFI_DISCONNECTED
 };
 
 void BLEinit(std::string deviceName, bool *hasEvent);
