@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <StoreHub.h>
 #include <stdio.h>
 #include <string>
 #include <BLEDevice.h>

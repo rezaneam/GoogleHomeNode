@@ -46,6 +46,8 @@ void setup()
 {
   // put your setup code here, to run once:
   Serial.begin(115200);
+  EEPROM.begin(512);
+
   Serial.println("Starting App");
 
   Oled.init();
@@ -69,6 +71,11 @@ void setup()
 
   pinMode(BLE_ADVERTISE_ENABLE_PIN, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(BLE_ADVERTISE_ENABLE_PIN), handleExternalInterrupt, FALLING);
+
+  if (HasValidWiFi())
+    WiFiConnect(GetFlashValue(EEPROM_VALUE::WiFi_SSID), GetFlashValue(EEPROM_VALUE::WiFi_Password));
+  else
+    Serial.println("No WiFi is configured");
 }
 
 void loop()
@@ -93,9 +100,9 @@ void loop()
       WiFiScanNodes();
       break;
     case ble_events::WIFI_CONNECTION_CHANGED:
-      WiFiConnect(BLEgetSSID(), BLEgetPassword());
+      WiFiConnect(GetFlashValue(EEPROM_VALUE::WiFi_SSID), GetFlashValue(EEPROM_VALUE::WiFi_Password));
     case ble_events::WIFI_CONNECTED:
-      Oled.WiFiconnected(true, BLEgetSSID());
+      Oled.WiFiconnected(true, GetFlashValue(EEPROM_VALUE::WiFi_SSID));
       break;
     case ble_events::WIFI_DISCONNECTED:
       Oled.WiFiconnected(false);

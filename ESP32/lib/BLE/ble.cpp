@@ -68,7 +68,12 @@ class CharacteristicCallbacks : public BLECharacteristicCallbacks
         }
         if (uuid.equals(BLEUUID((uint16_t)CHARACTERISTIC_UUID_WIFI_PASS)))
         {
-            std::string val = pCharacteristic->getValue();
+            std::string tmp = BLEgetSSID();
+            Serial.print("WiFi config received. SSID: ");
+            Serial.print(BLEgetSSID().c_str());
+            Serial.print(" Password: ");
+            Serial.println(pCharacteristic->getValue().c_str());
+            WriteFlashWiFi(BLEgetSSID(), pCharacteristic->getValue());
             event = ble_events::WIFI_CONNECTION_CHANGED;
             *phasEvent = true;
             return;
