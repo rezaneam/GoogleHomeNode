@@ -10,7 +10,6 @@
 // TODO: Code Clean up - Phase 2 (organizing the process)
 // TODO: Code Clean up - Phase 3 (using the event system)
 
-#define SENSOR_READ_INTERVAL 10
 BME280 Sensor = BME280();
 hw_timer_t *sensorReadTimer = NULL;
 portMUX_TYPE sensorReadtimerMux = portMUX_INITIALIZER_UNLOCKED;
@@ -43,13 +42,17 @@ void initSensorReadTimer()
   timerAlarmEnable(sensorReadTimer);
 }
 
+GoogleHomeNotifier ghn;
+const char displayName[] = "Living Room speaker";
+bool isHomeConnected = false;
+char messageBuffer[64];
 void setup()
 {
   // put your setup code here, to run once:
-  Serial.begin(115200);
+  Serial.begin(SERIAL_BAUDRATE);
   Serial.println("ESP-IDF version is : " + String(esp_get_idf_version()));
   Serial.println("Free heap is " + String(ESP.getFreeHeap()));
-  EEPROM.begin(128);
+  EEPROM.begin(EEPROM_SIZE);
 
   Serial.println("Starting App");
 
@@ -76,7 +79,29 @@ void setup()
   attachInterrupt(digitalPinToInterrupt(BLE_ADVERTISE_ENABLE_PIN), handleExternalInterrupt, FALLING);
   Serial.println("Free heap is " + String(ESP.getFreeHeap()));
   if (HasValidWiFi())
+  {
     WiFiConnect(GetFlashValue(EEPROM_VALUE::WiFi_SSID), GetFlashValue(EEPROM_VALUE::WiFi_Password));
+
+    Serial.println("connecting to Google Home...");
+    if (ghn.device(displayName, "en") != true)
+    {
+      Serial.println(ghn.getLastError());
+      return;
+    }
+    else
+    {
+      isHomeConnected = true;
+      Serial.println("found Google Home(" + ghn.getIPAddress().toString() + ":" + String(ghn.getPort()) + ")");
+      Serial.println("Free heap is " + String(ESP.getFreeHeap()));
+      delay(2000);
+      if (ghn.notify("Hello!. Google node is initialized and ready to use.") != true)
+      {
+        Serial.println(ghn.getLastError());
+        return;
+      }
+      Serial.println("Free heap is " + String(ESP.getFreeHeap()));
+    }
+  }
 }
 
 void loop()
@@ -121,6 +146,13 @@ void loop()
     float humidity = Sensor.readHumidity();
     float pressure = Sensor.readPressure();
     UpdateSensorValues(temperature, humidity, pressure);
+    // if (isHomeConnected)
+    // {
+    //   sprintf(messageBuffer, "Temperature is %d degrees and it is %d %% humide. BTW, the pressure is %.1f. atm", (int16_t)temperature, (int16_t)humidity, pressure / 101325);
+    //   Serial.println(messageBuffer);
+    //   ghn.notify(messageBuffer);
+    //   Serial.println("Free heap is " + String(ESP.getFreeHeap()));
+    // }
     Oled.RefressSensorArea(temperature, humidity, pressure);
     readSenor = false;
   }
