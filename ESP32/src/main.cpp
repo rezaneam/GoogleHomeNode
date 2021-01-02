@@ -3,6 +3,7 @@
 // TODO: Adding Google Name & Keyword to the GATT
 // TODO: Adding support for Google Home welcome message
 // TODO: Adding Cloud service
+// TODO: Adding Cloud icon on Oled
 // TODO: Adding IFTT service
 // TODO: Adding verbose flag for printing outputs
 // TODO: Code Clean up - Phase 1 (minimize the logic in the main.cpp)
@@ -46,7 +47,9 @@ void setup()
 {
   // put your setup code here, to run once:
   Serial.begin(115200);
-  EEPROM.begin(512);
+  Serial.println("ESP-IDF version is : " + String(esp_get_idf_version()));
+  Serial.println("Free heap is " + String(ESP.getFreeHeap()));
+  EEPROM.begin(128);
 
   Serial.println("Starting App");
 
@@ -64,18 +67,16 @@ void setup()
   Sensor.takeForcedMeasurement();
   Oled.RefressSensorArea(Sensor.readTemperature(), Sensor.readHumidity(), Sensor.readPressure());
   initSensorReadTimer();
-
+  Serial.println("Free heap is " + String(ESP.getFreeHeap()));
   Serial.println("Starting BLE");
   BLEinit(BLE_DEVICE_NAME, &hasBleEvent);
   BLEsetupAd();
 
   pinMode(BLE_ADVERTISE_ENABLE_PIN, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(BLE_ADVERTISE_ENABLE_PIN), handleExternalInterrupt, FALLING);
-
+  Serial.println("Free heap is " + String(ESP.getFreeHeap()));
   if (HasValidWiFi())
     WiFiConnect(GetFlashValue(EEPROM_VALUE::WiFi_SSID), GetFlashValue(EEPROM_VALUE::WiFi_Password));
-  else
-    Serial.println("No WiFi is configured");
 }
 
 void loop()
@@ -84,27 +85,29 @@ void loop()
   if (hasBleEvent)
     switch (BLEreadEvent())
     {
-    case ble_events::BLE_CONNECTED:
+    case BLEEvents::BLE_CONNECTED:
       Oled.BLEconnected(true);
       break;
-    case ble_events::BLE_DISCONNECT:
+    case BLEEvents::BLE_DISCONNECT:
       Oled.BLEconnected(false);
       break;
-    case ble_events::BLE_STOPPED:
+    case BLEEvents::BLE_STOPPED:
+      NimBLEDevice::stopAdvertising();
       Oled.BLEadvertising(false);
       break;
-    case ble_events::BLE_STARTED:
+    case BLEEvents::BLE_STARTED:
+      NimBLEDevice::startAdvertising();
       Oled.BLEadvertising(true);
       break;
-    case ble_events::WIFI_START_SCAN:
+    case BLEEvents::WIFI_START_SCAN:
       WiFiScanNodes();
       break;
-    case ble_events::WIFI_CONNECTION_CHANGED:
+    case BLEEvents::WIFI_CONNECTION_CHANGED:
       WiFiConnect(GetFlashValue(EEPROM_VALUE::WiFi_SSID), GetFlashValue(EEPROM_VALUE::WiFi_Password));
-    case ble_events::WIFI_CONNECTED:
+    case BLEEvents::WIFI_CONNECTED:
       Oled.WiFiconnected(true, GetFlashValue(EEPROM_VALUE::WiFi_SSID));
       break;
-    case ble_events::WIFI_DISCONNECTED:
+    case BLEEvents::WIFI_DISCONNECTED:
       Oled.WiFiconnected(false);
       break;
     default:

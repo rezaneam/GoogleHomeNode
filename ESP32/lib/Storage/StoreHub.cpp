@@ -8,22 +8,22 @@ void ReadFlash()
 {
     Storage_WiFi_SSID.clear();
     uint8_t ssid_len = EEPROM.read(EEPROM_WIFI_SSID_NAME_LEN_ADDR);
-    if(ssid_len == EEPROM_UNINITIALIZED_VALUE) ssid_len = 0;
-    Serial.println("SSID length is " + String(ssid_len));
+    if (ssid_len == EEPROM_UNINITIALIZED_VALUE)
+        ssid_len = 0;
     for (size_t i = 0; i < ssid_len; i++)
         Storage_WiFi_SSID.push_back(EEPROM.readChar(i + EEPROM_STORAGE_START_ADDR));
 
     Storage_WiFi_Pass.clear();
     uint8_t pass_len = EEPROM.read(EEPROM_WIFI_PASSWORD_LEN_ADDR);
-    if(pass_len == EEPROM_UNINITIALIZED_VALUE) pass_len = 0;
-    Serial.println("Password length is " + String(pass_len));
+    if (pass_len == EEPROM_UNINITIALIZED_VALUE)
+        pass_len = 0;
     for (size_t i = 0; i < pass_len; i++)
         Storage_WiFi_Pass.push_back(EEPROM.readChar(i + ssid_len + EEPROM_STORAGE_START_ADDR));
 
     Storage_Home_Name.clear();
     uint8_t home_len = EEPROM.read(EEPROM_GOOGLE_HOME_NAME_LEN_ADDR);
-    if(home_len == EEPROM_UNINITIALIZED_VALUE) home_len = 0;
-    Serial.println("Home Name length is " + String(home_len));
+    if (home_len == EEPROM_UNINITIALIZED_VALUE)
+        home_len = 0;
     for (size_t i = 0; i < home_len; i++)
         Storage_Home_Name.push_back(EEPROM.readChar(i + ssid_len + pass_len + EEPROM_STORAGE_START_ADDR));
 }
@@ -41,21 +41,18 @@ void WriteFlash(std::string wifi_ssid, std::string wifi_pass, std::string home_n
 
     if (!wifi_ssid.empty())
         ssid_len = wifi_ssid.length();
-    Serial.println("SSID length is " + String(ssid_len));
     EEPROM.write(EEPROM_WIFI_SSID_NAME_LEN_ADDR, ssid_len);
     for (size_t i = 0; i < ssid_len; i++)
         EEPROM.writeChar(EEPROM_STORAGE_START_ADDR + i, wifi_ssid.at(i));
 
     if (!wifi_pass.empty())
         pass_len = wifi_pass.length();
-    Serial.println("Password length is " + String(pass_len));
     EEPROM.write(EEPROM_WIFI_PASSWORD_LEN_ADDR, pass_len);
     for (size_t i = 0; i < pass_len; i++)
         EEPROM.writeChar(EEPROM_STORAGE_START_ADDR + ssid_len + i, wifi_pass.at(i));
 
     if (!home_name.empty())
         home_len = home_name.length();
-    Serial.println("Home Name length is " + String(home_len));
     EEPROM.write(EEPROM_GOOGLE_HOME_NAME_LEN_ADDR, home_len);
     for (size_t i = 0; i < home_len; i++)
         EEPROM.writeChar(EEPROM_STORAGE_START_ADDR + ssid_len + pass_len + i, home_name.at(i));

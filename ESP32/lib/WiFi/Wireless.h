@@ -1,5 +1,5 @@
 #include <WiFi.h>
-#include <ble.h>
+#include <blesmall.h>
 
 bool WiFiScanNodes();
 bool WiFiConnect(std::string SSID, std::string Password);
