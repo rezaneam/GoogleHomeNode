@@ -11,7 +11,7 @@ enum EEPROM_VALUE
 {
     WiFi_SSID,
     WiFi_Password,
-    Home_Name
+    Google_Home_Name
 };
 
 void ReadFlash();

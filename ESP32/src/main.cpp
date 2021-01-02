@@ -81,7 +81,8 @@ void setup()
   if (HasValidWiFi())
   {
     WiFiConnect(GetFlashValue(EEPROM_VALUE::WiFi_SSID), GetFlashValue(EEPROM_VALUE::WiFi_Password));
-
+    BLEsetSSID(GetFlashValue(EEPROM_VALUE::WiFi_SSID));
+    
     Serial.println("connecting to Google Home...");
     if (ghn.device(displayName, "en") != true)
     {

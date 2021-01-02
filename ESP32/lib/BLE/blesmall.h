@@ -84,6 +84,8 @@ std::string getCharacteristicValue(BLEUUID serviceUuid, BLEUUID charateristicsUu
 BLEEvents BLEreadEvent();
 std::string BLEgetSSIDs();
 std::string BLEgetSSID();
+void BLEsetSSID(std::string value);
 std::string BLEgetPassword();
 void UpdateSensorValues(float temperature, float humidity, float pressure);
 std::string convertToString(float value);
+bool hasNotifier(BLEUUID uuid);

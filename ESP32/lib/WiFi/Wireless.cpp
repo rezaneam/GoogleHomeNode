@@ -35,8 +35,8 @@ bool WiFiScanNodes()
             String encryptionTypeDescription = translateEncryptionType(WiFi.encryptionType(i));
             Serial.println(encryptionTypeDescription);
             delay(10);
-            BLEsetSSIDs(SSIDs);
         }
+        BLEsetSSIDs(SSIDs);
         return true;
     }
 }

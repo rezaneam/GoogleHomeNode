@@ -86,7 +86,7 @@ std::string GetFlashValue(EEPROM_VALUE value, bool readFlash)
         return Storage_WiFi_SSID;
     case EEPROM_VALUE::WiFi_Password:
         return Storage_WiFi_Pass;
-    case EEPROM_VALUE::Home_Name:
+    case EEPROM_VALUE::Google_Home_Name:
         return Storage_Home_Name;
     default:
         return "";

@@ -122,6 +122,24 @@ class CharacteristicCallbacks : public NimBLECharacteristicCallbacks
         Serial.print(pCharacteristic->getUUID().toString().c_str());
         Serial.print(": onWrite(), value: ");
         Serial.println(pCharacteristic->getValue().c_str());
+        NimBLEUUID uuid = pCharacteristic->getUUID();
+        if (uuid.equals(BLEUUID((uint16_t)CHARACTERISTIC_UUID_WIFI_SCANNING)))
+        {
+            std::string val = pCharacteristic->getValue();
+            if (val == "1")
+            {
+                event = BLEEvents::WIFI_START_SCAN;
+                *phasEvent = true;
+            }
+            return;
+        }
+        if (uuid.equals(BLEUUID((uint16_t)CHARACTERISTIC_UUID_WIFI_PASS)))
+        {
+            WriteFlashWiFi(BLEgetSSID(), pCharacteristic->getValue());
+            event = BLEEvents::WIFI_CONNECTION_CHANGED;
+            *phasEvent = true;
+            return;
+        }
     };
     /** Called before notification or indication is sent,
      *  the value can be changed here before sending if desired.
@@ -269,7 +287,8 @@ void addCharacteristic(BLEService *pService, int uuid, uint32_t properties, std:
 void setCharacteristicValue(BLEUUID serviceUuid, BLEUUID charateristicsUuid, std::string value)
 {
     pServer->getServiceByUUID(serviceUuid)->getCharacteristic(charateristicsUuid)->setValue(value);
-    pServer->getServiceByUUID(serviceUuid)->getCharacteristic(charateristicsUuid)->notify();
+    if (hasNotifier(charateristicsUuid))
+        pServer->getServiceByUUID(serviceUuid)->getCharacteristic(charateristicsUuid)->notify();
 }
 
 void BLEsetSSIDs(std::string SSIDs)
@@ -304,6 +323,11 @@ std::string BLEgetSSIDs()
     return getCharacteristicValue(BLEUUID((uint16_t)SERVICE_UUID_USER_DATA), BLEUUID((uint16_t)CHARACTERISTIC_UUID_WIFI_SSID_NAMES));
 }
 
+void BLEsetSSID(std::string value)
+{
+    return setCharacteristicValue(BLEUUID((uint16_t)SERVICE_UUID_USER_DATA), BLEUUID((uint16_t)CHARACTERISTIC_UUID_WIFI_SSID), value);
+}
+
 std::string BLEgetSSID()
 {
     return getCharacteristicValue(BLEUUID((uint16_t)SERVICE_UUID_USER_DATA), BLEUUID((uint16_t)CHARACTERISTIC_UUID_WIFI_SSID));
@@ -328,4 +352,21 @@ std::string convertToString(float value)
     std::ostringstream sstream;
     sstream << value;
     return sstream.str();
+}
+
+bool hasNotifier(BLEUUID uuid)
+{
+    if (uuid.equals(BLEUUID((uint16_t)CHARACTERISTIC_UUID_BATTERY_LEVEL)))
+        return true;
+    if (uuid.equals(BLEUUID((uint16_t)CHARACTERISTIC_UUID_PRESSURE)))
+        return true;
+    if (uuid.equals(BLEUUID((uint16_t)CHARACTERISTIC_UUID_TEMPERATURE)))
+        return true;
+    if (uuid.equals(BLEUUID((uint16_t)CHARACTERISTIC_UUID_HUMIDITY)))
+        return true;
+    if (uuid.equals(BLEUUID((uint16_t)CHARACTERISTIC_UUID_WIFI_SCANNING)))
+        return true;
+    if (uuid.equals(BLEUUID((uint16_t)CHARACTERISTIC_UUID_WIFI_CONNECTION_STAT)))
+        return true;
+    return false;
 }
