@@ -29,6 +29,7 @@
 #define CHARACTERISTIC_UUID_WIFI_SSID 0x4902            // WiFi SSID Name
 #define CHARACTERISTIC_UUID_WIFI_PASS 0x4903            // WiFi SSID Password
 #define CHARACTERISTIC_UUID_WIFI_CONNECTION_STAT 0x2904 // WiFi Connection status: 0 Not connected, 1 Connecting, 2 Connected
+#define CHARACTERISTIC_UUID_GOOGLE_HOME_NAME 0x2905     // Google Home name seats here
 
 #define DESCRIPTOR_UUID_BATTERY 0x3900     // Discriptor for battery level
 #define DESCRIPTOR_UUID_PRESSURE 0x3901    // Discriptor for Pressure Sensor
@@ -37,6 +38,7 @@
 #define DESCRIPTOR_UUID_WIFI_SCAN 0x3904   // Discriptor for WiFi scan status
 #define DESCRIPTOR_UUID_WIFI_SSIDs 0x3905  // Discriptor for for found SSIDs
 #define DESCRIPTOR_UUID_WIFI_CONN 0x3906   // Discriptor for WiFi connection status
+#define DESCRIPTOR_UUID_GLHM_NAME 0x3907   // Discriptor for Google Home name
 
 #define DESCRIPTOR_VAL_BATTERY "Battery Level"
 #define DESCRIPTOR_VAL_TEMPEATURE "Temperature in centigrade scale"
@@ -45,6 +47,7 @@
 #define DESCRIPTOR_VAL_WIFI_SCAN "WiFi scanning: 0 - Not scanning, 1 - scanning"
 #define DESCRIPTOR_VAL_WIFI_SSIDs "List of the SSIDs found after scan"
 #define DESCRIPTOR_VAL_WIFI_CONN "WiFi Connection status: 0 Not connected, 1 Connecting, 2 Connected"
+#define DESCRIPTOR_VAL_GLHM_NAME "Google Home Name"
 
 #define BLE_WIFI_SCANNING_ACTIVE "1"
 #define BLE_WIFI_SCANNING_DEACTIVE "0"

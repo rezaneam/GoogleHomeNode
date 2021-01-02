@@ -228,6 +228,7 @@ void BLEinit(std::string deviceName, bool *hasEvent)
     addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_WIFI_SSID, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE, "");
     addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_WIFI_PASS, NIMBLE_PROPERTY::WRITE, "");
     addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_WIFI_CONNECTION_STAT, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY, BLE_WIFI_NOT_CONNECTED, DESCRIPTOR_UUID_WIFI_CONN, DESCRIPTOR_VAL_WIFI_CONN);
+    addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_GOOGLE_HOME_NAME, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY | NIMBLE_PROPERTY::WRITE, BLE_WIFI_SCANNING_DEACTIVE, DESCRIPTOR_UUID_GLHM_NAME, DESCRIPTOR_VAL_GLHM_NAME);
 
     pDeviceInfoService->start();
     pBatteryService->start();
@@ -367,6 +368,8 @@ bool hasNotifier(BLEUUID uuid)
     if (uuid.equals(BLEUUID((uint16_t)CHARACTERISTIC_UUID_WIFI_SCANNING)))
         return true;
     if (uuid.equals(BLEUUID((uint16_t)CHARACTERISTIC_UUID_WIFI_CONNECTION_STAT)))
+        return true;
+    if (uuid.equals(BLEUUID((uint16_t)CHARACTERISTIC_UUID_GOOGLE_HOME_NAME)))
         return true;
     return false;
 }
