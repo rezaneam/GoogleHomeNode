@@ -76,6 +76,12 @@ bool HasValidWiFi()
     return !(Storage_WiFi_SSID.empty() || Storage_WiFi_Pass.empty());
 }
 
+bool HasValidHome()
+{
+    ReadFlash();
+    return !Storage_Home_Name.empty();
+}
+
 std::string GetFlashValue(EEPROM_VALUE value, bool readFlash)
 {
     if (readFlash)

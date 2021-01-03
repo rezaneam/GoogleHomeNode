@@ -42,9 +42,13 @@ void initSensorReadTimer()
   timerAlarmEnable(sensorReadTimer);
 }
 
-GoogleHomeNotifier ghn;
-const char displayName[] = "Living Room speaker";
+GoogleHomeNotifier googleHomeNotifier;
+
 bool isHomeConnected = false;
+bool isBLEadvertising = false;
+bool isBLEconnected = false;
+bool isWiFiconnected = false;
+std::string ssid;
 char messageBuffer[64];
 void setup()
 {
@@ -56,9 +60,7 @@ void setup()
 
   Serial.println("Starting App");
 
-  Oled.init();
-  //Oled.flipScreenVertically();
-  Oled.clear();
+  Oled.initialize();
 
   Sensor.begin();
   Sensor.setSampling(BME280::sensor_mode::MODE_FORCED,
@@ -67,8 +69,6 @@ void setup()
                      BME280::sensor_sampling::SAMPLING_X1,
                      BME280::sensor_filter::FILTER_OFF,
                      BME280::standby_duration::STANDBY_MS_1000);
-  Sensor.takeForcedMeasurement();
-  Oled.RefressSensorArea(Sensor.readTemperature(), Sensor.readHumidity(), Sensor.readPressure());
   initSensorReadTimer();
   Serial.println("Free heap is " + String(ESP.getFreeHeap()));
   Serial.println("Starting BLE");
@@ -82,27 +82,33 @@ void setup()
   {
     WiFiConnect(GetFlashValue(EEPROM_VALUE::WiFi_SSID), GetFlashValue(EEPROM_VALUE::WiFi_Password));
     BLEsetSSID(GetFlashValue(EEPROM_VALUE::WiFi_SSID));
-    
-    Serial.println("connecting to Google Home...");
-    if (ghn.device(displayName, "en") != true)
+
+    if (HasValidHome())
     {
-      Serial.println(ghn.getLastError());
-      return;
-    }
-    else
-    {
-      isHomeConnected = true;
-      Serial.println("found Google Home(" + ghn.getIPAddress().toString() + ":" + String(ghn.getPort()) + ")");
-      Serial.println("Free heap is " + String(ESP.getFreeHeap()));
-      delay(2000);
-      if (ghn.notify("Hello!. Google node is initialized and ready to use.") != true)
+      Serial.println("connecting to Google Home...");
+      if (googleHomeNotifier.device(GetFlashValue(EEPROM_VALUE::Google_Home_Name).c_str(), "en") != true)
       {
-        Serial.println(ghn.getLastError());
+        Serial.println(googleHomeNotifier.getLastError());
         return;
       }
-      Serial.println("Free heap is " + String(ESP.getFreeHeap()));
+      else
+      {
+        isHomeConnected = true;
+        Serial.println("found Google Home(" + googleHomeNotifier.getIPAddress().toString() + ":" + String(googleHomeNotifier.getPort()) + ")");
+        Serial.println("Free heap is " + String(ESP.getFreeHeap()));
+        delay(2000);
+        if (googleHomeNotifier.notify("Hello!. Google node is initialized and ready to use.") != true)
+        {
+          Serial.println(googleHomeNotifier.getLastError());
+          return;
+        }
+        Serial.println("Free heap is " + String(ESP.getFreeHeap()));
+      }
     }
   }
+
+  Sensor.takeForcedMeasurement();
+  Oled.RefressSensorArea(Sensor.readTemperature(), Sensor.readHumidity(), Sensor.readPressure());
 }
 
 void loop()
@@ -112,18 +118,26 @@ void loop()
     switch (BLEreadEvent())
     {
     case BLEEvents::BLE_CONNECTED:
-      Oled.BLEconnected(true);
+      isBLEconnected = true;
+      isBLEadvertising = false;
+      Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid);
       break;
     case BLEEvents::BLE_DISCONNECT:
-      Oled.BLEconnected(false);
+      isBLEconnected = false;
+      isBLEadvertising = true;
+      Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid);
       break;
     case BLEEvents::BLE_STOPPED:
       NimBLEDevice::stopAdvertising();
-      Oled.BLEadvertising(false);
+      isBLEconnected = false;
+      isBLEadvertising = false;
+      Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid);
       break;
     case BLEEvents::BLE_STARTED:
       NimBLEDevice::startAdvertising();
-      Oled.BLEadvertising(true);
+      isBLEconnected = false;
+      isBLEadvertising = true;
+      Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid);
       break;
     case BLEEvents::WIFI_START_SCAN:
       WiFiScanNodes();
@@ -131,10 +145,16 @@ void loop()
     case BLEEvents::WIFI_CONNECTION_CHANGED:
       WiFiConnect(GetFlashValue(EEPROM_VALUE::WiFi_SSID), GetFlashValue(EEPROM_VALUE::WiFi_Password));
     case BLEEvents::WIFI_CONNECTED:
-      Oled.WiFiconnected(true, GetFlashValue(EEPROM_VALUE::WiFi_SSID));
+      isWiFiconnected = true;
+      ssid = GetFlashValue(EEPROM_VALUE::WiFi_SSID);
+      Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid);
       break;
     case BLEEvents::WIFI_DISCONNECTED:
-      Oled.WiFiconnected(false);
+      isWiFiconnected = false;
+      ssid = "";
+      Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid);
+      break;
+    case BLEEvents::GOOGLE_HOME_NAME:
       break;
     default:
       break;

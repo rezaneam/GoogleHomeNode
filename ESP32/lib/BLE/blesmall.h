@@ -72,7 +72,8 @@ enum BLEEvents
     WIFI_START_SCAN,
     WIFI_CONNECTION_CHANGED,
     WIFI_CONNECTED,
-    WIFI_DISCONNECTED
+    WIFI_DISCONNECTED,
+    GOOGLE_HOME_NAME
 };
 
 void BLEinit(std::string deviceName, bool *hasEvent);

@@ -140,6 +140,13 @@ class CharacteristicCallbacks : public NimBLECharacteristicCallbacks
             *phasEvent = true;
             return;
         }
+        if (uuid.equals(BLEUUID((uint16_t)CHARACTERISTIC_UUID_GOOGLE_HOME_NAME)))
+        {
+            WriteFlashHomeName(pCharacteristic->getValue());
+            event = BLEEvents::GOOGLE_HOME_NAME;
+            *phasEvent = true;
+            return;
+        }
     };
     /** Called before notification or indication is sent,
      *  the value can be changed here before sending if desired.
@@ -326,7 +333,7 @@ std::string BLEgetSSIDs()
 
 void BLEsetSSID(std::string value)
 {
-    return setCharacteristicValue(BLEUUID((uint16_t)SERVICE_UUID_USER_DATA), BLEUUID((uint16_t)CHARACTERISTIC_UUID_WIFI_SSID), value);
+    setCharacteristicValue(BLEUUID((uint16_t)SERVICE_UUID_USER_DATA), BLEUUID((uint16_t)CHARACTERISTIC_UUID_WIFI_SSID), value);
 }
 
 std::string BLEgetSSID()

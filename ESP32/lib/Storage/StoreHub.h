@@ -19,5 +19,6 @@ void WriteFlash(std::string wifi_ssid, std::string wifi_pass, std::string home_n
 void WriteFlashHomeName(std::string home_name);
 void WriteFlashWiFi(std::string wifi_ssid, std::string wifi_pass);
 bool HasValidWiFi();
+bool HasValidHome();
 
 std::string GetFlashValue(EEPROM_VALUE value, bool readFlash = false);
