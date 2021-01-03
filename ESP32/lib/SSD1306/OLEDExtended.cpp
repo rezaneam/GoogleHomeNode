@@ -44,6 +44,9 @@ void OLEDDisplayExtended::drawIcon(OLEDDISPLAY_ICONS icon)
     case OLEDDISPLAY_ICONS::GOOGLE_HOME:
         this->drawXbm(status_icon_pos[0] + offset, status_icon_pos[1], status_icon_pos[2], status_icon_pos[3], Google_Home_icon_img);
         break;
+    case OLEDDISPLAY_ICONS::CLOUD:
+        this->drawXbm(status_icon_pos[0] + offset, status_icon_pos[1], status_icon_pos[2], status_icon_pos[3], Cloud_icon_img);
+        break;
     default:
         break;
     }
@@ -82,6 +85,8 @@ void OLEDDisplayExtended::ReferessStatusArea(bool isBLEadvertising, bool isBLEco
         this->drawIcon(OLEDDISPLAY_ICONS::BLE_CONNECTED_ICON);
     if (isHomeConencted)
         this->drawIcon(OLEDDISPLAY_ICONS::GOOGLE_HOME);
+    // if (isCloudConencted)
+    //     this->drawIcon(OLEDDISPLAY_ICONS::CLOUD);
     if (isWiFiconnected)
     {
         this->drawIcon(OLEDDISPLAY_ICONS::WIFI_ICON);
