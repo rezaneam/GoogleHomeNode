@@ -119,6 +119,17 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="BLE\BatteryService.cs" />
+    <Compile Include="BLE\BleWatcher.cs" />
+    <Compile Include="BLE\BluetoothLEDeviceDisplay.cs" />
+    <Compile Include="BLE\ConfigurationService.cs" />
+    <Compile Include="BLE\DeviceService.cs" />
+    <Compile Include="BLE\Node.cs" />
+    <Compile Include="BLE\SensorService.cs" />
+    <Compile Include="BLE\ServiceBase.cs" />
+    <Compile Include="BLE\SupportedUuids.cs" />
+    <Compile Include="Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="Converters\InvBoolToVisibilityConverter.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
