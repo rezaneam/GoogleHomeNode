@@ -10,20 +10,11 @@
 // TODO: Code Clean up - Phase 2 (organizing the process)
 // TODO: Code Clean up - Phase 3 (using the event system)
 
-BME280 Sensor = BME280();
-hw_timer_t *sensorReadTimer = NULL;
-portMUX_TYPE sensorReadtimerMux = portMUX_INITIALIZER_UNLOCKED;
-bool readSenor = false;
-
-SSD1306Wire Oled(OLED_Address, SDA_PIN, SCL_PIN);
-bool hasBleEvent = false;
-
-portMUX_TYPE mux = portMUX_INITIALIZER_UNLOCKED;
 void IRAM_ATTR handleExternalInterrupt()
 {
-  portENTER_CRITICAL_ISR(&mux);
+  portENTER_CRITICAL_ISR(&externalPinmux);
   BLEstartAd();
-  portEXIT_CRITICAL_ISR(&mux);
+  portEXIT_CRITICAL_ISR(&externalPinmux);
 }
 
 void IRAM_ATTR onReadSensor()
@@ -42,14 +33,6 @@ void initSensorReadTimer()
   timerAlarmEnable(sensorReadTimer);
 }
 
-GoogleHomeNotifier googleHomeNotifier;
-
-bool isHomeConnected = false;
-bool isBLEadvertising = false;
-bool isBLEconnected = false;
-bool isWiFiconnected = false;
-std::string ssid;
-char messageBuffer[64];
 void setup()
 {
   // put your setup code here, to run once:
@@ -84,27 +67,7 @@ void setup()
     BLEsetSSID(GetFlashValue(EEPROM_VALUE::WiFi_SSID));
 
     if (HasValidHome())
-    {
-      Serial.println("connecting to Google Home...");
-      if (googleHomeNotifier.device(GetFlashValue(EEPROM_VALUE::Google_Home_Name).c_str(), "en") != true)
-      {
-        Serial.println(googleHomeNotifier.getLastError());
-        return;
-      }
-      else
-      {
-        isHomeConnected = true;
-        Serial.println("found Google Home(" + googleHomeNotifier.getIPAddress().toString() + ":" + String(googleHomeNotifier.getPort()) + ")");
-        Serial.println("Free heap is " + String(ESP.getFreeHeap()));
-        delay(2000);
-        if (googleHomeNotifier.notify("Hello!. Google node is initialized and ready to use.") != true)
-        {
-          Serial.println(googleHomeNotifier.getLastError());
-          return;
-        }
-        Serial.println("Free heap is " + String(ESP.getFreeHeap()));
-      }
-    }
+      NotifierTryConnect(GetFlashValue(EEPROM_VALUE::Google_Home_Name));
   }
 
   Sensor.takeForcedMeasurement();
@@ -177,4 +140,42 @@ void loop()
     Oled.RefressSensorArea(temperature, humidity, pressure);
     readSenor = false;
   }
+}
+
+bool NotifierTryConnect(std::string deviceName)
+{
+  if (isHomeConnected)
+    return true;
+
+  Serial.println("connecting to Google Home: " + String(deviceName.c_str()));
+  if (googleHomeNotifier.device(deviceName.c_str(), "en") != true)
+  {
+    Serial.println(googleHomeNotifier.getLastError());
+    return false;
+  }
+  else
+  {
+    isHomeConnected = true;
+    Serial.println("found Google Home(" + googleHomeNotifier.getIPAddress().toString() + ":" + String(googleHomeNotifier.getPort()) + ")");
+    if (googleHomeNotifier.notify(Notifier_WELCOME_MSG) != true)
+    {
+      Serial.println(googleHomeNotifier.getLastError());
+      return false;
+    }
+    isHomeConnected = true;
+  }
+
+  return true;
+}
+
+bool NotifierNotify(std::string deviceName, std::string message)
+{
+  if (!NotifierTryConnect(deviceName))
+    return false;
+  if (googleHomeNotifier.notify(message.c_str()) != true)
+  {
+    Serial.println(googleHomeNotifier.getLastError());
+    return false;
+  }
+  return true;
 }

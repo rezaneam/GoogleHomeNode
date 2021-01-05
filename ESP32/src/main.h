@@ -19,3 +19,26 @@
 #define SERIAL_BAUDRATE 115200
 
 #define VERBOSE true
+
+#define Notifier_WELCOME_MSG "Hello!. Google node is initialized and ready to use."
+
+GoogleHomeNotifier googleHomeNotifier;
+
+BME280 Sensor = BME280();
+SSD1306Wire Oled(OLED_Address, SDA_PIN, SCL_PIN);
+bool readSenor = false;
+bool hasBleEvent = false;
+bool isHomeConnected = false;
+bool isBLEadvertising = false;
+bool isBLEconnected = false;
+bool isWiFiconnected = false;
+
+std::string ssid;
+char messageBuffer[64];
+
+hw_timer_t *sensorReadTimer = NULL;
+portMUX_TYPE sensorReadtimerMux = portMUX_INITIALIZER_UNLOCKED;
+portMUX_TYPE externalPinmux = portMUX_INITIALIZER_UNLOCKED;
+
+bool NotifierTryConnect(std::string deviceName);
+bool NotifierNotify(std::string deviceName, std::string message);
