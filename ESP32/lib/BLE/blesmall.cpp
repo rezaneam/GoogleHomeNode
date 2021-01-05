@@ -152,6 +152,25 @@ class CharacteristicCallbacks : public NimBLECharacteristicCallbacks
             event = BLEEvents::WIFI_TRY_CONNECT;
             *phasEvent = true;
         }
+        if (uuid.equals(BLEUUID((uint16_t)CHARACTERISTIC_UUID_RESET_CONFIG)))
+        {
+            std::string val = pCharacteristic->getValue();
+            if (val == "1")
+            {
+                event = BLEEvents::RESTART;
+                *phasEvent = true;
+            }
+            else if (val == "2")
+            {
+                event = BLEEvents::FACTORY_RESET;
+                *phasEvent = true;
+            }
+            else if (val == "3")
+            {
+                event = BLEEvents::FACTORY_RESET_SAFE;
+                *phasEvent = true;
+            }
+        }
     };
     /** Called before notification or indication is sent,
      *  the value can be changed here before sending if desired.
@@ -235,6 +254,8 @@ void BLEinit(std::string deviceName, bool *hasEvent)
 
     // WiFi Configuration - Read, Notify, Write
     NimBLEService *pAutomationService = pServer->createService(BLEUUID((uint16_t)SERVICE_UUID_USER_DATA));
+
+    addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_RESET_CONFIG, NIMBLE_PROPERTY::WRITE | NIMBLE_PROPERTY::READ, "0");
     addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_WIFI_SSID_NAMES, NIMBLE_PROPERTY::READ, "");
     addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_WIFI_SCANNING, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY | NIMBLE_PROPERTY::WRITE, BLE_WIFI_SCANNING_DEACTIVE, DESCRIPTOR_UUID_WIFI_SCAN, DESCRIPTOR_VAL_WIFI_SCAN);
     addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_WIFI_SSID, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE, "");

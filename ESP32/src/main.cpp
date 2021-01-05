@@ -43,7 +43,7 @@ void setup()
 
   Serial.println("Starting App");
 
-  Oled.initialize();
+  Oled.Initialize();
 
   Sensor.begin();
   Sensor.setSampling(BME280::sensor_mode::MODE_FORCED,
@@ -118,6 +118,23 @@ void loop()
       Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid);
       break;
     case BLEEvents::GOOGLE_HOME_NAME:
+      break;
+    case BLEEvents::FACTORY_RESET:
+      Oled.ShowRestMessage("Factory Reset");
+      EraseFlash();
+      delay(5000);
+      ESP.restart();
+      break;
+    case BLEEvents::FACTORY_RESET_SAFE:
+      Oled.ShowRestMessage("Factory Reset [safe]");
+      EraseFlash(true);
+      delay(5000);
+      ESP.restart();
+      break;
+    case BLEEvents::RESTART:
+      Oled.ShowRestMessage("Restarting...");
+      delay(5000);
+      ESP.restart();
       break;
     default:
       break;

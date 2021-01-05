@@ -121,9 +121,11 @@ public:
 
     void drawSensorIcon();
 
-    void initialize(bool flip = false);
+    void Initialize(bool flip = false);
 
     void RefressSensorArea(float temperature, float humidity, float pressure);
 
     void ReferessStatusArea(bool isBLEadvertising, bool isBLEconnected, bool isHomeConencted, bool isWiFiconnected, std::string ssid);
+
+    void ShowRestMessage(String message);
 };

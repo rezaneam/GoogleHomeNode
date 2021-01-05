@@ -1,6 +1,6 @@
 #include <OLEDExtended.h>
 
-void OLEDDisplayExtended::initialize(bool flip)
+void OLEDDisplayExtended::Initialize(bool flip)
 {
     init();
     if (flip)
@@ -9,6 +9,18 @@ void OLEDDisplayExtended::initialize(bool flip)
     setTextAlignment(TEXT_ALIGN_LEFT);
     setFont(ArialMT_Plain_24);
     this->drawString(sensor_icon_pos[0], sensor_icon_pos[1], "Initializing...");
+
+    setFont(ArialMT_Plain_16);
+    this->drawString(Sensor_Text_Area[0], Sensor_Text_Area[1], "Please wait.");
+    this->display();
+}
+
+void OLEDDisplayExtended::ShowRestMessage(String message)
+{
+    clear();
+    setTextAlignment(TEXT_ALIGN_LEFT);
+    setFont(ArialMT_Plain_24);
+    this->drawString(sensor_icon_pos[0], sensor_icon_pos[1], message);
 
     setFont(ArialMT_Plain_16);
     this->drawString(Sensor_Text_Area[0], Sensor_Text_Area[1], "Please wait.");

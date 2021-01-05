@@ -4,6 +4,30 @@ std::string Storage_WiFi_SSID;
 std::string Storage_WiFi_Pass;
 std::string Storage_Home_Name;
 
+void EraseFlash(bool safe)
+{
+    if (safe)
+    {
+        uint8_t ssid_len = EEPROM.read(EEPROM_WIFI_SSID_NAME_LEN_ADDR);
+        for (size_t i = 0; i < ssid_len; i++)
+            EEPROM.writeChar(EEPROM_STORAGE_START_ADDR + i, 0);
+
+        uint8_t pass_len = EEPROM.read(EEPROM_WIFI_PASSWORD_LEN_ADDR);
+        for (size_t i = 0; i < pass_len; i++)
+            EEPROM.writeChar(EEPROM_STORAGE_START_ADDR + i, 0);
+
+        uint8_t home_len = EEPROM.read(EEPROM_GOOGLE_HOME_NAME_LEN_ADDR);
+        for (size_t i = 0; i < home_len; i++)
+            EEPROM.writeChar(EEPROM_STORAGE_START_ADDR + i, 0);
+    }
+
+    EEPROM.write(EEPROM_WIFI_SSID_NAME_LEN_ADDR, 0);
+    EEPROM.write(EEPROM_WIFI_PASSWORD_LEN_ADDR, 0);
+    EEPROM.write(EEPROM_GOOGLE_HOME_NAME_LEN_ADDR, 0);
+
+    EEPROM.commit();
+}
+
 void ReadFlash()
 {
     Storage_WiFi_SSID.clear();

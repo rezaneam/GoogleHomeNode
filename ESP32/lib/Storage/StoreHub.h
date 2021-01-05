@@ -14,6 +14,7 @@ enum EEPROM_VALUE
     Google_Home_Name
 };
 
+void EraseFlash(bool safe = false);
 void ReadFlash();
 void WriteFlash(std::string wifi_ssid, std::string wifi_pass, std::string home_name);
 void WriteFlashHomeName(std::string home_name);
