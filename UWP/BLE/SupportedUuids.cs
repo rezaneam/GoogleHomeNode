@@ -63,6 +63,7 @@ namespace ConfigTool.BLE
             { new Guid(UUID_BAT_SERV), "Battery Service"},
             { new Guid(UUID_SEN_SERV), "Sensor Service" },
             { new Guid(UUID_CON_SERV), "Configuration Service" },
+            { new Guid(UUID_CON_REST_FACT), "Restarting and Factory Resting device" },
             { new Guid(UUID_CON_WIFI_SSIDS), "Found WiFi SSIDs" },
             { new Guid(UUID_CON_WIFI_SCAN), "WiFi scan status" },
             { new Guid(UUID_CON_WIFI_SSID), "WiFi SSID" },
