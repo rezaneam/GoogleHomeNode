@@ -24,12 +24,12 @@
 #define CHARACTERISTIC_UUID_PRESSURE 0x2A6D             // Pressure Measurements
 #define CHARACTERISTIC_UUID_TEMPERATURE 0x2A6E          // Temperature Measurements
 #define CHARACTERISTIC_UUID_HUMIDITY 0x2A6F             // Humidity Measurements
-#define CHARACTERISTIC_UUID_WIFI_SSID_NAMES 0x2900      // Found WiFi names
-#define CHARACTERISTIC_UUID_WIFI_SCANNING 0x2901        // Scan Refresh - used for is WiFi scanning: 0 - Not scanning, 1 - scanning
+#define CHARACTERISTIC_UUID_WIFI_SSID_NAMES 0x4900      // Found WiFi names
+#define CHARACTERISTIC_UUID_WIFI_SCANNING 0x4901        // Scan Refresh - used for is WiFi scanning: 0 - Not scanning, 1 - scanning
 #define CHARACTERISTIC_UUID_WIFI_SSID 0x4902            // WiFi SSID Name
 #define CHARACTERISTIC_UUID_WIFI_PASS 0x4903            // WiFi SSID Password
-#define CHARACTERISTIC_UUID_WIFI_CONNECTION_STAT 0x2904 // WiFi Connection status: 0 Not connected, 1 Connecting, 2 Connected
-#define CHARACTERISTIC_UUID_GOOGLE_HOME_NAME 0x2905     // Google Home name seats here
+#define CHARACTERISTIC_UUID_WIFI_CONNECTION_STAT 0x4904 // WiFi Connection status: 0 Not connected, 1 Connecting, 2 Connected
+#define CHARACTERISTIC_UUID_GOOGLE_HOME_NAME 0x4905     // Google Home name seats here
 
 #define DESCRIPTOR_UUID_BATTERY 0x3900     // Discriptor for battery level
 #define DESCRIPTOR_UUID_PRESSURE 0x3901    // Discriptor for Pressure Sensor
@@ -46,7 +46,7 @@
 #define DESCRIPTOR_VAL_PRESSURE "Pressure in Pascal scale"
 #define DESCRIPTOR_VAL_WIFI_SCAN "WiFi scanning: 0 - Not scanning, 1 - scanning"
 #define DESCRIPTOR_VAL_WIFI_SSIDs "List of the SSIDs found after scan"
-#define DESCRIPTOR_VAL_WIFI_CONN "WiFi Connection status: 0 Not connected, 1 Connecting, 2 Connected"
+#define DESCRIPTOR_VAL_WIFI_CONN "WiFi Connection status: 0 Not connected, 1 (try)Connecting, 2 Connected"
 #define DESCRIPTOR_VAL_GLHM_NAME "Google Home Name"
 
 #define BLE_WIFI_SCANNING_ACTIVE "1"
@@ -62,6 +62,7 @@
 #define BLE_FIRMWARE_REVISION __DATE__
 #define BLE_HARDWARE_REVISION "v1"
 #define BLE_SOFTWARE_REVISION "v1"
+#define BLE_WIFI_PASS_WRITE_ONLY "WRITE ONLY"
 
 enum BLEEvents
 {
@@ -70,10 +71,11 @@ enum BLEEvents
     BLE_STOPPED,
     BLE_STARTED,
     WIFI_START_SCAN,
-    WIFI_CONNECTION_CHANGED,
+    WIFI_TRY_CONNECT,
     WIFI_CONNECTED,
     WIFI_DISCONNECTED,
-    GOOGLE_HOME_NAME
+    GOOGLE_HOME_NAME,
+    NONE
 };
 
 void BLEinit(std::string deviceName, bool *hasEvent);

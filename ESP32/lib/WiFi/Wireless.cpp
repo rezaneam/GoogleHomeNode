@@ -42,7 +42,7 @@ bool WiFiScanNodes()
 }
 bool WiFiConnect(std::string ssid, std::string password)
 {
-    BLEwirelessConnectionChanged(BLE_WIFI_CONNECTING);
+    //BLEwirelessConnectionChanged(BLE_WIFI_CONNECTING);
     WiFi.begin(ssid.c_str(), password.c_str());
     while (WiFi.status() != WL_CONNECTED && WiFi.status() != WL_CONNECT_FAILED)
         ;

@@ -50,6 +50,7 @@ class ServerCallbacks : public NimBLEServerCallbacks
      */
     void onConnect(NimBLEServer *pServer, ble_gap_conn_desc *desc)
     {
+        Serial.println("Client connected");
         Serial.print("Client address: ");
         Serial.println(NimBLEAddress(desc->peer_ota_addr).toString().c_str());
         /** We can use the connection handle here to ask for different connection parameters.
@@ -136,8 +137,7 @@ class CharacteristicCallbacks : public NimBLECharacteristicCallbacks
         if (uuid.equals(BLEUUID((uint16_t)CHARACTERISTIC_UUID_WIFI_PASS)))
         {
             WriteFlashWiFi(BLEgetSSID(), pCharacteristic->getValue());
-            event = BLEEvents::WIFI_CONNECTION_CHANGED;
-            *phasEvent = true;
+            setCharacteristicValue(BLEUUID((uint16_t)SERVICE_UUID_USER_DATA), uuid, BLE_WIFI_PASS_WRITE_ONLY);
             return;
         }
         if (uuid.equals(BLEUUID((uint16_t)CHARACTERISTIC_UUID_GOOGLE_HOME_NAME)))
@@ -146,6 +146,11 @@ class CharacteristicCallbacks : public NimBLECharacteristicCallbacks
             event = BLEEvents::GOOGLE_HOME_NAME;
             *phasEvent = true;
             return;
+        }
+        if (uuid.equals(BLEUUID((uint16_t)CHARACTERISTIC_UUID_WIFI_CONNECTION_STAT)) && pCharacteristic->getValue() == "1")
+        {
+            event = BLEEvents::WIFI_TRY_CONNECT;
+            *phasEvent = true;
         }
     };
     /** Called before notification or indication is sent,
@@ -233,8 +238,8 @@ void BLEinit(std::string deviceName, bool *hasEvent)
     addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_WIFI_SSID_NAMES, NIMBLE_PROPERTY::READ, "");
     addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_WIFI_SCANNING, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY | NIMBLE_PROPERTY::WRITE, BLE_WIFI_SCANNING_DEACTIVE, DESCRIPTOR_UUID_WIFI_SCAN, DESCRIPTOR_VAL_WIFI_SCAN);
     addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_WIFI_SSID, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE, "");
-    addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_WIFI_PASS, NIMBLE_PROPERTY::WRITE, "");
-    addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_WIFI_CONNECTION_STAT, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY, BLE_WIFI_NOT_CONNECTED, DESCRIPTOR_UUID_WIFI_CONN, DESCRIPTOR_VAL_WIFI_CONN);
+    addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_WIFI_PASS, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE, BLE_WIFI_PASS_WRITE_ONLY);
+    addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_WIFI_CONNECTION_STAT, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY | NIMBLE_PROPERTY::WRITE, BLE_WIFI_NOT_CONNECTED, DESCRIPTOR_UUID_WIFI_CONN, DESCRIPTOR_VAL_WIFI_CONN);
     addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_GOOGLE_HOME_NAME, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY | NIMBLE_PROPERTY::WRITE, BLE_WIFI_SCANNING_DEACTIVE, DESCRIPTOR_UUID_GLHM_NAME, DESCRIPTOR_VAL_GLHM_NAME);
 
     pDeviceInfoService->start();

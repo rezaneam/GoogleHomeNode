@@ -105,7 +105,7 @@ void loop()
     case BLEEvents::WIFI_START_SCAN:
       WiFiScanNodes();
       break;
-    case BLEEvents::WIFI_CONNECTION_CHANGED:
+    case BLEEvents::WIFI_TRY_CONNECT:
       WiFiConnect(GetFlashValue(EEPROM_VALUE::WiFi_SSID), GetFlashValue(EEPROM_VALUE::WiFi_Password));
     case BLEEvents::WIFI_CONNECTED:
       isWiFiconnected = true;
