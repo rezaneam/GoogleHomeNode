@@ -28,11 +28,12 @@ namespace ConfigTool.BLE
         public const string UUID_SEN_BAR = "00002a6d-0000-1000-8000-00805f9b34fb";
 
         public const string UUID_CON_SERV = "0000181c-0000-1000-8000-00805f9b34fb";
-        public const string UUID_CON_WIFI_SSIDS = "00002900-0000-1000-8000-00805f9b34fb";
-        public const string UUID_CON_WIFI_SCAN = "00002901-0000-1000-8000-00805f9b34fb";
+        public const string UUID_CON_WIFI_SSIDS = "00004900-0000-1000-8000-00805f9b34fb";
+        public const string UUID_CON_WIFI_SCAN = "00004901-0000-1000-8000-00805f9b34fb";
         public const string UUID_CON_WIFI_SSID = "00004902-0000-1000-8000-00805f9b34fb";
         public const string UUID_CON_WIFI_PASS = "00004903-0000-1000-8000-00805f9b34fb";
-        public const string UUID_CON_WIFI_CONN = "00002904-0000-1000-8000-00805f9b34fb";
+        public const string UUID_CON_WIFI_CONN = "00004904-0000-1000-8000-00805f9b34fb";
+        public const string UUID_CON_HOME_NAME = "00004905-0000-1000-8000-00805f9b34fb";
 
         private static Dictionary<Guid, string> supportedServices = new Dictionary<Guid, string>()
         {
@@ -65,7 +66,8 @@ namespace ConfigTool.BLE
             { new Guid(UUID_CON_WIFI_SCAN), "WiFi scan status" },
             { new Guid(UUID_CON_WIFI_SSID), "WiFi SSID" },
             { new Guid(UUID_CON_WIFI_PASS), "WiFi Password" },
-            { new Guid(UUID_CON_WIFI_CONN), "WiFi connection status" }
+            { new Guid(UUID_CON_WIFI_CONN), "WiFi connection status" },
+            { new Guid(UUID_CON_HOME_NAME), "Google Home Name" }
         };
 
         public static string TranslateUuid(Guid uuid)

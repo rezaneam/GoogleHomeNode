@@ -430,7 +430,7 @@ namespace Config_Tool___Google_Home_Node
         private async void onConnectWiFi(object sender, RoutedEventArgs e)
         {
             if (!string.IsNullOrEmpty(ssid) & !string.IsNullOrEmpty(passwordBox.Password))
-                await node.Config.SetWiFi(ssid, passwordBox.Password);
+                await node.Config.TryConnect(ssid, passwordBox.Password);
         }
 
         private void FoundSSIDsListView_SelectionChanged(object sender, SelectionChangedEventArgs e)

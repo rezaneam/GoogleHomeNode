@@ -44,13 +44,13 @@ namespace ConfigTool.BLE
             foreach (var item in result.Characteristics)
             {
                 GattReadResult readResult = await item.ReadValueAsync();
-                if (readResult.Status != GattCommunicationStatus.Success) return false;
+                if (readResult.Status != GattCommunicationStatus.Success) 
+                    return false;
                 if (item.CharacteristicProperties.HasFlag(GattCharacteristicProperties.Notify))
                 {
                     await item.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.Notify);
                     item.ValueChanged += valueChanged;
                     item.ValueChanged += localValueChanged;
-                    
                 }
                 characteristics.Add(item);
                 values.Add(item.Uuid, FormatToString(readResult.Value));

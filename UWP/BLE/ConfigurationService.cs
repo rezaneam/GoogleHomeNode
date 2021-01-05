@@ -29,10 +29,11 @@ namespace ConfigTool.BLE
             return await GetCharacteristicValue(new Guid(SupportedUuids.UUID_CON_WIFI_SSIDS));
         }
 
-        public async Task SetWiFi(string ssid, string password)
+        public async Task TryConnect(string ssid, string password)
         {
             await SetCharacteristicValue(new Guid(SupportedUuids.UUID_CON_WIFI_SSID), ssid);
             await SetCharacteristicValue(new Guid(SupportedUuids.UUID_CON_WIFI_PASS), password);
+            await SetCharacteristicValue(new Guid(SupportedUuids.UUID_CON_WIFI_CONN), "1");
         }
 
         public string ScanStatus => values.TryGetValue(new Guid(SupportedUuids.UUID_CON_WIFI_SCAN), out string response) ? response : string.Empty;
