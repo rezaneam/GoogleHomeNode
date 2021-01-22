@@ -147,13 +147,6 @@ void loop()
     float humidity = Sensor.readHumidity();
     float pressure = Sensor.readPressure();
     UpdateSensorValues(temperature, humidity, pressure);
-    // if (isHomeConnected)
-    // {
-    //   sprintf(messageBuffer, "Temperature is %d degrees and it is %d %% humide. BTW, the pressure is %.1f. atm", (int16_t)temperature, (int16_t)humidity, pressure / 101325);
-    //   Serial.println(messageBuffer);
-    //   ghn.notify(messageBuffer);
-    //   Serial.println("Free heap is " + String(ESP.getFreeHeap()));
-    // }
     Oled.RefressSensorArea(temperature, humidity, pressure);
     readSenor = false;
   }

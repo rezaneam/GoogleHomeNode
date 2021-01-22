@@ -124,6 +124,7 @@
     <Compile Include="BLE\BluetoothLEDeviceDisplay.cs" />
     <Compile Include="BLE\ConfigurationService.cs" />
     <Compile Include="BLE\DeviceService.cs" />
+    <Compile Include="BLE\Enums.cs" />
     <Compile Include="BLE\Node.cs" />
     <Compile Include="BLE\SensorService.cs" />
     <Compile Include="BLE\ServiceBase.cs" />

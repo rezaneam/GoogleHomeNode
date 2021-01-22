@@ -32,10 +32,10 @@ namespace Config_Tool___Google_Home_Node
     /// </summary>
     public sealed partial class MainPage : Page
     {
+
         #region Error Codes
-        readonly int E_BLUETOOTH_ATT_WRITE_NOT_PERMITTED = unchecked((int)0x80650003);
-        readonly int E_BLUETOOTH_ATT_INVALID_PDU = unchecked((int)0x80650004);
-        readonly int E_ACCESSDENIED = unchecked((int)0x80070005);
+        //readonly int E_BLUETOOTH_ATT_INVALID_PDU = unchecked((int)0x80650004);
+        //readonly int E_ACCESSDENIED = unchecked((int)0x80070005);
         readonly int E_DEVICE_NOT_AVAILABLE = unchecked((int)0x800710df); // HRESULT_FROM_WIN32(ERROR_DEVICE_NOT_AVAILABLE)
         #endregion
 
@@ -382,10 +382,15 @@ namespace Config_Tool___Google_Home_Node
                 {
                     case SupportedUuids.UUID_CON_WIFI_SCAN:
                         FoundSSIDs.Clear();
+                        Debug.WriteLine("Received a List of SSID ");
                         var ssids = (await node.Config.FetchSSIDs()).Split(',').ToList();
                         foreach (var ssid in ssids)
+                        {
+                            Debug.WriteLine(ssid);
                             if (!string.IsNullOrEmpty(ssid) && !FoundSSIDs.Contains(ssid))
                                 FoundSSIDs.Add(ssid);
+                        }
+                            
                         break;
                     default:
                         break;

@@ -8,7 +8,7 @@ namespace ConfigTool.BLE
 {
     public static class SupportedUuids
     {
-        public const string UUID_INF_SERV =  "0000180a-0000-1000-8000-00805f9b34fb";
+        public const string UUID_INF_SERV = "0000180a-0000-1000-8000-00805f9b34fb";
         public const string UUID_INF_SYSID = "00002a23-0000-1000-8000-00805f9b34fb";
         public const string UUID_INF_MODEL_NR = "00002a24-0000-1000-8000-00805f9b34fb";
         public const string UUID_INF_SERIAL_NR = "00002a25-0000-1000-8000-00805f9b34fb";
