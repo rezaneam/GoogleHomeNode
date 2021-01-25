@@ -191,6 +191,8 @@ class CharacteristicCallbacks : public NimBLECharacteristicCallbacks
         str += code;
         str += ", ";
         str += NimBLEUtils::returnCodeToString(code);
+        str +=  ", ";
+        str += String(pCharacteristic->getUUID().toString().c_str());
         Serial.println(str);
     };
 
@@ -256,12 +258,12 @@ void BLEinit(std::string deviceName, bool *hasEvent)
     NimBLEService *pAutomationService = pServer->createService(BLEUUID((uint16_t)SERVICE_UUID_USER_DATA));
 
     addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_RESET_CONFIG, NIMBLE_PROPERTY::WRITE | NIMBLE_PROPERTY::READ, "0");
-    addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_WIFI_SSID_NAMES, NIMBLE_PROPERTY::READ, "");
+    addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_WIFI_SSID_NAMES, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY, "");
     addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_WIFI_SCANNING, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY | NIMBLE_PROPERTY::WRITE, BLE_WIFI_SCANNING_DEACTIVE, DESCRIPTOR_UUID_WIFI_SCAN, DESCRIPTOR_VAL_WIFI_SCAN);
     addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_WIFI_SSID, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE, "");
     addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_WIFI_PASS, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE, BLE_WIFI_PASS_WRITE_ONLY);
     addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_WIFI_CONNECTION_STAT, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY | NIMBLE_PROPERTY::WRITE, BLE_WIFI_NOT_CONNECTED, DESCRIPTOR_UUID_WIFI_CONN, DESCRIPTOR_VAL_WIFI_CONN);
-    addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_GOOGLE_HOME_NAME, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY | NIMBLE_PROPERTY::WRITE, BLE_WIFI_SCANNING_DEACTIVE, DESCRIPTOR_UUID_GLHM_NAME, DESCRIPTOR_VAL_GLHM_NAME);
+    addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_GOOGLE_HOME_NAME, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY | NIMBLE_PROPERTY::WRITE, "", DESCRIPTOR_UUID_GLHM_NAME, DESCRIPTOR_VAL_GLHM_NAME);
 
     pDeviceInfoService->start();
     pBatteryService->start();

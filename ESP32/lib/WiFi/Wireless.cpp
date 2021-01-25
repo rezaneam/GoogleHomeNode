@@ -44,9 +44,10 @@ bool WiFiConnect(std::string ssid, std::string password)
 {
     //BLEwirelessConnectionChanged(BLE_WIFI_CONNECTING);
     WiFi.begin(ssid.c_str(), password.c_str());
-    while (WiFi.status() != WL_CONNECTED && WiFi.status() != WL_CONNECT_FAILED)
-        ;
-    if (WiFi.status() == WL_CONNECTED)
+    uint8_t connectionStatus = WiFi.waitForConnectResult();
+    // while (WiFi.status() != WL_CONNECTED && WiFi.status() != WL_CONNECT_FAILED)
+    //     ;
+    if (connectionStatus == WL_CONNECTED)
     {
         BLEwirelessConnectionChanged(BLE_WIFI_CONNECTED);
         Serial.println(WiFi.localIP());
@@ -54,7 +55,10 @@ bool WiFiConnect(std::string ssid, std::string password)
         Serial.println(WiFi.gatewayIP());
         return true;
     }
-    Serial.println(WiFi.status());
+    if (connectionStatus == WL_NO_SSID_AVAIL)
+        Serial.println("WiFi connection failed. SSID is not available");
+    else
+        Serial.println("WiFi Connection failed. Code " + String(connectionStatus));
     BLEwirelessConnectionChanged(BLE_WIFI_NOT_CONNECTED);
     return false;
 }
