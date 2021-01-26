@@ -6,6 +6,7 @@
 #include <Wireless.h>
 #include <BME280.h>
 #include <esp8266-google-home-notifier.h>
+#include <security.h>
 
 #define SDA_PIN 5
 #define SCL_PIN 4
@@ -42,3 +43,5 @@ portMUX_TYPE externalPinmux = portMUX_INITIALIZER_UNLOCKED;
 
 bool NotifierTryConnect(std::string deviceName);
 bool NotifierNotify(std::string deviceName, std::string message);
+
+bool InitIoT();
