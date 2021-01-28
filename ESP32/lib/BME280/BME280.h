@@ -202,6 +202,8 @@ public:
     float readAltitude(float seaLevel);
     float seaLevelForAltitude(float altitude, float pressure);
 
+    bool isBME280 = false;
+
 private:
     TwoWire *_wire;
     void readCoefficients(void);

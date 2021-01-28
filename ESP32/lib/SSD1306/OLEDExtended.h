@@ -137,11 +137,11 @@ public:
     // Drawing the Icons
     void drawIcon(OLEDDISPLAY_ICONS icon);
 
-    void drawSensorIcon();
+    void drawSensorIcon(bool isBME280, bool isBME680);
 
     void Initialize(bool flip = false);
 
-    void RefressSensorArea(float temperature, float humidity, float pressure);
+    void RefressSensorArea(float temperature, float humidity, float pressure, float air_quality = -1);
 
     void ReferessStatusArea(bool isBLEadvertising, bool isBLEconnected, bool isHomeConencted, bool isWiFiconnected, std::string ssid, bool isCloudConencted);
 

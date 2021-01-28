@@ -158,17 +158,22 @@ bool BME280::init()
     uint8_t chip_id = read8(BME280_REGISTER_CHIPID);
 
     // check if sensor, i.e. the chip ID is correct
-    if (chip_id != 0x60)
+    switch (chip_id)
     {
-        if (chip_id != 58)
-            Serial.println("BMP280 chip is found!");
-        else
-            Serial.println("Unknow chipId: " + String(chip_id));
+    case 0x60:
+        Serial.println("BME280 chip is found!");
+        isBME280 = true;
+        break;
 
+    case 0x58:
+        Serial.println("BMP280 chip is found!");
+        break;
+
+    default:
+        Serial.println("Unknow chipId: " + String(chip_id));
         return false;
     }
 
-    Serial.println("BME280 chip is found");
     // reset the device using soft-reset
     // this makes sure the IIR is off, etc.
     write8(BME280_REGISTER_SOFTRESET, 0xB6);
@@ -571,6 +576,7 @@ float BME280::readPressure(void)
 /**************************************************************************/
 float BME280::readHumidity(void)
 {
+    if(!isBME280) return -1;
     readTemperature(); // must be done first to get t_fine
 
     int32_t adc_H = read16(BME280_REGISTER_HUMIDDATA);
