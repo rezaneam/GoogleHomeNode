@@ -33,6 +33,7 @@ bool isHomeConnected = false;
 bool isBLEadvertising = false;
 bool isBLEconnected = false;
 bool isWiFiconnected = false;
+bool isCloudconnected = false;
 
 std::string ssid;
 char messageBuffer[64];

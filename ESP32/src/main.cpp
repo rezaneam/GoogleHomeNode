@@ -10,7 +10,7 @@
 // TODO: Code Clean up - Phase 2 (organizing the process)
 // TODO: Code Clean up - Phase 3 (using the event system)
 
-// ! Azure IoT
+// ? Azure IoT
 #include <AzureIoTHub.h>
 #include <AzureIoTProtocol_MQTT.h>
 #include <iothubtransportmqtt.h>
@@ -19,10 +19,6 @@
 static const char *connectionString = DEVICE_CONNECTION_STRING;
 static bool g_continueRunning = true; // defines whether or not the device maintains its IoT Hub connection after sending (think receiving messages from the cloud)
 
-IOTHUB_MESSAGE_HANDLE message_handle;
-size_t messages_sent = 0;
-#define MESSAGE_COUNT 5 // determines the number of times the device tries to send a message to the IoT Hub in the cloud.
-const char *telemetry_msg = "test_message";
 const char *quit_msg = "quit";
 const char *exit_msg = "exit";
 
@@ -86,64 +82,37 @@ static void connection_status_callback(IOTHUB_CLIENT_CONNECTION_STATUS result, I
   }
 }
 
-static int deviceMethodCallback(const char *method_name, const unsigned char *payload, size_t size, unsigned char **response, size_t *response_size, void *userContextCallback)
+static int device_method_callback(const char *method_name, const unsigned char *payload, size_t size, unsigned char **response, size_t *response_size, void *userContextCallback)
 {
-  Serial.println("deviceMethodCallback");
+  Serial.println("device_method_callback: " + String(method_name));
 
-  char *buffer = (char *)malloc(sizeof(char) * 100);
-  char *buffer2 = (char *)malloc(sizeof(char) * 100);
-  memset(buffer, 0, sizeof(char) * 100);
-  memset(buffer2, 0, sizeof(char) * 100);
-  (void)userContextCallback;
-  //(void)payload;
-  (void)size;
+  int result = 200;
 
-  int result;
-
-  if (strcmp("hello", method_name) == 0)
+  if (strcmp("Google Home", method_name) == 0)
   {
-    printf("size of Payload is %d\n", sizeof(payload));
-    strcpy(buffer, (char *)payload);
-    printf("payload is %d\n", strlen((char *)payload));
-    printf("payload is %d\n", strlen(buffer));
-    memmove(buffer, buffer + 1, strlen(buffer));
-    printf("payload is %s\n", buffer);
-    printf("size is %d\n", strlen(buffer));
-    int j = 0;
-    for (int i = 0; i < strlen(buffer); i++)
-    {
-      if ((*(buffer + i)) != '\\')
-      {
-        *(buffer2 + j) = *(buffer + i);
-        j++;
-      }
-    }
-    int len = strlen(buffer2);
-    printf("paylaod is %s\n", buffer2);
-    printf("paylaod length is %d\n", strlen(buffer2));
-    buffer2[len - 1] = '\0';
-    printf("payload is %s\n", buffer2);
+    printf("size of Payload is %d : %d\n", strlen((char *)payload), size);
+    Serial.println((char *)payload);
+
     const char deviceMethodResponse[] = "{ \"Response\": \"1HGCM82633A004352\" }";
     *response_size = sizeof(deviceMethodResponse) - 1;
     *response = (unsigned char *)malloc(*response_size);
     (void)memcpy(*response, deviceMethodResponse, *response_size);
     result = 200;
+    return result;
   }
-  else
-  {
-    // All other entries are ignored.
-    const char deviceMethodResponse[] = "{ }";
-    *response_size = sizeof(deviceMethodResponse) - 1;
-    *response = (unsigned char *)malloc(*response_size);
-    (void)memcpy(*response, deviceMethodResponse, *response_size);
-    result = -1;
-  }
-
+  // All other entries are ignored.
+  const char deviceMethodResponse[] = "{ }";
+  *response_size = sizeof(deviceMethodResponse) - 1;
+  *response = (unsigned char *)malloc(*response_size);
+  (void)memcpy(*response, deviceMethodResponse, *response_size);
+  result = -1;
   return result;
 }
 
-// ! Azure IoT
+// ? Azure IoT
 
+// ? Timer Settings
+uint64_t timerCalls = 0;
 void IRAM_ATTR handleExternalInterrupt()
 {
   portENTER_CRITICAL_ISR(&externalPinmux);
@@ -151,7 +120,6 @@ void IRAM_ATTR handleExternalInterrupt()
   portEXIT_CRITICAL_ISR(&externalPinmux);
 }
 
-uint64_t timerCalls = 0;
 void IRAM_ATTR onReadSensor()
 {
   portENTER_CRITICAL_ISR(&sensorReadtimerMux);
@@ -173,6 +141,8 @@ void initSensorReadTimer()
   timerAlarmWrite(sensorReadTimer, 1000, true);
   timerAlarmEnable(sensorReadTimer);
 }
+
+// ? Timer Settings
 
 void setup()
 {
@@ -216,10 +186,6 @@ void setup()
       struct tm timeinfo;
       if (getLocalTime(&timeinfo))
       {
-        time_t now;
-
-        time(&now);
-        Serial.println(now);
         // ! Azure IoT
         InitIoT();
       }
@@ -245,24 +211,24 @@ void loop()
     case BLEEvents::BLE_CONNECTED:
       isBLEconnected = true;
       isBLEadvertising = false;
-      Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid);
+      Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid, isCloudconnected);
       break;
     case BLEEvents::BLE_DISCONNECT:
       isBLEconnected = false;
       isBLEadvertising = true;
-      Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid);
+      Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid, isCloudconnected);
       break;
     case BLEEvents::BLE_STOPPED:
       NimBLEDevice::stopAdvertising();
       isBLEconnected = false;
       isBLEadvertising = false;
-      Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid);
+      Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid, isCloudconnected);
       break;
     case BLEEvents::BLE_STARTED:
       NimBLEDevice::startAdvertising();
       isBLEconnected = false;
       isBLEadvertising = true;
-      Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid);
+      Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid, isCloudconnected);
       break;
     case BLEEvents::WIFI_START_SCAN:
       WiFiScanNodes();
@@ -272,12 +238,12 @@ void loop()
     case BLEEvents::WIFI_CONNECTED:
       isWiFiconnected = true;
       ssid = GetFlashValue(EEPROM_VALUE::WiFi_SSID);
-      Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid);
+      Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid, isCloudconnected);
       break;
     case BLEEvents::WIFI_DISCONNECTED:
       isWiFiconnected = false;
       ssid = "";
-      Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid);
+      Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid, isCloudconnected);
       break;
     case BLEEvents::GOOGLE_HOME_NAME:
       break;
@@ -304,7 +270,10 @@ void loop()
 
   if (readSenor)
   {
-    Serial.println("Info: Free heap is " + String(ESP.getFreeHeap()));
+    time_t now;
+    time(&now);
+
+    Serial.println(">> Info: " + String(ctime(&now)) + " Free heap is " + String(ESP.getFreeHeap()));
     Sensor.takeForcedMeasurement();
     float temperature = Sensor.readTemperature();
     float humidity = Sensor.readHumidity();
@@ -397,7 +366,7 @@ bool InitIoT()
     return false;
   }
 
-  if (IoTHubDeviceClient_LL_SetDeviceMethodCallback(device_ll_handle, deviceMethodCallback, NULL) != IOTHUB_CLIENT_OK)
+  if (IoTHubDeviceClient_LL_SetDeviceMethodCallback(device_ll_handle, device_method_callback, NULL) != IOTHUB_CLIENT_OK)
   {
     LogInfo("ERROR: IoTHubDeviceClient_LL_SetDeviceMethodCallback..........FAILED!");
     return false;
