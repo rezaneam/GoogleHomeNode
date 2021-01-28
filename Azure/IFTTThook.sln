@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30907.101
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IFTTThook", "IFTTThook\IFTTThook.csproj", "{54FE8442-7B15-4A6F-8635-92D8C05FD607}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{54FE8442-7B15-4A6F-8635-92D8C05FD607}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54FE8442-7B15-4A6F-8635-92D8C05FD607}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54FE8442-7B15-4A6F-8635-92D8C05FD607}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54FE8442-7B15-4A6F-8635-92D8C05FD607}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DBB03738-F2DE-4942-8422-C9DF3D098190}
+	EndGlobalSection
+EndGlobal
