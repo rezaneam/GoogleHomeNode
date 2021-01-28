@@ -60,6 +60,7 @@ bool WiFiConnect(std::string ssid, std::string password)
     else
         Serial.println("WiFi Connection failed. Code " + String(connectionStatus));
     BLEwirelessConnectionChanged(BLE_WIFI_NOT_CONNECTED);
+    WiFi.disconnect();
     return false;
 }
 String translateEncryptionType(wifi_auth_mode_t encryptionType)
