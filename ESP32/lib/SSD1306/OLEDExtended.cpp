@@ -87,7 +87,7 @@ void OLEDDisplayExtended::drawSensorIcon()
     this->drawXbm(sensor_icon_pos[0] + 84, sensor_icon_pos[1], sensor_icon_pos[2], sensor_icon_pos[3], Barometer_Sensor_icon_img);
 }
 
-void OLEDDisplayExtended::ReferessStatusArea(bool isBLEadvertising, bool isBLEconnected, bool isHomeConencted, bool isWiFiconnected, std::string ssid)
+void OLEDDisplayExtended::ReferessStatusArea(bool isBLEadvertising, bool isBLEconnected, bool isHomeConencted, bool isWiFiconnected, std::string ssid, bool isCloudConencted)
 {
     this->clearArea(Status_Area[0], Status_Area[1], Status_Area[2], Status_Area[3]);
     offset = 0;
@@ -97,8 +97,8 @@ void OLEDDisplayExtended::ReferessStatusArea(bool isBLEadvertising, bool isBLEco
         this->drawIcon(OLEDDISPLAY_ICONS::BLE_CONNECTED_ICON);
     if (isHomeConencted)
         this->drawIcon(OLEDDISPLAY_ICONS::GOOGLE_HOME);
-    // if (isCloudConencted)
-    //     this->drawIcon(OLEDDISPLAY_ICONS::CLOUD);
+    if (isCloudConencted)
+         this->drawIcon(OLEDDISPLAY_ICONS::CLOUD);
     if (isWiFiconnected)
     {
         this->drawIcon(OLEDDISPLAY_ICONS::WIFI_ICON);
