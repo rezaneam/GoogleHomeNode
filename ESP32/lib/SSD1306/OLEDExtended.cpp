@@ -83,10 +83,10 @@ void OLEDDisplayExtended::RefressSensorArea(float temperature, float humidity, f
     }
     else if (isBME680)
     {
-        this->drawString(Sensor_Text_Area[0] + 4, Sensor_Text_Area[1], String(temperature, 1));
-        this->drawString(Sensor_Text_Area[0] + 36, Sensor_Text_Area[1], String(humidity, 1));
+        this->drawString(Sensor_Text_Area[0] + 4, Sensor_Text_Area[1], String(temperature, 0));
+        this->drawString(Sensor_Text_Area[0] + 36, Sensor_Text_Area[1], String(humidity, 0));
         this->drawString(Sensor_Text_Area[0] + 64, Sensor_Text_Area[1], String(pressure / 101325));
-        this->drawString(Sensor_Text_Area[0] + 100, Sensor_Text_Area[1], String(air_quality, 1));
+        this->drawString(Sensor_Text_Area[0] + 100, Sensor_Text_Area[1], String(air_quality, 0));
     }
     else
     { // BMP280
