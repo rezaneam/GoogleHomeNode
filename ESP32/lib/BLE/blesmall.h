@@ -31,6 +31,8 @@
 #define CHARACTERISTIC_UUID_WIFI_PASS 0x4904            // WiFi SSID Password
 #define CHARACTERISTIC_UUID_WIFI_CONNECTION_STAT 0x4905 // WiFi Connection status: 0 Not connected, 1 Connecting, 2 Connected
 #define CHARACTERISTIC_UUID_GOOGLE_HOME_NAME 0x4906     // Google Home name seats here
+#define CHARACTERISTIC_UUID_AZURE_IOT_HUB_CONN 0x4907     // Azure IoT Hub connection string seats here
+
 
 #define DESCRIPTOR_UUID_BATTERY 0x3900     // Discriptor for battery level
 #define DESCRIPTOR_UUID_PRESSURE 0x3901    // Discriptor for Pressure Sensor
@@ -76,6 +78,7 @@ enum BLEEvents
     WIFI_CONNECTED,
     WIFI_DISCONNECTED,
     GOOGLE_HOME_NAME,
+    AZURE_IOT_HUB_TRY_CONNECT,
     FACTORY_RESET,
     FACTORY_RESET_SAFE,
     RESTART,
