@@ -354,6 +354,7 @@ namespace Config_Tool___Google_Home_Node
                     FindNodeButton.IsEnabled = false;
                     ConfigNodeButton.IsEnabled = true;
                     ReadSensorButton.IsEnabled = true;
+                    ResetSensorButton.IsEnabled = true;
                     Debug.WriteLine("Successfully connected to the node");
                 }
 
@@ -381,6 +382,7 @@ namespace Config_Tool___Google_Home_Node
                 switch (sender.Uuid.ToString())
                 {
                     case SupportedUuids.UUID_CON_WIFI_SCAN:
+                        await Task.Delay(1000);
                         FoundSSIDs.Clear();
                         Debug.WriteLine("Received a List of SSID ");
                         var ssids = (await node.Config.FetchSSIDs()).Split(',').ToList();
@@ -442,6 +444,34 @@ namespace Config_Tool___Google_Home_Node
         {
             if (FoundSSIDsListView.SelectedIndex > -1)
                 ssid = (string)FoundSSIDsListView.SelectedItem;
+        }
+
+        private async void OpenNodeResetOptions(object sender, RoutedEventArgs e)
+        {
+            await RestNodeContentDialog.ShowAsync();
+        }
+
+        private void CancelRest(object sender, RoutedEventArgs e)
+        {
+            RestNodeContentDialog.Hide();
+        }
+
+        private async void OnRestartSensor(object sender, RoutedEventArgs e)
+        {
+            RestNodeContentDialog.Hide();
+            await node.Config.ResetNode("1");
+        }
+
+        private async void OnHardReset(object sender, RoutedEventArgs e)
+        {
+            RestNodeContentDialog.Hide();
+            await node.Config.ResetNode("2");
+        }
+
+        private async void OnSafeHardResetNode(object sender, RoutedEventArgs e)
+        {
+            RestNodeContentDialog.Hide();
+            await node.Config.ResetNode("3");
         }
     }
 }

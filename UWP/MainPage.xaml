@@ -53,7 +53,7 @@
             </Button>
 
             <Button Click="OnConfigNode" Windows10version1809:CornerRadius="16" Margin="8" x:Name="ConfigNodeButton"
-                    BorderBrush="DarkRed" BorderThickness="1" IsEnabled="False">
+                    BorderBrush="IndianRed" BorderThickness="1" IsEnabled="False">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock  FontSize="20"  Text="&#xE713;" Margin="4" 
                        HorizontalAlignment="Center" FontFamily="Segoe MDL2 Assets" Foreground="OrangeRed"/>
@@ -67,6 +67,15 @@
                     <TextBlock  FontSize="20"  Text="&#xE957;" Margin="4" 
                        HorizontalAlignment="Center" FontFamily="Segoe MDL2 Assets" Foreground="DarkGreen"/>
                     <TextBlock Text="Read Sensor Values" Margin="4"  />
+                </StackPanel>
+            </Button>
+
+            <Button Windows10version1809:CornerRadius="16" Margin="8" x:Name="ResetSensorButton"
+                    BorderBrush="DarkRed" BorderThickness="1" IsEnabled="False" Click="OpenNodeResetOptions">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock  FontSize="20"  Text="&#xE72C;" Margin="4" 
+                       HorizontalAlignment="Center" FontFamily="Segoe MDL2 Assets" Foreground="DarkRed"/>
+                    <TextBlock Text="Rest Node" Margin="4"  />
                 </StackPanel>
             </Button>
         </StackPanel>
@@ -90,6 +99,51 @@
                 <ProgressRing IsActive="True" Height="32" Width="32"/>
                 <TextBlock Text="Connecting to the Node" FontWeight="Bold" VerticalAlignment="Center" Margin="8"/>
             </StackPanel>
+        </ContentDialog>
+        <ContentDialog x:Name="RestNodeContentDialog" Windows10version1809:CornerRadius="16" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <Button Windows10version1809:CornerRadius="16" Margin="8" x:Name="RestartSensorButton"
+                    HorizontalAlignment="Center" Grid.Row="0" Width="224" Click="OnRestartSensor">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock  FontSize="20"  Text="&#xE72C;" Margin="4" 
+                       HorizontalAlignment="Center" FontFamily="Segoe MDL2 Assets" Foreground="Yellow"/>
+                        <TextBlock Text="Restart Node" Margin="4"  />
+                    </StackPanel>
+                </Button>
+
+                <Button Windows10version1809:CornerRadius="16" Margin="8" x:Name="HardResetButton"
+                    HorizontalAlignment="Center" Grid.Row="1" Width="224" Click="OnHardReset">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock  FontSize="20"  Text="&#xED60;" Margin="4" 
+                       HorizontalAlignment="Center" FontFamily="Segoe MDL2 Assets" Foreground="Red"/>
+                        <TextBlock Text="Erase and reset Node" Margin="4"  />
+                    </StackPanel>
+                </Button>
+
+                <Button Windows10version1809:CornerRadius="16" Margin="8" x:Name="HardRestSafeButton"
+                    HorizontalAlignment="Center" Grid.Row="2" Width="224" Click="OnSafeHardResetNode">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock  FontSize="20"  Text="&#xED60;" Margin="4" 
+                       HorizontalAlignment="Center" FontFamily="Segoe MDL2 Assets" Foreground="DarkRed"/>
+                        <TextBlock Text="Safe erase and reset Node" Margin="4"  />
+                    </StackPanel>
+                </Button>
+
+                <Button Windows10version1809:CornerRadius="16" Margin="8" x:Name="CancelResetSensorButton"
+                    HorizontalAlignment="Center" Grid.Row="3" Width="224" Click="CancelRest">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock  FontSize="20"  Text="&#xE711;" Margin="4" 
+                       HorizontalAlignment="Center" FontFamily="Segoe MDL2 Assets" Foreground="Blue"/>
+                        <TextBlock Text="Cancel" Margin="4"  />
+                    </StackPanel>
+                </Button>
+            </Grid>
         </ContentDialog>
         <ContentDialog x:Name="WiFiConfigContentDialog" Windows10version1809:CornerRadius="16" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
             <StackPanel>
@@ -132,6 +186,5 @@
                 </StackPanel>
             </StackPanel>
         </ContentDialog>
-
     </StackPanel>
 </Page>

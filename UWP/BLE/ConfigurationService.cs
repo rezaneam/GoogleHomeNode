@@ -24,6 +24,11 @@ namespace ConfigTool.BLE
             await SetCharacteristicValue(new Guid(SupportedUuids.UUID_CON_WIFI_SCAN), "1");
         }
 
+        public async Task ResetNode(string mode)
+        {
+            await SetCharacteristicValue(new Guid(SupportedUuids.UUID_CON_REST_FACT), mode);
+        }
+
         public async Task<string> FetchSSIDs()
         {
             return await GetCharacteristicValue(new Guid(SupportedUuids.UUID_CON_WIFI_SSIDS));

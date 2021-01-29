@@ -115,7 +115,7 @@ namespace ConfigTool.BLE
             values[characteristic.Uuid] = value;
         }
 
-        private string FormatToString(Windows.Storage.Streams.IBuffer value)
+        private string FormatToString(IBuffer value)
         {
             string formattedResult = string.Empty;
             CryptographicBuffer.CopyToByteArray(value, out byte[] data);
