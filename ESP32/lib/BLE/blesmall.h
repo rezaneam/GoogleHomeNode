@@ -4,6 +4,7 @@
 #include <string.h>
 #include <NimBLEDevice.h>
 #include <sstream>
+#include <enums.h>
 
 #define BLE_ADVERTISE_TIMEOUT 60 // BLE advertising timeout
 
@@ -31,8 +32,7 @@
 #define CHARACTERISTIC_UUID_WIFI_PASS 0x4904            // WiFi SSID Password
 #define CHARACTERISTIC_UUID_WIFI_CONNECTION_STAT 0x4905 // WiFi Connection status: 0 Not connected, 1 Connecting, 2 Connected
 #define CHARACTERISTIC_UUID_GOOGLE_HOME_NAME 0x4906     // Google Home name seats here
-#define CHARACTERISTIC_UUID_AZURE_IOT_HUB_CONN 0x4907     // Azure IoT Hub connection string seats here
-
+#define CHARACTERISTIC_UUID_AZURE_IOT_HUB_CONN 0x4907   // Azure IoT Hub connection string seats here
 
 #define DESCRIPTOR_UUID_BATTERY 0x3900     // Discriptor for battery level
 #define DESCRIPTOR_UUID_PRESSURE 0x3901    // Discriptor for Pressure Sensor
@@ -67,25 +67,7 @@
 #define BLE_SOFTWARE_REVISION "v1"
 #define BLE_WIFI_PASS_WRITE_ONLY "WRITE ONLY"
 
-enum BLEEvents
-{
-    BLE_CONNECTED,
-    BLE_DISCONNECT,
-    BLE_STOPPED,
-    BLE_STARTED,
-    WIFI_START_SCAN,
-    WIFI_TRY_CONNECT,
-    WIFI_CONNECTED,
-    WIFI_DISCONNECTED,
-    GOOGLE_HOME_NAME,
-    AZURE_IOT_HUB_TRY_CONNECT,
-    FACTORY_RESET,
-    FACTORY_RESET_SAFE,
-    RESTART,
-    NONE
-};
-
-void BLEinit(std::string deviceName, bool *hasEvent);
+void BLEinit(std::string deviceName, CustomEvents *event);
 void BLEsetupAd();
 void BLEstartAd();
 void BLEstopAd();
@@ -94,7 +76,6 @@ void setCharacteristicValue(BLEUUID serviceUuid, BLEUUID charateristicsUuid, std
 void BLEsetSSIDs(std::string SSIDs);
 void BLEwirelessConnectionChanged(std::string status);
 std::string getCharacteristicValue(BLEUUID serviceUuid, BLEUUID charateristicsUuid);
-BLEEvents BLEreadEvent();
 std::string BLEgetSSIDs();
 std::string BLEgetSSID();
 void BLEsetSSID(std::string value);

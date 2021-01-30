@@ -190,7 +190,7 @@ void setup()
                      BME280::standby_duration::STANDBY_MS_1000);
   initSensorReadTimer();
   Serial.println("Starting BLE");
-  BLEinit(BLE_DEVICE_NAME, &hasBleEvent);
+  BLEinit(BLE_DEVICE_NAME, &activeEvent);
   BLEsetupAd();
 
   pinMode(BLE_ADVERTISE_ENABLE_PIN, INPUT_PULLUP);
@@ -230,61 +230,62 @@ void loop()
     fireIoT = false;
   }
 
-  if (hasBleEvent)
-    switch (BLEreadEvent())
+  if (activeEvent != CustomEvents::EVENT_NONE)
+  {
+    switch (activeEvent)
     {
-    case BLEEvents::BLE_CONNECTED:
+    case CustomEvents::EVENT_BLE_CONNECTED:
       isBLEconnected = true;
       isBLEadvertising = false;
       Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid, isCloudconnected);
       break;
-    case BLEEvents::BLE_DISCONNECT:
+    case CustomEvents::EVENT_BLE_DISCONNECT:
       isBLEconnected = false;
       isBLEadvertising = true;
       Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid, isCloudconnected);
       break;
-    case BLEEvents::BLE_STOPPED:
+    case CustomEvents::EVENT_BLE_STOPPED:
       NimBLEDevice::stopAdvertising();
       isBLEconnected = false;
       isBLEadvertising = false;
       Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid, isCloudconnected);
       break;
-    case BLEEvents::BLE_STARTED:
+    case CustomEvents::EVENT_BLE_STARTED:
       NimBLEDevice::startAdvertising();
       isBLEconnected = false;
       isBLEadvertising = true;
       Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid, isCloudconnected);
       break;
-    case BLEEvents::WIFI_START_SCAN:
+    case CustomEvents::EVENT_WIFI_START_SCAN:
       WiFiScanNodes();
       break;
-    case BLEEvents::WIFI_TRY_CONNECT:
+    case CustomEvents::EVENT_WIFI_TRY_CONNECT:
       WiFiConnect(GetFlashValue(EEPROM_VALUE::WiFi_SSID), GetFlashValue(EEPROM_VALUE::WiFi_Password));
-    case BLEEvents::WIFI_CONNECTED:
+    case CustomEvents::EVENT_WIFI_CONNECTED:
       isWiFiconnected = true;
       ssid = GetFlashValue(EEPROM_VALUE::WiFi_SSID);
       Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid, isCloudconnected);
       break;
-    case BLEEvents::WIFI_DISCONNECTED:
+    case CustomEvents::EVENT_WIFI_DISCONNECTED:
       isWiFiconnected = false;
       ssid = "";
       Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid, isCloudconnected);
       break;
-    case BLEEvents::GOOGLE_HOME_NAME:
+    case CustomEvents::EVENT_GOOGLE_HOME_NAME:
       break;
-    case BLEEvents::FACTORY_RESET:
+    case CustomEvents::EVENT_FACTORY_RESET:
       Oled.ShowRestMessage("Factory Reset");
       EraseFlash();
       delay(5000);
       ESP.restart();
       break;
-    case BLEEvents::FACTORY_RESET_SAFE:
+    case CustomEvents::EVENT_FACTORY_RESET_SAFE:
       Oled.ShowRestMessage("Factory Reset [safe]");
       EraseFlash(true);
       delay(5000);
       ESP.restart();
       break;
-    case BLEEvents::RESTART:
+    case CustomEvents::EVENT_RESTART:
       Oled.ShowRestMessage("Restarting...");
       delay(5000);
       ESP.restart();
@@ -292,6 +293,8 @@ void loop()
     default:
       break;
     }
+    activeEvent = CustomEvents::EVENT_NONE;
+  }
 
   if (readSenor)
   {

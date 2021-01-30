@@ -1,8 +1,7 @@
 #include <blesmall.h>
 
 NimBLEServer *pServer;
-BLEEvents event;
-bool *phasEvent;
+CustomEvents *pEvent;
 bool isConnected = false;
 bool isAdvertising = false;
 
@@ -16,8 +15,7 @@ void IRAM_ATTR onStopAdvertise()
     {
         BLEstopAd();
         timerStop(timer);
-        event = BLEEvents::BLE_STOPPED;
-        *phasEvent = true;
+        *pEvent = CustomEvents::EVENT_BLE_STOPPED;
     }
     portEXIT_CRITICAL_ISR(&timerMux);
 }
@@ -42,8 +40,7 @@ class ServerCallbacks : public NimBLEServerCallbacks
         NimBLEDevice::startAdvertising();
 
         isConnected = true;
-        event = BLEEvents::BLE_CONNECTED;
-        *phasEvent = true;
+        *pEvent = CustomEvents::EVENT_BLE_CONNECTED;
     };
     /** Alternative onConnect() method to extract details of the connection.
      *  See: src/ble_gap.h for the details of the ble_gap_conn_desc struct.
@@ -63,8 +60,7 @@ class ServerCallbacks : public NimBLEServerCallbacks
         pServer->updateConnParams(desc->conn_handle, 24, 48, 0, 60);
 
         isConnected = true;
-        event = BLEEvents::BLE_CONNECTED;
-        *phasEvent = true;
+        *pEvent = CustomEvents::EVENT_BLE_CONNECTED;
     };
     void onDisconnect(NimBLEServer *pServer)
     {
@@ -72,8 +68,7 @@ class ServerCallbacks : public NimBLEServerCallbacks
         NimBLEDevice::startAdvertising();
 
         isConnected = false;
-        event = BLEEvents::BLE_DISCONNECT;
-        *phasEvent = true;
+        *pEvent = CustomEvents::EVENT_BLE_DISCONNECT;
     };
 
     /********************* Security handled here **********************
@@ -129,8 +124,7 @@ class CharacteristicCallbacks : public NimBLECharacteristicCallbacks
             std::string val = pCharacteristic->getValue();
             if (val == "1")
             {
-                event = BLEEvents::WIFI_START_SCAN;
-                *phasEvent = true;
+                *pEvent = CustomEvents::EVENT_WIFI_START_SCAN;
             }
             return;
         }
@@ -143,40 +137,30 @@ class CharacteristicCallbacks : public NimBLECharacteristicCallbacks
         if (uuid.equals(BLEUUID((uint16_t)CHARACTERISTIC_UUID_GOOGLE_HOME_NAME)))
         {
             WriteFlashHomeName(pCharacteristic->getValue());
-            event = BLEEvents::GOOGLE_HOME_NAME;
-            *phasEvent = true;
+            *pEvent = CustomEvents::EVENT_GOOGLE_HOME_NAME;
             return;
         }
         if (uuid.equals(BLEUUID((uint16_t)CHARACTERISTIC_UUID_AZURE_IOT_HUB_CONN)))
         {
             WriteAzureIoTHub(pCharacteristic->getValue());
-            event = BLEEvents::AZURE_IOT_HUB_TRY_CONNECT;
-            *phasEvent = true;
+            *pEvent = CustomEvents::EVENT_AZURE_IOT_HUB_TRY_CONNECT;
             return;
         }
         if (uuid.equals(BLEUUID((uint16_t)CHARACTERISTIC_UUID_WIFI_CONNECTION_STAT)) && pCharacteristic->getValue() == "1")
         {
-            event = BLEEvents::WIFI_TRY_CONNECT;
-            *phasEvent = true;
+            *pEvent = CustomEvents::EVENT_WIFI_TRY_CONNECT;
         }
         if (uuid.equals(BLEUUID((uint16_t)CHARACTERISTIC_UUID_RESET_CONFIG)))
         {
             std::string val = pCharacteristic->getValue();
             if (val == "1")
-            {
-                event = BLEEvents::RESTART;
-                *phasEvent = true;
-            }
+                *pEvent = CustomEvents::EVENT_RESTART;
+
             else if (val == "2")
-            {
-                event = BLEEvents::FACTORY_RESET;
-                *phasEvent = true;
-            }
+                *pEvent = CustomEvents::EVENT_FACTORY_RESET;
+
             else if (val == "3")
-            {
-                event = BLEEvents::FACTORY_RESET_SAFE;
-                *phasEvent = true;
-            }
+                *pEvent = CustomEvents::EVENT_FACTORY_RESET_SAFE;
         }
     };
     /** Called before notification or indication is sent,
@@ -231,9 +215,9 @@ class CharacteristicCallbacks : public NimBLECharacteristicCallbacks
     };
 };
 
-void BLEinit(std::string deviceName, bool *hasEvent)
+void BLEinit(std::string deviceName, CustomEvents *event)
 {
-    phasEvent = hasEvent;
+    pEvent = event;
     Serial.println("Free heap is " + String(ESP.getFreeHeap()));
     NimBLEDevice::init(deviceName);
     NimBLEDevice::setPower(ESP_PWR_LVL_P9); /** +9db */
@@ -302,8 +286,7 @@ void BLEstartAd()
     // NimBLEDevice::startAdvertising();
     Serial.println("BLE starts advertising");
     timerStart(timer);
-    event = BLEEvents::BLE_STARTED;
-    *phasEvent = true;
+    *pEvent = CustomEvents::EVENT_BLE_STARTED;
 }
 
 void BLEstopAd()
@@ -345,21 +328,14 @@ void BLEwirelessConnectionChanged(std::string status)
 {
     setCharacteristicValue(BLEUUID((uint16_t)SERVICE_UUID_USER_DATA), BLEUUID((uint16_t)CHARACTERISTIC_UUID_WIFI_CONNECTION_STAT), status);
     if (status == BLE_WIFI_CONNECTED)
-        event = BLEEvents::WIFI_CONNECTED;
+        *pEvent = CustomEvents::EVENT_WIFI_CONNECTED;
     else
-        event = BLEEvents::WIFI_DISCONNECTED;
-    *phasEvent = true;
+        *pEvent = CustomEvents::EVENT_WIFI_DISCONNECTED;
 }
 
 std::string getCharacteristicValue(BLEUUID serviceUuid, BLEUUID charateristicsUuid)
 {
     return pServer->getServiceByUUID(serviceUuid)->getCharacteristic(charateristicsUuid)->getValue();
-}
-
-BLEEvents BLEreadEvent()
-{
-    *phasEvent = false;
-    return event;
 }
 
 std::string BLEgetSSIDs()

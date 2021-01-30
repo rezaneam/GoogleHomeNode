@@ -28,12 +28,12 @@ GoogleHomeNotifier googleHomeNotifier;
 BME280 Sensor = BME280();
 SSD1306Wire Oled(OLED_Address, SDA_PIN, SCL_PIN);
 bool readSenor = false;
-bool hasBleEvent = false;
 bool isHomeConnected = false;
 bool isBLEadvertising = false;
 bool isBLEconnected = false;
 bool isWiFiconnected = false;
 bool isCloudconnected = false;
+CustomEvents activeEvent = CustomEvents::EVENT_NONE;
 
 std::string ssid;
 char messageBuffer[64];
