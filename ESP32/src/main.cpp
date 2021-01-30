@@ -116,6 +116,12 @@ static int device_method_callback(const char *method_name, const unsigned char *
 
     char *message = resolveValue(buffer, "\"Key\"");
 
+    if (strstr(message, "temperature"))
+
+      activeEvent = CustomEvents::EVENT_GOOGLE_REPORT_TEMPERATURE;
+    else if (strstr(message, "humidity"))
+      activeEvent = CustomEvents::EVENT_GOOGLE_REPORT_HUMIDITY;
+
     printf("message is: %s\r\n", message);
     free(buffer);
     const char deviceMethodResponse[] = "{ \"Response\": \"1HGCM82633A004352\" }";
@@ -212,7 +218,7 @@ void setup()
       if (getLocalTime(&timeinfo))
       {
         // ! Azure IoT
-        InitIoT();
+        isCloudconnected = InitIoT();
       }
     }
   }
@@ -272,6 +278,22 @@ void loop()
       Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid, isCloudconnected);
       break;
     case CustomEvents::EVENT_GOOGLE_HOME_NAME:
+      break;
+    case CustomEvents::EVENT_GOOGLE_REPORT_TEMPERATURE:
+      if (isHomeConnected)
+      {
+        char buffer[200];
+        sprintf(buffer, "The current temperature is %d", (int)Sensor.readTemperature());
+        NotifierNotify(GetFlashValue(EEPROM_VALUE::Google_Home_Name), buffer);
+      }
+      break;
+    case CustomEvents::EVENT_GOOGLE_REPORT_HUMIDITY:
+      if (isHomeConnected)
+      {
+        char buffer[200];
+        sprintf(buffer, "The current humidity is %d", (int)Sensor.readHumidity());
+        NotifierNotify(GetFlashValue(EEPROM_VALUE::Google_Home_Name), buffer);
+      }
       break;
     case CustomEvents::EVENT_FACTORY_RESET:
       Oled.ShowRestMessage("Factory Reset");
