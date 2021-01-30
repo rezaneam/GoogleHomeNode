@@ -143,6 +143,7 @@ class CharacteristicCallbacks : public NimBLECharacteristicCallbacks
         if (uuid.equals(BLEUUID((uint16_t)CHARACTERISTIC_UUID_AZURE_IOT_HUB_CONN)))
         {
             WriteAzureIoTHub(pCharacteristic->getValue());
+            setCharacteristicValue(BLEUUID((uint16_t)SERVICE_UUID_USER_DATA), uuid, BLE_WIFI_PASS_WRITE_ONLY);
             *pEvent = CustomEvents::EVENT_AZURE_IOT_HUB_TRY_CONNECT;
             return;
         }
@@ -256,6 +257,7 @@ void BLEinit(std::string deviceName, CustomEvents *event)
     addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_WIFI_CONNECTION_STAT, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY | NIMBLE_PROPERTY::WRITE, BLE_WIFI_NOT_CONNECTED, DESCRIPTOR_UUID_WIFI_CONN, DESCRIPTOR_VAL_WIFI_CONN);
     addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_GOOGLE_HOME_NAME, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY | NIMBLE_PROPERTY::WRITE, "", DESCRIPTOR_UUID_GLHM_NAME, DESCRIPTOR_VAL_GLHM_NAME);
     addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_AZURE_IOT_HUB_CONN, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE, "");
+    addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_DEVICE_LOCATION, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE, "");
 
     pDeviceInfoService->start();
     pBatteryService->start();
