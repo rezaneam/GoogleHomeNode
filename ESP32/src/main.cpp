@@ -10,6 +10,24 @@
 // TODO: Code Clean up - Phase 2 (organizing the process)
 // TODO: Code Clean up - Phase 3 (using the event system)
 
+char *resolveValue(char *text, char *key)
+{
+  char *pch = strstr(text, key);
+  uint8_t pos1, pos2;
+  pch += strlen(key);
+  pch = strchr(pch, '"');
+  pos1 = pch - text + 1;
+  pch = strchr(pch + 1, '"');
+  pos2 = pch - text + 1;
+  char *returnValue = new char[pos2 - pos1 - 1];
+
+  for (size_t i = 0; i < (pos2 - pos1 - 1); i++)
+    returnValue[i] = text[pos1 + i];
+  returnValue[pos2 - pos1 - 1] = '\0';
+
+  return returnValue;
+}
+
 // ? Azure IoT
 #include <AzureIoTHub.h>
 #include <AzureIoTProtocol_MQTT.h>
@@ -87,12 +105,19 @@ static int device_method_callback(const char *method_name, const unsigned char *
   Serial.println("device_method_callback: " + String(method_name));
 
   int result = 200;
-
+  printf("%s is called [%d] payload size\r\n", method_name, size);
   if (strcmp("Google Home", method_name) == 0)
   {
-    printf("size of Payload is %d : %d\n", strlen((char *)payload), size);
-    Serial.println((char *)payload);
+    char *buffer;
+    buffer = (char *)malloc(sizeof(char) * (size + 1));
+    strncpy(buffer, (char *)payload, size);
+    buffer[size] = '\0';
+    printf("Payload: %s\r\n", buffer);
 
+    char *message = resolveValue(buffer, "\"Key\"");
+
+    printf("message is: %s\r\n", message);
+    free(buffer);
     const char deviceMethodResponse[] = "{ \"Response\": \"1HGCM82633A004352\" }";
     *response_size = sizeof(deviceMethodResponse) - 1;
     *response = (unsigned char *)malloc(*response_size);
