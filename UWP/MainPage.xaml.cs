@@ -382,10 +382,10 @@ namespace Config_Tool___Google_Home_Node
                 switch (sender.Uuid.ToString())
                 {
                     case SupportedUuids.UUID_CON_WIFI_SCAN:
-                        await Task.Delay(1000);
+                        await Task.Delay(5000);
                         FoundSSIDs.Clear();
-                        Debug.WriteLine("Received a List of SSID ");
                         var ssids = (await node.Config.FetchSSIDs()).Split(',').ToList();
+                        Debug.WriteLine($"Received {ssids.Count - 1} SSIDs ");
                         foreach (var ssid in ssids)
                         {
                             Debug.WriteLine(ssid);

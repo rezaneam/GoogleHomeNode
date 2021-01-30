@@ -35,6 +35,8 @@ namespace ConfigTool.BLE
         public const string UUID_CON_WIFI_PASS = "00004904-0000-1000-8000-00805f9b34fb";
         public const string UUID_CON_WIFI_CONN = "00004905-0000-1000-8000-00805f9b34fb";
         public const string UUID_CON_HOME_NAME = "00004906-0000-1000-8000-00805f9b34fb";
+        public const string UUID_CON_AZURE_IOT = "00004907-0000-1000-8000-00805f9b34fb";
+        public const string UUID_CON_DEVIC_LOC = "00004908-0000-1000-8000-00805f9b34fb";
 
         private static Dictionary<Guid, string> supportedServices = new Dictionary<Guid, string>()
         {

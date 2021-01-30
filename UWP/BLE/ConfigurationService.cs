@@ -41,6 +41,21 @@ namespace ConfigTool.BLE
             await SetCharacteristicValue(new Guid(SupportedUuids.UUID_CON_WIFI_CONN), "1");
         }
 
+        public async Task SetGoogleHomeName(string name)
+        {
+            await SetCharacteristicValue(new Guid(SupportedUuids.UUID_CON_HOME_NAME), name);
+        }
+
+        public async Task SetAzureConnectionString(string connection)
+        {
+            await SetCharacteristicValue(new Guid(SupportedUuids.UUID_CON_AZURE_IOT), connection);
+        }
+
+        public async Task SetDeviceLocation(string location)
+        {
+            await SetCharacteristicValue(new Guid(SupportedUuids.UUID_CON_DEVIC_LOC), location);
+        }
+
         public string ScanStatus => values.TryGetValue(new Guid(SupportedUuids.UUID_CON_WIFI_SCAN), out string response) ? response : string.Empty;
         public string FoundSSIDs => values.TryGetValue(new Guid(SupportedUuids.UUID_CON_WIFI_SSIDS), out string response) ? response : string.Empty;
         public string SSID => values.TryGetValue(new Guid(SupportedUuids.UUID_CON_WIFI_SSID), out string response) ? response : string.Empty;
