@@ -147,9 +147,24 @@ class CharacteristicCallbacks : public NimBLECharacteristicCallbacks
             *pEvent = CustomEvents::EVENT_AZURE_IOT_HUB_TRY_CONNECT;
             return;
         }
-        if (uuid.equals(BLEUUID((uint16_t)CHARACTERISTIC_UUID_WIFI_CONNECTION_STAT)) && pCharacteristic->getValue() == "1")
+        if (uuid.equals(BLEUUID((uint16_t)CHARACTERISTIC_UUID_CONNECTION_STAT)))
         {
-            *pEvent = CustomEvents::EVENT_WIFI_TRY_CONNECT;
+            std::string val = pCharacteristic->getValue();
+            if (val[0] = '1') //
+            {
+                *pEvent = CustomEvents::EVENT_WIFI_TRY_CONNECT;
+                return;
+            }
+            if (val[1] = '1') //
+            {
+                *pEvent = CustomEvents::EVENT_GOOGLE_TYPE_CONNECT;
+                return;
+            }
+            if (val[2] = '1') //
+            {
+                *pEvent = CustomEvents::EVENT_AZURE_IOT_HUB_TRY_CONNECT;
+                return;
+            }
         }
         if (uuid.equals(BLEUUID((uint16_t)CHARACTERISTIC_UUID_RESET_CONFIG)))
         {
@@ -254,7 +269,7 @@ void BLEinit(std::string deviceName, CustomEvents *event)
     addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_WIFI_SCANNING, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY | NIMBLE_PROPERTY::WRITE, BLE_WIFI_SCANNING_DEACTIVE, DESCRIPTOR_UUID_WIFI_SCAN, DESCRIPTOR_VAL_WIFI_SCAN);
     addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_WIFI_SSID, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE, "");
     addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_WIFI_PASS, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE, BLE_WIFI_PASS_WRITE_ONLY);
-    addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_WIFI_CONNECTION_STAT, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY | NIMBLE_PROPERTY::WRITE, BLE_WIFI_NOT_CONNECTED, DESCRIPTOR_UUID_WIFI_CONN, DESCRIPTOR_VAL_WIFI_CONN);
+    addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_CONNECTION_STAT, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY | NIMBLE_PROPERTY::WRITE, BLE_WIFI_NOT_CONNECTED, DESCRIPTOR_UUID_WIFI_CONN, DESCRIPTOR_VAL_WIFI_CONN);
     addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_GOOGLE_HOME_NAME, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY | NIMBLE_PROPERTY::WRITE, "", DESCRIPTOR_UUID_GLHM_NAME, DESCRIPTOR_VAL_GLHM_NAME);
     addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_AZURE_IOT_HUB_CONN, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE, "");
     addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_DEVICE_LOCATION, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE, "");
@@ -328,7 +343,6 @@ void BLEsetSSIDs(std::string SSIDs)
 
 void BLEwirelessConnectionChanged(std::string status)
 {
-    setCharacteristicValue(BLEUUID((uint16_t)SERVICE_UUID_USER_DATA), BLEUUID((uint16_t)CHARACTERISTIC_UUID_WIFI_CONNECTION_STAT), status);
     if (status == BLE_WIFI_CONNECTED)
         *pEvent = CustomEvents::EVENT_WIFI_CONNECTED;
     else
@@ -388,9 +402,18 @@ bool hasNotifier(BLEUUID uuid)
         return true;
     if (uuid.equals(BLEUUID((uint16_t)CHARACTERISTIC_UUID_WIFI_SCANNING)))
         return true;
-    if (uuid.equals(BLEUUID((uint16_t)CHARACTERISTIC_UUID_WIFI_CONNECTION_STAT)))
+    if (uuid.equals(BLEUUID((uint16_t)CHARACTERISTIC_UUID_CONNECTION_STAT)))
         return true;
     if (uuid.equals(BLEUUID((uint16_t)CHARACTERISTIC_UUID_GOOGLE_HOME_NAME)))
         return true;
     return false;
+}
+
+void BLEupdateConnectionStatus(bool isWiFiConnected, bool isGoogleHomeConnected, bool isAzureConnected)
+{
+    std::string status;
+    status.push_back(isWiFiConnected ? '2' : '0');
+    status.push_back(isGoogleHomeConnected ? '2' : '0');
+    status.push_back(isAzureConnected ? '2' : '0');
+    setCharacteristicValue(BLEUUID((uint16_t)SERVICE_UUID_USER_DATA), BLEUUID((uint16_t)CHARACTERISTIC_UUID_CONNECTION_STAT), status);
 }

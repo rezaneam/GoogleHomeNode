@@ -21,19 +21,19 @@
 #define CHARACTERISTIC_UUID_FIRMWARE_REVISION 0x2A26
 #define CHARACTERISTIC_UUID_HARDWARE_REVISION 0x2A27
 #define CHARACTERISTIC_UUID_SOFTWARE_REVISION 0x2A28
-#define CHARACTERISTIC_UUID_BATTERY_LEVEL 0x2A19        // Battery level
-#define CHARACTERISTIC_UUID_PRESSURE 0x2A6D             // Pressure Measurements
-#define CHARACTERISTIC_UUID_TEMPERATURE 0x2A6E          // Temperature Measurements
-#define CHARACTERISTIC_UUID_HUMIDITY 0x2A6F             // Humidity Measurements
-#define CHARACTERISTIC_UUID_RESET_CONFIG 0x4900         // factory reseting the configurations - set 1 to reset ESP and 2 to erase EEPROM and then reset 3  to safe erase EEPROM and then reset.
-#define CHARACTERISTIC_UUID_WIFI_SSID_NAMES 0x4901      // Found WiFi names
-#define CHARACTERISTIC_UUID_WIFI_SCANNING 0x4902        // Scan Refresh - used for is WiFi scanning: 0 - Not scanning, 1 - scanning
-#define CHARACTERISTIC_UUID_WIFI_SSID 0x4903            // WiFi SSID Name
-#define CHARACTERISTIC_UUID_WIFI_PASS 0x4904            // WiFi SSID Password
-#define CHARACTERISTIC_UUID_WIFI_CONNECTION_STAT 0x4905 // WiFi Connection status: 0 Not connected, 1 Connecting, 2 Connected
-#define CHARACTERISTIC_UUID_GOOGLE_HOME_NAME 0x4906     // Google Home name seats here
-#define CHARACTERISTIC_UUID_AZURE_IOT_HUB_CONN 0x4907   // Azure IoT Hub connection string seats here
-#define CHARACTERISTIC_UUID_DEVICE_LOCATION 0x4908      // Device Location
+#define CHARACTERISTIC_UUID_BATTERY_LEVEL 0x2A19      // Battery level
+#define CHARACTERISTIC_UUID_PRESSURE 0x2A6D           // Pressure Measurements
+#define CHARACTERISTIC_UUID_TEMPERATURE 0x2A6E        // Temperature Measurements
+#define CHARACTERISTIC_UUID_HUMIDITY 0x2A6F           // Humidity Measurements
+#define CHARACTERISTIC_UUID_RESET_CONFIG 0x4900       // factory reseting the configurations - set 1 to reset ESP and 2 to erase EEPROM and then reset 3  to safe erase EEPROM and then reset.
+#define CHARACTERISTIC_UUID_WIFI_SSID_NAMES 0x4901    // Found WiFi names
+#define CHARACTERISTIC_UUID_WIFI_SCANNING 0x4902      // Scan Refresh - used for is WiFi scanning: 0 - Not scanning, 1 - scanning
+#define CHARACTERISTIC_UUID_WIFI_SSID 0x4903          // WiFi SSID Name
+#define CHARACTERISTIC_UUID_WIFI_PASS 0x4904          // WiFi SSID Password
+#define CHARACTERISTIC_UUID_CONNECTION_STAT 0x4905    // Connection status: each char for WiFi, Google Home, Azure=> 0 Not connected, 1 (try)Connecting, 2 Connected, 3 unknown
+#define CHARACTERISTIC_UUID_GOOGLE_HOME_NAME 0x4906   // Google Home name seats here
+#define CHARACTERISTIC_UUID_AZURE_IOT_HUB_CONN 0x4907 // Azure IoT Hub connection string seats here
+#define CHARACTERISTIC_UUID_DEVICE_LOCATION 0x4908    // Device Location
 
 #define DESCRIPTOR_UUID_BATTERY 0x3900     // Discriptor for battery level
 #define DESCRIPTOR_UUID_PRESSURE 0x3901    // Discriptor for Pressure Sensor
@@ -50,7 +50,7 @@
 #define DESCRIPTOR_VAL_PRESSURE "Pressure in Pascal scale"
 #define DESCRIPTOR_VAL_WIFI_SCAN "WiFi scanning: 0 - Not scanning, 1 - scanning"
 #define DESCRIPTOR_VAL_WIFI_SSIDs "List of the SSIDs found after scan"
-#define DESCRIPTOR_VAL_WIFI_CONN "WiFi Connection status: 0 Not connected, 1 (try)Connecting, 2 Connected"
+#define DESCRIPTOR_VAL_WIFI_CONN "Connection status: 0 Not connected, 1 (try)Connecting, 2 Connected"
 #define DESCRIPTOR_VAL_GLHM_NAME "Google Home Name"
 
 #define BLE_WIFI_SCANNING_ACTIVE "1"
@@ -76,6 +76,7 @@ void addCharacteristic(BLEService *pService, int uuid, uint32_t properties, std:
 void setCharacteristicValue(BLEUUID serviceUuid, BLEUUID charateristicsUuid, std::string value);
 void BLEsetSSIDs(std::string SSIDs);
 void BLEwirelessConnectionChanged(std::string status);
+void BLEupdateConnectionStatus(bool isWiFiConnected, bool isGoogleHomeConnected, bool isAzureConnected);
 std::string getCharacteristicValue(BLEUUID serviceUuid, BLEUUID charateristicsUuid);
 std::string BLEgetSSIDs();
 std::string BLEgetSSID();

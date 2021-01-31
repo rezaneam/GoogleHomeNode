@@ -269,11 +269,13 @@ void loop()
       WiFiConnect(GetFlashValue(EEPROM_VALUE::WiFi_SSID), GetFlashValue(EEPROM_VALUE::WiFi_Password));
     case CustomEvents::EVENT_WIFI_CONNECTED:
       isWiFiconnected = true;
+      BLEupdateConnectionStatus(isWiFiconnected, isHomeConnected, isCloudconnected);
       ssid = GetFlashValue(EEPROM_VALUE::WiFi_SSID);
       Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid, isCloudconnected);
       break;
     case CustomEvents::EVENT_WIFI_DISCONNECTED:
       isWiFiconnected = false;
+      BLEupdateConnectionStatus(isWiFiconnected, isHomeConnected, isCloudconnected);
       ssid = "";
       Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid, isCloudconnected);
       break;
