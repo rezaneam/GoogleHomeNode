@@ -1,8 +1,15 @@
 #include <Wireless.h>
+CustomEvents *pWiFiEvent;
+void WiFiInit(CustomEvents *event)
+{
+    WiFi.mode(WIFI_STA);
+    //WiFi.setHostname(WiFiName);
+    pWiFiEvent = event;
+}
 
 bool WiFiScanNodes()
 {
-    WiFi.mode(WIFI_STA);
+
     int n = WiFi.scanNetworks();
     std::string SSIDs;
     if (n == 0)
@@ -49,7 +56,7 @@ bool WiFiConnect(std::string ssid, std::string password)
     //     ;
     if (connectionStatus == WL_CONNECTED)
     {
-        BLEwirelessConnectionChanged(BLE_WIFI_CONNECTED);
+        *pWiFiEvent = CustomEvents::EVENT_WIFI_CONNECTED;
         Serial.println(WiFi.localIP());
         Serial.println(WiFi.getHostname());
         Serial.println(WiFi.gatewayIP());
@@ -59,7 +66,7 @@ bool WiFiConnect(std::string ssid, std::string password)
         Serial.println("WiFi connection failed. SSID is not available");
     else
         Serial.println("WiFi Connection failed. Code " + String(connectionStatus));
-    BLEwirelessConnectionChanged(BLE_WIFI_NOT_CONNECTED);
+    *pWiFiEvent = CustomEvents::EVENT_WIFI_DISCONNECTED;
     WiFi.disconnect();
     return false;
 }

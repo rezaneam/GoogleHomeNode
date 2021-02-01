@@ -202,6 +202,8 @@ void setup()
   pinMode(BLE_ADVERTISE_ENABLE_PIN, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(BLE_ADVERTISE_ENABLE_PIN), handleExternalInterrupt, FALLING);
 
+  WiFiInit(&activeEvent);
+
   if (HasValidWiFi())
   {
     isWiFiconnected = WiFiConnect(GetFlashValue(EEPROM_VALUE::WiFi_SSID), GetFlashValue(EEPROM_VALUE::WiFi_Password));
@@ -280,6 +282,12 @@ void loop()
       Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid, isCloudconnected);
       break;
     case CustomEvents::EVENT_GOOGLE_HOME_NAME:
+      if (isWiFiconnected && HasValidHome())
+        NotifierTryConnect(GetFlashValue(EEPROM_VALUE::Google_Home_Name));
+      break;
+    case CustomEvents::EVENT_GOOGLE_HOME_CONNECTED:
+      BLEsetGoogleHomeName(GetFlashValue(EEPROM_VALUE::Google_Home_Name));
+      Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid, isCloudconnected);
       break;
     case CustomEvents::EVENT_GOOGLE_REPORT_TEMPERATURE:
       if (isHomeConnected)
@@ -351,13 +359,14 @@ bool NotifierTryConnect(std::string deviceName)
   {
     isHomeConnected = true;
     Serial.println("found Google Home(" + googleHomeNotifier.getIPAddress().toString() + ":" + String(googleHomeNotifier.getPort()) + ")");
-    if (googleHomeNotifier.notify(Notifier_WELCOME_MSG) != true)
-    {
-      Serial.println(googleHomeNotifier.getLastError());
-      return false;
-    }
+    // if (googleHomeNotifier.notify(Notifier_WELCOME_MSG) != true)
+    // {
+    //   Serial.println(googleHomeNotifier.getLastError());
+    //   return false;
+    // }
     isHomeConnected = true;
   }
+  activeEvent = CustomEvents::EVENT_GOOGLE_HOME_CONNECTED;
 
   return true;
 }

@@ -55,7 +55,7 @@
 
 #define BLE_WIFI_SCANNING_ACTIVE "1"
 #define BLE_WIFI_SCANNING_DEACTIVE "0"
-#define BLE_WIFI_NOT_CONNECTED "0"
+#define BLE_NOT_CONNECTED "000"
 #define BLE_WIFI_CONNECTING "1"
 #define BLE_WIFI_CONNECTED "2"
 
@@ -75,12 +75,12 @@ void BLEstopAd();
 void addCharacteristic(BLEService *pService, int uuid, uint32_t properties, std::string value, int descriptorUuid = -1, std::string descriptorValue = "");
 void setCharacteristicValue(BLEUUID serviceUuid, BLEUUID charateristicsUuid, std::string value);
 void BLEsetSSIDs(std::string SSIDs);
-void BLEwirelessConnectionChanged(std::string status);
+void BLEsetSSID(std::string value);
+void BLEsetGoogleHomeName(std::string value);
 void BLEupdateConnectionStatus(bool isWiFiConnected, bool isGoogleHomeConnected, bool isAzureConnected);
 std::string getCharacteristicValue(BLEUUID serviceUuid, BLEUUID charateristicsUuid);
 std::string BLEgetSSIDs();
 std::string BLEgetSSID();
-void BLEsetSSID(std::string value);
 std::string BLEgetPassword();
 void UpdateSensorValues(float temperature, float humidity, float pressure);
 std::string convertToString(float value);

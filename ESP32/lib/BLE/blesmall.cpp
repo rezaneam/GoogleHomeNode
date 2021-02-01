@@ -269,7 +269,7 @@ void BLEinit(std::string deviceName, CustomEvents *event)
     addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_WIFI_SCANNING, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY | NIMBLE_PROPERTY::WRITE, BLE_WIFI_SCANNING_DEACTIVE, DESCRIPTOR_UUID_WIFI_SCAN, DESCRIPTOR_VAL_WIFI_SCAN);
     addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_WIFI_SSID, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE, "");
     addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_WIFI_PASS, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE, BLE_WIFI_PASS_WRITE_ONLY);
-    addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_CONNECTION_STAT, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY | NIMBLE_PROPERTY::WRITE, BLE_WIFI_NOT_CONNECTED, DESCRIPTOR_UUID_WIFI_CONN, DESCRIPTOR_VAL_WIFI_CONN);
+    addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_CONNECTION_STAT, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY | NIMBLE_PROPERTY::WRITE, BLE_NOT_CONNECTED, DESCRIPTOR_UUID_WIFI_CONN, DESCRIPTOR_VAL_WIFI_CONN);
     addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_GOOGLE_HOME_NAME, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY | NIMBLE_PROPERTY::WRITE, "", DESCRIPTOR_UUID_GLHM_NAME, DESCRIPTOR_VAL_GLHM_NAME);
     addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_AZURE_IOT_HUB_CONN, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE, "");
     addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_DEVICE_LOCATION, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE, "");
@@ -341,14 +341,6 @@ void BLEsetSSIDs(std::string SSIDs)
     setCharacteristicValue(BLEUUID((uint16_t)SERVICE_UUID_USER_DATA), BLEUUID((uint16_t)CHARACTERISTIC_UUID_WIFI_SCANNING), BLE_WIFI_SCANNING_DEACTIVE);
 }
 
-void BLEwirelessConnectionChanged(std::string status)
-{
-    if (status == BLE_WIFI_CONNECTED)
-        *pEvent = CustomEvents::EVENT_WIFI_CONNECTED;
-    else
-        *pEvent = CustomEvents::EVENT_WIFI_DISCONNECTED;
-}
-
 std::string getCharacteristicValue(BLEUUID serviceUuid, BLEUUID charateristicsUuid)
 {
     return pServer->getServiceByUUID(serviceUuid)->getCharacteristic(charateristicsUuid)->getValue();
@@ -362,6 +354,11 @@ std::string BLEgetSSIDs()
 void BLEsetSSID(std::string value)
 {
     setCharacteristicValue(BLEUUID((uint16_t)SERVICE_UUID_USER_DATA), BLEUUID((uint16_t)CHARACTERISTIC_UUID_WIFI_SSID), value);
+}
+
+void BLEsetGoogleHomeName(std::string value)
+{
+    setCharacteristicValue(BLEUUID((uint16_t)SERVICE_UUID_USER_DATA), BLEUUID((uint16_t)CHARACTERISTIC_UUID_GOOGLE_HOME_NAME), value);
 }
 
 std::string BLEgetSSID()
@@ -415,5 +412,6 @@ void BLEupdateConnectionStatus(bool isWiFiConnected, bool isGoogleHomeConnected,
     status.push_back(isWiFiConnected ? '2' : '0');
     status.push_back(isGoogleHomeConnected ? '2' : '0');
     status.push_back(isAzureConnected ? '2' : '0');
+    printf("connection status is %s\r\n", status);
     setCharacteristicValue(BLEUUID((uint16_t)SERVICE_UUID_USER_DATA), BLEUUID((uint16_t)CHARACTERISTIC_UUID_CONNECTION_STAT), status);
 }
