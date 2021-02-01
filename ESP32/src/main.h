@@ -7,6 +7,7 @@
 #include <BME280.h>
 #include <esp8266-google-home-notifier.h>
 #include <security.h>
+#include <vector>
 
 #define SDA_PIN 5
 #define SCL_PIN 4
@@ -27,13 +28,14 @@ GoogleHomeNotifier googleHomeNotifier;
 
 BME280 Sensor = BME280();
 SSD1306Wire Oled(OLED_Address, SDA_PIN, SCL_PIN);
+bool tryStartBLE = false;
 bool readSenor = false;
 bool isHomeConnected = false;
 bool isBLEadvertising = false;
 bool isBLEconnected = false;
 bool isWiFiconnected = false;
 bool isCloudconnected = false;
-CustomEvents activeEvent = CustomEvents::EVENT_NONE;
+std::vector<CustomEvents> eventQueue;
 
 std::string ssid;
 char messageBuffer[64];
@@ -44,5 +46,7 @@ portMUX_TYPE externalPinmux = portMUX_INITIALIZER_UNLOCKED;
 
 bool NotifierTryConnect(std::string deviceName);
 bool NotifierNotify(std::string deviceName, std::string message);
+void EnqueueEvent(CustomEvents newEvent);
+CustomEvents DequeueEvent();
 
 bool InitIoT();

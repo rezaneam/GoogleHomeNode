@@ -1,10 +1,8 @@
 #include <main.h>
 
-// TODO: Adding Google Name & Keyword to the GATT
-// TODO: Adding support for Google Home welcome message
-// TODO: Adding Cloud service
-// TODO: Adding Cloud icon on Oled
-// TODO: Adding IFTT service
+// TODO: Moving BLE stuff to a seperate class
+// TODO: Moving WiFi stuff to a seperate class
+// TODO: Use connection string stored in the
 // TODO: Adding verbose flag for printing outputs
 // TODO: Code Clean up - Phase 1 (minimize the logic in the main.cpp)
 // TODO: Code Clean up - Phase 2 (organizing the process)
@@ -117,10 +115,9 @@ static int device_method_callback(const char *method_name, const unsigned char *
     char *message = resolveValue(buffer, "\"Key\"");
 
     if (strstr(message, "temperature"))
-
-      activeEvent = CustomEvents::EVENT_GOOGLE_REPORT_TEMPERATURE;
+      EnqueueEvent(CustomEvents::EVENT_GOOGLE_REPORT_TEMPERATURE);
     else if (strstr(message, "humidity"))
-      activeEvent = CustomEvents::EVENT_GOOGLE_REPORT_HUMIDITY;
+      EnqueueEvent(CustomEvents::EVENT_GOOGLE_REPORT_HUMIDITY);
 
     printf("message is: %s\r\n", message);
     free(buffer);
@@ -147,7 +144,7 @@ uint64_t timerCalls = 0;
 void IRAM_ATTR handleExternalInterrupt()
 {
   portENTER_CRITICAL_ISR(&externalPinmux);
-  BLEstartAd();
+  tryStartBLE = true;
   portEXIT_CRITICAL_ISR(&externalPinmux);
 }
 
@@ -175,6 +172,21 @@ void initSensorReadTimer()
 
 // ? Timer Settings
 
+void EnqueueEvent(CustomEvents newEvent)
+{
+  if (std::find(eventQueue.begin(), eventQueue.end(), newEvent) == eventQueue.end())
+    eventQueue.push_back(newEvent);
+}
+
+CustomEvents DequeueEvent()
+{
+  if (eventQueue.size() == 0)
+    return CustomEvents::EVENT_NONE;
+  CustomEvents returnEvent = eventQueue.front();
+  eventQueue.erase(eventQueue.begin());
+  return returnEvent;
+}
+
 void setup()
 {
   // put your setup code here, to run once:
@@ -196,13 +208,13 @@ void setup()
                      BME280::standby_duration::STANDBY_MS_1000);
   initSensorReadTimer();
   Serial.println("Starting BLE");
-  BLEinit(BLE_DEVICE_NAME, &activeEvent);
+  BLEinit(BLE_DEVICE_NAME, &EnqueueEvent);
   BLEsetupAd();
 
   pinMode(BLE_ADVERTISE_ENABLE_PIN, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(BLE_ADVERTISE_ENABLE_PIN), handleExternalInterrupt, FALLING);
 
-  WiFiInit(&activeEvent);
+  WiFiInit(&EnqueueEvent);
 
   if (HasValidWiFi())
   {
@@ -238,94 +250,103 @@ void loop()
     fireIoT = false;
   }
 
-  if (activeEvent != CustomEvents::EVENT_NONE)
+  if (tryStartBLE)
   {
-    switch (activeEvent)
+    tryStartBLE = false;
+    if (!isBLEadvertising)
+      EnqueueEvent(CustomEvents::EVENT_BLE_TRY_START_ADV);
+  }
+
+  if (isBLEadvertising && !BLEgetAdvertiseStatus())
+    EnqueueEvent(CustomEvents::EVENT_BLE_STOPPED);
+
+  switch (DequeueEvent())
+  {
+  case CustomEvents::EVENT_BLE_CONNECTED:
+    isBLEconnected = true;
+    isBLEadvertising = false;
+    Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid, isCloudconnected);
+    break;
+  case CustomEvents::EVENT_BLE_DISCONNECT:
+    isBLEconnected = false;
+    isBLEadvertising = true;
+    Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid, isCloudconnected);
+    break;
+  case CustomEvents::EVENT_BLE_STOPPED:
+    //NimBLEDevice::stopAdvertising();
+    Serial.println("BLE stopped advertising.");
+    isBLEconnected = false;
+    isBLEadvertising = false;
+    Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid, isCloudconnected);
+    break;
+  case CustomEvents::EVENT_BLE_TRY_START_ADV:
+    BLEstartAd();
+    //NimBLEDevice::startAdvertising();
+    isBLEconnected = false;
+    isBLEadvertising = true;
+    Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid, isCloudconnected);
+    break;
+  case CustomEvents::EVENT_WIFI_START_SCAN:
+    WiFiScanNodes();
+    break;
+  case CustomEvents::EVENT_WIFI_TRY_CONNECT:
+    WiFiConnect(GetFlashValue(EEPROM_VALUE::WiFi_SSID), GetFlashValue(EEPROM_VALUE::WiFi_Password));
+  case CustomEvents::EVENT_WIFI_CONNECTED:
+    isWiFiconnected = true;
+    BLEupdateConnectionStatus(isWiFiconnected, isHomeConnected, isCloudconnected);
+    ssid = GetFlashValue(EEPROM_VALUE::WiFi_SSID);
+    Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid, isCloudconnected);
+    break;
+  case CustomEvents::EVENT_WIFI_DISCONNECTED:
+    isWiFiconnected = false;
+    BLEupdateConnectionStatus(isWiFiconnected, isHomeConnected, isCloudconnected);
+    ssid = "";
+    Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid, isCloudconnected);
+    break;
+  case CustomEvents::EVENT_GOOGLE_HOME_NAME:
+    if (isWiFiconnected && HasValidHome())
+      NotifierTryConnect(GetFlashValue(EEPROM_VALUE::Google_Home_Name));
+    break;
+  case CustomEvents::EVENT_GOOGLE_HOME_CONNECTED:
+    BLEsetGoogleHomeName(GetFlashValue(EEPROM_VALUE::Google_Home_Name));
+    BLEupdateConnectionStatus(isWiFiconnected, isHomeConnected, isCloudconnected);
+    Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid, isCloudconnected);
+    break;
+  case CustomEvents::EVENT_GOOGLE_REPORT_TEMPERATURE:
+    if (isHomeConnected)
     {
-    case CustomEvents::EVENT_BLE_CONNECTED:
-      isBLEconnected = true;
-      isBLEadvertising = false;
-      Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid, isCloudconnected);
-      break;
-    case CustomEvents::EVENT_BLE_DISCONNECT:
-      isBLEconnected = false;
-      isBLEadvertising = true;
-      Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid, isCloudconnected);
-      break;
-    case CustomEvents::EVENT_BLE_STOPPED:
-      NimBLEDevice::stopAdvertising();
-      isBLEconnected = false;
-      isBLEadvertising = false;
-      Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid, isCloudconnected);
-      break;
-    case CustomEvents::EVENT_BLE_STARTED:
-      NimBLEDevice::startAdvertising();
-      isBLEconnected = false;
-      isBLEadvertising = true;
-      Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid, isCloudconnected);
-      break;
-    case CustomEvents::EVENT_WIFI_START_SCAN:
-      WiFiScanNodes();
-      break;
-    case CustomEvents::EVENT_WIFI_TRY_CONNECT:
-      WiFiConnect(GetFlashValue(EEPROM_VALUE::WiFi_SSID), GetFlashValue(EEPROM_VALUE::WiFi_Password));
-    case CustomEvents::EVENT_WIFI_CONNECTED:
-      isWiFiconnected = true;
-      BLEupdateConnectionStatus(isWiFiconnected, isHomeConnected, isCloudconnected);
-      ssid = GetFlashValue(EEPROM_VALUE::WiFi_SSID);
-      Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid, isCloudconnected);
-      break;
-    case CustomEvents::EVENT_WIFI_DISCONNECTED:
-      isWiFiconnected = false;
-      BLEupdateConnectionStatus(isWiFiconnected, isHomeConnected, isCloudconnected);
-      ssid = "";
-      Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid, isCloudconnected);
-      break;
-    case CustomEvents::EVENT_GOOGLE_HOME_NAME:
-      if (isWiFiconnected && HasValidHome())
-        NotifierTryConnect(GetFlashValue(EEPROM_VALUE::Google_Home_Name));
-      break;
-    case CustomEvents::EVENT_GOOGLE_HOME_CONNECTED:
-      BLEsetGoogleHomeName(GetFlashValue(EEPROM_VALUE::Google_Home_Name));
-      Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid, isCloudconnected);
-      break;
-    case CustomEvents::EVENT_GOOGLE_REPORT_TEMPERATURE:
-      if (isHomeConnected)
-      {
-        char buffer[200];
-        sprintf(buffer, "The current temperature is %d", (int)Sensor.readTemperature());
-        NotifierNotify(GetFlashValue(EEPROM_VALUE::Google_Home_Name), buffer);
-      }
-      break;
-    case CustomEvents::EVENT_GOOGLE_REPORT_HUMIDITY:
-      if (isHomeConnected)
-      {
-        char buffer[200];
-        sprintf(buffer, "The current humidity is %d", (int)Sensor.readHumidity());
-        NotifierNotify(GetFlashValue(EEPROM_VALUE::Google_Home_Name), buffer);
-      }
-      break;
-    case CustomEvents::EVENT_FACTORY_RESET:
-      Oled.ShowRestMessage("Factory Reset");
-      EraseFlash();
-      delay(5000);
-      ESP.restart();
-      break;
-    case CustomEvents::EVENT_FACTORY_RESET_SAFE:
-      Oled.ShowRestMessage("Factory Reset [safe]");
-      EraseFlash(true);
-      delay(5000);
-      ESP.restart();
-      break;
-    case CustomEvents::EVENT_RESTART:
-      Oled.ShowRestMessage("Restarting...");
-      delay(5000);
-      ESP.restart();
-      break;
-    default:
-      break;
+      char buffer[200];
+      sprintf(buffer, "The current temperature is %d", (int)Sensor.readTemperature());
+      NotifierNotify(GetFlashValue(EEPROM_VALUE::Google_Home_Name), buffer);
     }
-    activeEvent = CustomEvents::EVENT_NONE;
+    break;
+  case CustomEvents::EVENT_GOOGLE_REPORT_HUMIDITY:
+    if (isHomeConnected)
+    {
+      char buffer[200];
+      sprintf(buffer, "The current humidity is %d", (int)Sensor.readHumidity());
+      NotifierNotify(GetFlashValue(EEPROM_VALUE::Google_Home_Name), buffer);
+    }
+    break;
+  case CustomEvents::EVENT_FACTORY_RESET:
+    Oled.ShowRestMessage("Factory Reset");
+    EraseFlash();
+    delay(5000);
+    ESP.restart();
+    break;
+  case CustomEvents::EVENT_FACTORY_RESET_SAFE:
+    Oled.ShowRestMessage("Factory Reset [safe]");
+    EraseFlash(true);
+    delay(5000);
+    ESP.restart();
+    break;
+  case CustomEvents::EVENT_RESTART:
+    Oled.ShowRestMessage("Restarting...");
+    delay(5000);
+    ESP.restart();
+    break;
+  default:
+    break;
   }
 
   if (readSenor)
@@ -366,7 +387,7 @@ bool NotifierTryConnect(std::string deviceName)
     // }
     isHomeConnected = true;
   }
-  activeEvent = CustomEvents::EVENT_GOOGLE_HOME_CONNECTED;
+  EnqueueEvent(CustomEvents::EVENT_GOOGLE_HOME_CONNECTED);
 
   return true;
 }

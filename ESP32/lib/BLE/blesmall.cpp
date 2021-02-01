@@ -1,10 +1,10 @@
 #include <blesmall.h>
 
 NimBLEServer *pServer;
-CustomEvents *pEvent;
+
 bool isConnected = false;
 bool isAdvertising = false;
-
+void (*queueEventBLE)(CustomEvents);
 hw_timer_t *timer = NULL;
 portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;
 
@@ -13,9 +13,8 @@ void IRAM_ATTR onStopAdvertise()
     portENTER_CRITICAL_ISR(&timerMux);
     if (!isConnected)
     {
-        BLEstopAd();
         timerStop(timer);
-        *pEvent = CustomEvents::EVENT_BLE_STOPPED;
+        isAdvertising = false;
     }
     portEXIT_CRITICAL_ISR(&timerMux);
 }
@@ -40,7 +39,7 @@ class ServerCallbacks : public NimBLEServerCallbacks
         NimBLEDevice::startAdvertising();
 
         isConnected = true;
-        *pEvent = CustomEvents::EVENT_BLE_CONNECTED;
+        queueEventBLE(CustomEvents::EVENT_BLE_CONNECTED);
     };
     /** Alternative onConnect() method to extract details of the connection.
      *  See: src/ble_gap.h for the details of the ble_gap_conn_desc struct.
@@ -60,7 +59,7 @@ class ServerCallbacks : public NimBLEServerCallbacks
         pServer->updateConnParams(desc->conn_handle, 24, 48, 0, 60);
 
         isConnected = true;
-        *pEvent = CustomEvents::EVENT_BLE_CONNECTED;
+        queueEventBLE(CustomEvents::EVENT_BLE_CONNECTED);
     };
     void onDisconnect(NimBLEServer *pServer)
     {
@@ -68,7 +67,7 @@ class ServerCallbacks : public NimBLEServerCallbacks
         NimBLEDevice::startAdvertising();
 
         isConnected = false;
-        *pEvent = CustomEvents::EVENT_BLE_DISCONNECT;
+        queueEventBLE(CustomEvents::EVENT_BLE_DISCONNECT);
     };
 
     /********************* Security handled here **********************
@@ -124,7 +123,7 @@ class CharacteristicCallbacks : public NimBLECharacteristicCallbacks
             std::string val = pCharacteristic->getValue();
             if (val == "1")
             {
-                *pEvent = CustomEvents::EVENT_WIFI_START_SCAN;
+                queueEventBLE(CustomEvents::EVENT_WIFI_START_SCAN);
             }
             return;
         }
@@ -137,14 +136,14 @@ class CharacteristicCallbacks : public NimBLECharacteristicCallbacks
         if (uuid.equals(BLEUUID((uint16_t)CHARACTERISTIC_UUID_GOOGLE_HOME_NAME)))
         {
             WriteFlashHomeName(pCharacteristic->getValue());
-            *pEvent = CustomEvents::EVENT_GOOGLE_HOME_NAME;
+            queueEventBLE(CustomEvents::EVENT_GOOGLE_HOME_NAME);
             return;
         }
         if (uuid.equals(BLEUUID((uint16_t)CHARACTERISTIC_UUID_AZURE_IOT_HUB_CONN)))
         {
             WriteAzureIoTHub(pCharacteristic->getValue());
             setCharacteristicValue(BLEUUID((uint16_t)SERVICE_UUID_USER_DATA), uuid, BLE_WIFI_PASS_WRITE_ONLY);
-            *pEvent = CustomEvents::EVENT_AZURE_IOT_HUB_TRY_CONNECT;
+            queueEventBLE(CustomEvents::EVENT_AZURE_IOT_HUB_TRY_CONNECT);
             return;
         }
         if (uuid.equals(BLEUUID((uint16_t)CHARACTERISTIC_UUID_CONNECTION_STAT)))
@@ -152,17 +151,17 @@ class CharacteristicCallbacks : public NimBLECharacteristicCallbacks
             std::string val = pCharacteristic->getValue();
             if (val[0] = '1') //
             {
-                *pEvent = CustomEvents::EVENT_WIFI_TRY_CONNECT;
+                queueEventBLE(CustomEvents::EVENT_WIFI_TRY_CONNECT);
                 return;
             }
             if (val[1] = '1') //
             {
-                *pEvent = CustomEvents::EVENT_GOOGLE_TYPE_CONNECT;
+                queueEventBLE(CustomEvents::EVENT_GOOGLE_TYPE_CONNECT);
                 return;
             }
             if (val[2] = '1') //
             {
-                *pEvent = CustomEvents::EVENT_AZURE_IOT_HUB_TRY_CONNECT;
+                queueEventBLE(CustomEvents::EVENT_AZURE_IOT_HUB_TRY_CONNECT);
                 return;
             }
         }
@@ -170,13 +169,13 @@ class CharacteristicCallbacks : public NimBLECharacteristicCallbacks
         {
             std::string val = pCharacteristic->getValue();
             if (val == "1")
-                *pEvent = CustomEvents::EVENT_RESTART;
+                queueEventBLE(CustomEvents::EVENT_RESTART);
 
             else if (val == "2")
-                *pEvent = CustomEvents::EVENT_FACTORY_RESET;
+                queueEventBLE(CustomEvents::EVENT_FACTORY_RESET);
 
             else if (val == "3")
-                *pEvent = CustomEvents::EVENT_FACTORY_RESET_SAFE;
+                queueEventBLE(CustomEvents::EVENT_FACTORY_RESET_SAFE);
         }
     };
     /** Called before notification or indication is sent,
@@ -231,9 +230,9 @@ class CharacteristicCallbacks : public NimBLECharacteristicCallbacks
     };
 };
 
-void BLEinit(std::string deviceName, CustomEvents *event)
+void BLEinit(std::string deviceName, void (*event_queue_method)(CustomEvents))
 {
-    pEvent = event;
+    queueEventBLE = event_queue_method;
     Serial.println("Free heap is " + String(ESP.getFreeHeap()));
     NimBLEDevice::init(deviceName);
     NimBLEDevice::setPower(ESP_PWR_LVL_P9); /** +9db */
@@ -282,6 +281,11 @@ void BLEinit(std::string deviceName, CustomEvents *event)
     initTimer();
 }
 
+bool BLEgetAdvertiseStatus()
+{
+    return isAdvertising;
+}
+
 void BLEsetupAd()
 {
     NimBLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
@@ -300,17 +304,9 @@ void BLEstartAd()
     if (isAdvertising)
         return;
     isAdvertising = true;
-    // NimBLEDevice::startAdvertising();
+    NimBLEDevice::startAdvertising();
     Serial.println("BLE starts advertising");
     timerStart(timer);
-    *pEvent = CustomEvents::EVENT_BLE_STARTED;
-}
-
-void BLEstopAd()
-{
-    // NimBLEDevice::stopAdvertising();
-    isAdvertising = false;
-    Serial.println("BLE stopped advertising.");
 }
 
 void addCharacteristic(BLEService *pService, int uuid, uint32_t properties, std::string value, int descriptorUuid, std::string descriptorValue)
@@ -412,6 +408,5 @@ void BLEupdateConnectionStatus(bool isWiFiConnected, bool isGoogleHomeConnected,
     status.push_back(isWiFiConnected ? '2' : '0');
     status.push_back(isGoogleHomeConnected ? '2' : '0');
     status.push_back(isAzureConnected ? '2' : '0');
-    printf("connection status is %s\r\n", status);
     setCharacteristicValue(BLEUUID((uint16_t)SERVICE_UUID_USER_DATA), BLEUUID((uint16_t)CHARACTERISTIC_UUID_CONNECTION_STAT), status);
 }
