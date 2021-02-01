@@ -6,8 +6,9 @@
 #include <Wireless.h>
 #include <BME280.h>
 #include <esp8266-google-home-notifier.h>
-#include <security.h>
 #include <vector>
+#include <security.h>
+#include <Azure.h>
 
 #define SDA_PIN 5
 #define SCL_PIN 4
@@ -30,6 +31,7 @@ BME280 Sensor = BME280();
 SSD1306Wire Oled(OLED_Address, SDA_PIN, SCL_PIN);
 bool tryStartBLE = false;
 bool readSenor = false;
+bool fireIoT = false;
 bool isHomeConnected = false;
 bool isBLEadvertising = false;
 bool isBLEconnected = false;

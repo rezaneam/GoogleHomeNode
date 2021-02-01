@@ -1,3 +1,5 @@
+#pragma once
+
 enum CustomEvents
 {
     EVENT_NONE,
