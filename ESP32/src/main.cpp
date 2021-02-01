@@ -100,7 +100,6 @@ void setup()
       if (getLocalTime(&timeinfo))
       {
         // ! Azure IoT
-        // isCloudconnected = InitIoT();
         isCloudconnected = azureIoT.Initialize(DEVICE_CONNECTION_STRING, &EnqueueEvent, true);
       }
     }
@@ -112,13 +111,6 @@ void setup()
 
 void loop()
 {
-  // put your main code here, to run repeatedly:
-  // if (fireIoT && device_ll_handle != NULL)
-  // {
-  //   IoTHubDeviceClient_LL_DoWork(device_ll_handle);
-  //   fireIoT = false;
-  // }
-
   if (fireIoT)
   {
     azureIoT.HeartBeat();

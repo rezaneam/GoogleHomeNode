@@ -51,4 +51,4 @@ bool NotifierNotify(std::string deviceName, std::string message);
 void EnqueueEvent(CustomEvents newEvent);
 CustomEvents DequeueEvent();
 
-bool InitIoT();
+AzureIoTHub azureIoT;
