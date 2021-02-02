@@ -33,7 +33,7 @@ namespace ConfigTool.BLE
         public const string UUID_CON_WIFI_SCAN = "00004902-0000-1000-8000-00805f9b34fb";
         public const string UUID_CON_WIFI_SSID = "00004903-0000-1000-8000-00805f9b34fb";
         public const string UUID_CON_WIFI_PASS = "00004904-0000-1000-8000-00805f9b34fb";
-        public const string UUID_CON_WIFI_CONN = "00004905-0000-1000-8000-00805f9b34fb";
+        public const string UUID_CON_DEVI_CONN = "00004905-0000-1000-8000-00805f9b34fb";
         public const string UUID_CON_HOME_NAME = "00004906-0000-1000-8000-00805f9b34fb";
         public const string UUID_CON_AZURE_IOT = "00004907-0000-1000-8000-00805f9b34fb";
         public const string UUID_CON_DEVIC_LOC = "00004908-0000-1000-8000-00805f9b34fb";
@@ -70,7 +70,7 @@ namespace ConfigTool.BLE
             { new Guid(UUID_CON_WIFI_SCAN), "WiFi scan status" },
             { new Guid(UUID_CON_WIFI_SSID), "WiFi SSID" },
             { new Guid(UUID_CON_WIFI_PASS), "WiFi Password" },
-            { new Guid(UUID_CON_WIFI_CONN), "WiFi connection status" },
+            { new Guid(UUID_CON_DEVI_CONN), "WiFi, Google Home, Cloud connection status" },
             { new Guid(UUID_CON_HOME_NAME), "Google Home Name" }
         };
 

@@ -22,6 +22,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Windows.UI;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -372,6 +373,39 @@ namespace Config_Tool___Google_Home_Node
         //    Debug.WriteLine($"{SupportedUuids.TranslateUuid(sender.Uuid)} : {SupportedUuids.FormatToString(args.CharacteristicValue)}");
         //}
 
+        private string FormatToString(Windows.Storage.Streams.IBuffer value)
+        {
+            string formattedResult = string.Empty;
+            CryptographicBuffer.CopyToByteArray(value, out byte[] data);
+            if (data != null)
+                formattedResult = Encoding.UTF8.GetString(data);
+            return formattedResult;
+        }
+
+        private void UpdateConntionStatus(string status)
+        {
+            if (status[0] == '2')
+            {
+                WiFiStatus.Foreground = new SolidColorBrush(Colors.DarkGreen);
+                WiFiStatus.Text = "\xEC3F";
+            }
+            else
+            {
+                WiFiStatus.Foreground = new SolidColorBrush(Colors.DarkRed);
+                WiFiStatus.Text = "\xEB5E";
+            }
+
+            if (status[1] == '2')
+                GoogleHomeStatus.Foreground = new SolidColorBrush(Colors.DarkGreen);
+            else
+                GoogleHomeStatus.Foreground = new SolidColorBrush(Colors.DarkRed);
+
+            if (status[2] == '2')
+                AzureStatus.Foreground = new SolidColorBrush(Colors.DarkGreen);
+            else
+                AzureStatus.Foreground = new SolidColorBrush(Colors.DarkRed);
+        }
+
         private async void GattCharacteristic_ValueChanged(GattCharacteristic sender, GattValueChangedEventArgs args)
         {
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
@@ -392,7 +426,16 @@ namespace Config_Tool___Google_Home_Node
                             if (!string.IsNullOrEmpty(ssid) && !FoundSSIDs.Contains(ssid))
                                 FoundSSIDs.Add(ssid);
                         }
-                            
+
+                        break;
+
+                    case SupportedUuids.UUID_CON_DEVI_CONN:
+                        var value = FormatToString(args.CharacteristicValue);
+                        await Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+                        {
+                            UpdateConntionStatus(value);
+                        });
+
                         break;
                     default:
                         break;
@@ -405,28 +448,16 @@ namespace Config_Tool___Google_Home_Node
 
         private async void OnConfigNode(object sender, RoutedEventArgs e)
         {
-            if (node.Config.ConnectionStatus != "2")
-            {
-                NextSetting.IsEnabled = false;
+            if (node.Config.ConnectionStatus[0] != '2')
                 CurrentWiFiStatusTextBlock.Text = "Node is not connected to any WiFi.";
-            }
             else
-            {
-                NextSetting.IsEnabled = true;
                 CurrentWiFiStatusTextBlock.Text = $"WiFi is connected to {node.Config.SSID}";
-            }
 
-            await WiFiConfigContentDialog.ShowAsync();
-        }
+            GoogleHomeNameTextBox.Text = node.Config.GoogleHomeName;
 
-        private void onHomeSetting(object sender, RoutedEventArgs e)
-        {
-            WiFiConfigContentDialog.Hide();
-        }
+            UpdateConntionStatus(await node.Config.GetConnectionStatus());
 
-        private void OnCloseWiFiConfigContentDialog(object sender, RoutedEventArgs e)
-        {
-            WiFiConfigContentDialog.Hide();
+            NodeConfiguration.Visibility = Visibility.Visible;
         }
 
         private async void OnFindWiFi(object sender, RoutedEventArgs e)
@@ -472,6 +503,16 @@ namespace Config_Tool___Google_Home_Node
         {
             RestNodeContentDialog.Hide();
             await node.Config.ResetNode("3");
+        }
+
+        private async void onUpdateGoogleHomeName(object sender, RoutedEventArgs e)
+        {
+            await node.Config.SetGoogleHomeName(GoogleHomeNameTextBox.Text);
+        }
+
+        private async void onUpdateConnectionString(object sender, RoutedEventArgs e)
+        {
+            await node.Config.SetAzureConnectionString(connectionstringBox.Password);
         }
     }
 }

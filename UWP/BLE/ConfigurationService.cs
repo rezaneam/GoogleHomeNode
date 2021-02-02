@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Threading.Tasks;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
 using Windows.Foundation;
@@ -34,11 +35,18 @@ namespace ConfigTool.BLE
             return await GetCharacteristicValue(new Guid(SupportedUuids.UUID_CON_WIFI_SSIDS));
         }
 
+        public async Task<string> GetConnectionStatus()
+        {
+            return await GetCharacteristicValue(new Guid(SupportedUuids.UUID_CON_DEVI_CONN));
+        }
+
         public async Task TryConnect(string ssid, string password)
         {
             await SetCharacteristicValue(new Guid(SupportedUuids.UUID_CON_WIFI_SSID), ssid);
             await SetCharacteristicValue(new Guid(SupportedUuids.UUID_CON_WIFI_PASS), password);
-            await SetCharacteristicValue(new Guid(SupportedUuids.UUID_CON_WIFI_CONN), "1");
+            StringBuilder status = new StringBuilder(ConnectionStatus);
+            status[0] = '1';
+            await SetCharacteristicValue(new Guid(SupportedUuids.UUID_CON_DEVI_CONN), status.ToString());
         }
 
         public async Task SetGoogleHomeName(string name)
@@ -59,6 +67,7 @@ namespace ConfigTool.BLE
         public string ScanStatus => values.TryGetValue(new Guid(SupportedUuids.UUID_CON_WIFI_SCAN), out string response) ? response : string.Empty;
         public string FoundSSIDs => values.TryGetValue(new Guid(SupportedUuids.UUID_CON_WIFI_SSIDS), out string response) ? response : string.Empty;
         public string SSID => values.TryGetValue(new Guid(SupportedUuids.UUID_CON_WIFI_SSID), out string response) ? response : string.Empty;
-        public string ConnectionStatus => values.TryGetValue(new Guid(SupportedUuids.UUID_CON_WIFI_CONN), out string response) ? response : string.Empty;
+        public string ConnectionStatus => values.TryGetValue(new Guid(SupportedUuids.UUID_CON_DEVI_CONN), out string response) ? response : string.Empty;
+        public string GoogleHomeName => values.TryGetValue(new Guid(SupportedUuids.UUID_CON_HOME_NAME), out string response) ? response : string.Empty;
     }
 }
