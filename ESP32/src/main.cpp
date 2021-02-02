@@ -1,8 +1,7 @@
 #include <main.h>
 
 // TODO: Moving BLE stuff to a seperate class
-// TODO: Moving Google Home stuff to a seperate class
-// TODO: Use connection string stored in the
+// TODO: Use connection string stored in the flash
 // TODO: Adding verbose flag for printing outputs
 // TODO: Code Clean up - Phase 1 (minimize the logic in the main.cpp)
 // TODO: Code Clean up - Phase 2 (organizing the process)
@@ -84,6 +83,8 @@ void setup()
   attachInterrupt(digitalPinToInterrupt(BLE_ADVERTISE_ENABLE_PIN), handleExternalInterrupt, FALLING);
 
   wireless.Initialize(&EnqueueEvent, "GH Home", VERBOSE);
+  googleHome.Initialize(&EnqueueEvent, VERBOSE);
+
   if (HasValidWiFi())
   {
     isWiFiconnected = wireless.TryConnect(GetFlashValue(EEPROM_VALUE::WiFi_SSID), GetFlashValue(EEPROM_VALUE::WiFi_Password));
@@ -92,7 +93,7 @@ void setup()
       BLEsetSSID(GetFlashValue(EEPROM_VALUE::WiFi_SSID));
 
       if (HasValidHome())
-        NotifierTryConnect(GetFlashValue(EEPROM_VALUE::Google_Home_Name));
+        googleHome.TryConnect(GetFlashValue(EEPROM_VALUE::Google_Home_Name));
 
       const char *ntpServer = "pool.ntp.org";
       configTime(0, 0, ntpServer);
@@ -175,7 +176,7 @@ void loop()
     break;
   case CustomEvents::EVENT_GOOGLE_HOME_NAME:
     if (isWiFiconnected && HasValidHome())
-      NotifierTryConnect(GetFlashValue(EEPROM_VALUE::Google_Home_Name));
+      googleHome.TryConnect(GetFlashValue(EEPROM_VALUE::Google_Home_Name));
     break;
   case CustomEvents::EVENT_GOOGLE_HOME_CONNECTED:
     BLEsetGoogleHomeName(GetFlashValue(EEPROM_VALUE::Google_Home_Name));
@@ -187,7 +188,7 @@ void loop()
     {
       char buffer[200];
       sprintf(buffer, "The current temperature is %d", (int)Sensor.readTemperature());
-      NotifierNotify(GetFlashValue(EEPROM_VALUE::Google_Home_Name), buffer);
+      googleHome.Notify(GetFlashValue(EEPROM_VALUE::Google_Home_Name), buffer);
     }
     break;
   case CustomEvents::EVENT_GOOGLE_REPORT_HUMIDITY:
@@ -195,7 +196,7 @@ void loop()
     {
       char buffer[200];
       sprintf(buffer, "The current humidity is %d", (int)Sensor.readHumidity());
-      NotifierNotify(GetFlashValue(EEPROM_VALUE::Google_Home_Name), buffer);
+      googleHome.Notify(GetFlashValue(EEPROM_VALUE::Google_Home_Name), buffer);
     }
     break;
   case CustomEvents::EVENT_FACTORY_RESET:
@@ -235,43 +236,4 @@ void loop()
     Oled.RefressSensorArea(temperature, humidity, pressure);
     readSenor = false;
   }
-}
-
-bool NotifierTryConnect(std::string deviceName)
-{
-  if (isHomeConnected)
-    return true;
-
-  Serial.println("connecting to Google Home: " + String(deviceName.c_str()));
-  if (googleHomeNotifier.device(deviceName.c_str(), "en") != true)
-  {
-    Serial.println(googleHomeNotifier.getLastError());
-    return false;
-  }
-  else
-  {
-    isHomeConnected = true;
-    Serial.println("found Google Home(" + googleHomeNotifier.getIPAddress().toString() + ":" + String(googleHomeNotifier.getPort()) + ")");
-    // if (googleHomeNotifier.notify(Notifier_WELCOME_MSG) != true)
-    // {
-    //   Serial.println(googleHomeNotifier.getLastError());
-    //   return false;
-    // }
-    isHomeConnected = true;
-  }
-  EnqueueEvent(CustomEvents::EVENT_GOOGLE_HOME_CONNECTED);
-
-  return true;
-}
-
-bool NotifierNotify(std::string deviceName, std::string message)
-{
-  if (!NotifierTryConnect(deviceName))
-    return false;
-  if (googleHomeNotifier.notify(message.c_str()) != true)
-  {
-    Serial.println(googleHomeNotifier.getLastError());
-    return false;
-  }
-  return true;
 }
