@@ -9,6 +9,7 @@
 #include <vector>
 #include <security.h>
 #include <Azure.h>
+#include <blesmall.h>
 
 #define SDA_PIN 5
 #define SCL_PIN 4
@@ -22,8 +23,6 @@
 #define SERIAL_BAUDRATE 115200
 
 #define VERBOSE true
-
-#define Notifier_WELCOME_MSG "Hello!. Google node is initialized and ready to use."
 
 GoogleHomeNotifier googleHomeNotifier;
 
@@ -52,3 +51,4 @@ void EnqueueEvent(CustomEvents newEvent);
 CustomEvents DequeueEvent();
 
 AzureIoTHub azureIoT;
+Wireless wireless;

@@ -1,7 +1,7 @@
 #include <main.h>
 
 // TODO: Moving BLE stuff to a seperate class
-// TODO: Moving WiFi stuff to a seperate class
+// TODO: Moving Google Home stuff to a seperate class
 // TODO: Use connection string stored in the
 // TODO: Adding verbose flag for printing outputs
 // TODO: Code Clean up - Phase 1 (minimize the logic in the main.cpp)
@@ -83,10 +83,10 @@ void setup()
   pinMode(BLE_ADVERTISE_ENABLE_PIN, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(BLE_ADVERTISE_ENABLE_PIN), handleExternalInterrupt, FALLING);
 
-  WiFiInit(&EnqueueEvent);
+  wireless.Initialize(&EnqueueEvent, "GH Home", VERBOSE);
   if (HasValidWiFi())
   {
-    isWiFiconnected = WiFiConnect(GetFlashValue(EEPROM_VALUE::WiFi_SSID), GetFlashValue(EEPROM_VALUE::WiFi_Password));
+    isWiFiconnected = wireless.TryConnect(GetFlashValue(EEPROM_VALUE::WiFi_SSID), GetFlashValue(EEPROM_VALUE::WiFi_Password));
     if (isWiFiconnected)
     {
       BLEsetSSID(GetFlashValue(EEPROM_VALUE::WiFi_SSID));
@@ -100,7 +100,7 @@ void setup()
       if (getLocalTime(&timeinfo))
       {
         // ! Azure IoT
-        isCloudconnected = azureIoT.Initialize(DEVICE_CONNECTION_STRING, &EnqueueEvent, true);
+        isCloudconnected = azureIoT.Initialize(DEVICE_CONNECTION_STRING, &EnqueueEvent, VERBOSE);
       }
     }
   }
@@ -154,10 +154,13 @@ void loop()
     Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid, isCloudconnected);
     break;
   case CustomEvents::EVENT_WIFI_START_SCAN:
-    WiFiScanNodes();
+    wireless.ScanNodes();
+    break;
+  case CustomEvents::EVENT_WIFI_SCAN_COMPLETED:
+    BLEsetSSIDs(wireless.SSIDs);
     break;
   case CustomEvents::EVENT_WIFI_TRY_CONNECT:
-    WiFiConnect(GetFlashValue(EEPROM_VALUE::WiFi_SSID), GetFlashValue(EEPROM_VALUE::WiFi_Password));
+    wireless.TryConnect(GetFlashValue(EEPROM_VALUE::WiFi_SSID), GetFlashValue(EEPROM_VALUE::WiFi_Password));
   case CustomEvents::EVENT_WIFI_CONNECTED:
     isWiFiconnected = true;
     BLEupdateConnectionStatus(isWiFiconnected, isHomeConnected, isCloudconnected);
@@ -221,11 +224,13 @@ void loop()
     time_t now;
     time(&now);
 
-    Serial.println(">> Info: " + String(ctime(&now)) + " Free heap is " + String(ESP.getFreeHeap()));
     Sensor.takeForcedMeasurement();
     float temperature = Sensor.readTemperature();
     float humidity = Sensor.readHumidity();
     float pressure = Sensor.readPressure();
+    if (VERBOSE)
+      printf(">> General Info %s Free Heap %d >> Temperature: %2.1fc Humidity: %2.1f%% Pressure: %2.2fatm\r\n",
+             String(ctime(&now)).c_str(), ESP.getFreeHeap(), temperature, humidity, pressure / 101325);
     UpdateSensorValues(temperature, humidity, pressure);
     Oled.RefressSensorArea(temperature, humidity, pressure);
     readSenor = false;

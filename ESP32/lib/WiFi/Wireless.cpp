@@ -1,53 +1,48 @@
 #include <Wireless.h>
-void (*queueEventWiFi)(CustomEvents);
-void WiFiInit(void (*event_queue_method)(CustomEvents))
+
+void Wireless::Initialize(void (*event_queue_method)(CustomEvents), char *hostname, bool verbose)
 {
     queueEventWiFi = event_queue_method;
+    isVerbose = verbose;
     WiFi.mode(WIFI_STA);
-    //WiFi.setHostname(WiFiName);
+    if (hostname != "")
+        WiFi.setHostname(hostname);
 }
 
-bool WiFiScanNodes()
+bool Wireless::ScanNodes()
 {
 
     int n = WiFi.scanNetworks();
-    std::string SSIDs;
+    SSIDs.clear();
     if (n == 0)
     {
-        Serial.println("no networks found");
+        if (isVerbose)
+            printf("no networks found.\r\n");
+
         return false;
     }
     else
     {
-        Serial.print(n);
-        Serial.println(" networks found");
+        if (isVerbose)
+            printf("%d networks found.\r\n", n);
         for (int i = 0; i < n; ++i)
         {
-            // Print SSID and RSSI for each network found
-            Serial.print(i + 1);
-            Serial.print(": ");
-            Serial.print(WiFi.SSID(i));
-            for (size_t j = 0; j < WiFi.SSID(i).length(); j++)
-            {
-                SSIDs.push_back(WiFi.SSID(i)[j]);
-            }
-            SSIDs.push_back(',');
+            if (isVerbose)
+                printf("%d - %s (%ddbm) [%d] %d %s \r\n", i + 1, WiFi.SSID(i).c_str(), WiFi.RSSI(i), WiFi.channel(i), WiFi.encryptionType(i), translateEncryptionType(WiFi.encryptionType(i)));
 
-            Serial.print(" (");
-            Serial.print(WiFi.RSSI(i));
-            Serial.print(")");
-            Serial.print(" [");
-            Serial.print(WiFi.channel(i));
-            Serial.print("] ");
-            String encryptionTypeDescription = translateEncryptionType(WiFi.encryptionType(i));
-            Serial.println(encryptionTypeDescription);
+            // Print SSID and RSSI for each network found
+            for (size_t j = 0; j < WiFi.SSID(i).length(); j++)
+                SSIDs.push_back(WiFi.SSID(i)[j]);
+
+            if (i + 1 != n)
+                SSIDs.push_back(',');
             delay(10);
         }
-        BLEsetSSIDs(SSIDs);
+        queueEventWiFi(CustomEvents::EVENT_WIFI_SCAN_COMPLETED);
         return true;
     }
 }
-bool WiFiConnect(std::string ssid, std::string password)
+bool Wireless::TryConnect(std::string ssid, std::string password)
 {
 
     WiFi.begin(ssid.c_str(), password.c_str());
@@ -55,20 +50,23 @@ bool WiFiConnect(std::string ssid, std::string password)
     if (connectionStatus == WL_CONNECTED)
     {
         queueEventWiFi(CustomEvents::EVENT_WIFI_CONNECTED);
-        Serial.println(WiFi.localIP());
-        Serial.println(WiFi.getHostname());
-        Serial.println(WiFi.gatewayIP());
+        if (isVerbose)
+            printf("IP: %s   Hostname: %s   Gateway IP: %s\r\n", WiFi.localIP().toString().c_str(), WiFi.getHostname(), WiFi.gatewayIP().toString().c_str());
         return true;
     }
-    if (connectionStatus == WL_NO_SSID_AVAIL)
-        Serial.println("WiFi connection failed. SSID is not available");
-    else
-        Serial.println("WiFi Connection failed. Code " + String(connectionStatus));
+    if (isVerbose)
+    {
+        if (connectionStatus == WL_NO_SSID_AVAIL)
+            printf("WiFi connection failed. SSID is not available.\r\n");
+        else
+            printf("WiFi Connection failed. Code %d", connectionStatus);
+    }
     queueEventWiFi(CustomEvents::EVENT_WIFI_DISCONNECTED);
     WiFi.disconnect();
     return false;
 }
-String translateEncryptionType(wifi_auth_mode_t encryptionType)
+
+String Wireless::translateEncryptionType(wifi_auth_mode_t encryptionType)
 {
     switch (encryptionType)
     {
@@ -77,13 +75,13 @@ String translateEncryptionType(wifi_auth_mode_t encryptionType)
     case (1):
         return "WEP";
     case (2):
-        return "WPA_PSK";
+        return "WPA PSK";
     case (3):
-        return "WPA2_PSK";
+        return "WPA2 PSK";
     case (4):
-        return "WPA_WPA2_PSK";
+        return "WPA/2 PSK";
     case (5):
-        return "WPA2_ENTERPRISE";
+        return "WPA2 ENTERPRISE";
     default:
         return "UNKOWN";
     }
