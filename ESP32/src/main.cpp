@@ -149,6 +149,7 @@ void loop()
       googleHome.TryConnect(GetFlashValue(EEPROM_VALUE::Google_Home_Name));
     break;
   case CustomEvents::EVENT_GOOGLE_HOME_CONNECTED:
+    isHomeConnected = true;
     BLEsetGoogleHomeName(GetFlashValue(EEPROM_VALUE::Google_Home_Name));
     UpdateStatus(true, true);
     break;
