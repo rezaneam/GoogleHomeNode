@@ -8,7 +8,8 @@
 // TODO: Code Clean up - Phase 3 (using the event system)
 
 // ? Timer Settings
-uint64_t timerCalls = 0;
+uint16_t ble_advertize_timeOut = BLE_ADVERTISE_TIMEOUT_MS;
+uint16_t timerCalls = 0;
 void IRAM_ATTR handleExternalInterrupt()
 {
   portENTER_CRITICAL_ISR(&externalPinmux);
@@ -27,10 +28,14 @@ void IRAM_ATTR onReadSensor()
     readSenor = true;
     timerCalls = 0;
   }
+
+  if (isBLEadvertising && !isBLEconnected)
+    ble_advertize_timeOut--;
+
   portEXIT_CRITICAL_ISR(&sensorReadtimerMux);
 }
 
-void initSensorReadTimer()
+void initializeTimer()
 {
   sensorReadTimer = timerBegin(1, 80, true);
   timerAttachInterrupt(sensorReadTimer, &onReadSensor, true);
@@ -40,30 +45,14 @@ void initSensorReadTimer()
 
 // ? Timer Settings
 
-void EnqueueEvent(CustomEvents newEvent)
-{
-  if (std::find(eventQueue.begin(), eventQueue.end(), newEvent) == eventQueue.end())
-    eventQueue.push_back(newEvent);
-}
-
-CustomEvents DequeueEvent()
-{
-  if (eventQueue.size() == 0)
-    return CustomEvents::EVENT_NONE;
-  CustomEvents returnEvent = eventQueue.front();
-  eventQueue.erase(eventQueue.begin());
-  return returnEvent;
-}
-
 void setup()
 {
   // put your setup code here, to run once:
   Serial.begin(SERIAL_BAUDRATE);
-  Serial.println("ESP-IDF version is : " + String(esp_get_idf_version()));
+  if (VERBOSE)
+    printf("ESP-IDF version is : %s\r\n", esp_get_idf_version());
 
   EEPROM.begin(EEPROM_SIZE);
-
-  Serial.println("Starting App");
 
   Oled.Initialize(true);
 
@@ -74,37 +63,19 @@ void setup()
                      BME280::sensor_sampling::SAMPLING_X1,
                      BME280::sensor_filter::FILTER_OFF,
                      BME280::standby_duration::STANDBY_MS_1000);
-  initSensorReadTimer();
-  Serial.println("Starting BLE");
+  initializeTimer();
+
   BLEinit(BLE_DEVICE_NAME, &EnqueueEvent);
   BLEsetupAd();
-
-  pinMode(BLE_ADVERTISE_ENABLE_PIN, INPUT_PULLUP);
+  pinMode(BLE_ADVERTISE_ENABLE_PIN, INPUT_PULLUP); // External PIN for triggering the advertise for BLE
   attachInterrupt(digitalPinToInterrupt(BLE_ADVERTISE_ENABLE_PIN), handleExternalInterrupt, FALLING);
 
-  wireless.Initialize(&EnqueueEvent, "GH Home", VERBOSE);
+  wireless.Initialize(&EnqueueEvent, "GH-Home", VERBOSE);
+
   googleHome.Initialize(&EnqueueEvent, VERBOSE);
 
   if (HasValidWiFi())
-  {
-    isWiFiconnected = wireless.TryConnect(GetFlashValue(EEPROM_VALUE::WiFi_SSID), GetFlashValue(EEPROM_VALUE::WiFi_Password));
-    if (isWiFiconnected)
-    {
-      BLEsetSSID(GetFlashValue(EEPROM_VALUE::WiFi_SSID));
-
-      if (HasValidHome())
-        googleHome.TryConnect(GetFlashValue(EEPROM_VALUE::Google_Home_Name));
-
-      const char *ntpServer = "pool.ntp.org";
-      configTime(0, 0, ntpServer);
-      struct tm timeinfo;
-      if (getLocalTime(&timeinfo))
-      {
-        // ! Azure IoT
-        isCloudconnected = azureIoT.Initialize(DEVICE_CONNECTION_STRING, &EnqueueEvent, VERBOSE);
-      }
-    }
-  }
+    EnqueueEvent(CustomEvents::EVENT_WIFI_TRY_CONNECT);
 
   Sensor.takeForcedMeasurement();
   Oled.RefressSensorArea(Sensor.readTemperature(), Sensor.readHumidity(), Sensor.readPressure());
@@ -125,34 +96,31 @@ void loop()
       EnqueueEvent(CustomEvents::EVENT_BLE_TRY_START_ADV);
   }
 
-  if (isBLEadvertising && !BLEgetAdvertiseStatus())
-    EnqueueEvent(CustomEvents::EVENT_BLE_STOPPED);
+  if (ble_advertize_timeOut == 0)
+    EnqueueEvent(CustomEvents::EVENT_BLE_TRY_STOP_ADV);
 
   switch (DequeueEvent())
   {
   case CustomEvents::EVENT_BLE_CONNECTED:
     isBLEconnected = true;
-    isBLEadvertising = false;
-    Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid, isCloudconnected);
+    UpdateStatus(false, true);
     break;
   case CustomEvents::EVENT_BLE_DISCONNECT:
     isBLEconnected = false;
-    isBLEadvertising = true;
-    Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid, isCloudconnected);
+    ble_advertize_timeOut = BLE_ADVERTISE_TIMEOUT_MS;
+    UpdateStatus(false, true);
     break;
-  case CustomEvents::EVENT_BLE_STOPPED:
-    //NimBLEDevice::stopAdvertising();
-    Serial.println("BLE stopped advertising.");
-    isBLEconnected = false;
+  case CustomEvents::EVENT_BLE_TRY_STOP_ADV:
+    BLEstopAd();
     isBLEadvertising = false;
-    Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid, isCloudconnected);
+    ble_advertize_timeOut = BLE_ADVERTISE_TIMEOUT_MS;
+    UpdateStatus(false, true);
     break;
   case CustomEvents::EVENT_BLE_TRY_START_ADV:
     BLEstartAd();
-    //NimBLEDevice::startAdvertising();
-    isBLEconnected = false;
     isBLEadvertising = true;
-    Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid, isCloudconnected);
+    ble_advertize_timeOut = BLE_ADVERTISE_TIMEOUT_MS;
+    UpdateStatus(false, true);
     break;
   case CustomEvents::EVENT_WIFI_START_SCAN:
     wireless.ScanNodes();
@@ -164,24 +132,25 @@ void loop()
     wireless.TryConnect(GetFlashValue(EEPROM_VALUE::WiFi_SSID), GetFlashValue(EEPROM_VALUE::WiFi_Password));
   case CustomEvents::EVENT_WIFI_CONNECTED:
     isWiFiconnected = true;
-    BLEupdateConnectionStatus(isWiFiconnected, isHomeConnected, isCloudconnected);
+    BLEsetSSID(GetFlashValue(EEPROM_VALUE::WiFi_SSID));
     ssid = GetFlashValue(EEPROM_VALUE::WiFi_SSID);
-    Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid, isCloudconnected);
+    UpdateStatus(true, true);
+    ConfigureTime();
+    EnqueueEvent(CustomEvents::EVENT_GOOGLE_HOME_TRY_CONNECT);
+    EnqueueEvent(CustomEvents::EVENT_AZURE_IOT_HUB_TRY_CONNECT);
     break;
   case CustomEvents::EVENT_WIFI_DISCONNECTED:
     isWiFiconnected = false;
-    BLEupdateConnectionStatus(isWiFiconnected, isHomeConnected, isCloudconnected);
     ssid = "";
-    Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid, isCloudconnected);
+    UpdateStatus(true, true);
     break;
-  case CustomEvents::EVENT_GOOGLE_HOME_NAME:
+  case CustomEvents::EVENT_GOOGLE_HOME_TRY_CONNECT:
     if (isWiFiconnected && HasValidHome())
       googleHome.TryConnect(GetFlashValue(EEPROM_VALUE::Google_Home_Name));
     break;
   case CustomEvents::EVENT_GOOGLE_HOME_CONNECTED:
     BLEsetGoogleHomeName(GetFlashValue(EEPROM_VALUE::Google_Home_Name));
-    BLEupdateConnectionStatus(isWiFiconnected, isHomeConnected, isCloudconnected);
-    Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid, isCloudconnected);
+    UpdateStatus(true, true);
     break;
   case CustomEvents::EVENT_GOOGLE_REPORT_TEMPERATURE:
     if (isHomeConnected)
@@ -198,6 +167,19 @@ void loop()
       sprintf(buffer, "The current humidity is %d", (int)Sensor.readHumidity());
       googleHome.Notify(GetFlashValue(EEPROM_VALUE::Google_Home_Name), buffer);
     }
+    break;
+  case CustomEvents::EVENT_AZURE_IOT_HUB_TRY_CONNECT:
+    struct tm timeinfo;
+    if (getLocalTime(&timeinfo))
+      azureIoT.Initialize(DEVICE_CONNECTION_STRING, &EnqueueEvent, VERBOSE);
+    break;
+  case CustomEvents::EVENT_AZURE_IOT_HUB_CONNECTED:
+    isCloudconnected = true;
+    UpdateStatus(true, true);
+    break;
+  case CustomEvents::EVENT_AZURE_IOT_HUB_DISCONNECTED:
+    isCloudconnected = false;
+    UpdateStatus(true, true);
     break;
   case CustomEvents::EVENT_FACTORY_RESET:
     Oled.ShowRestMessage("Factory Reset");
@@ -236,4 +218,33 @@ void loop()
     Oled.RefressSensorArea(temperature, humidity, pressure);
     readSenor = false;
   }
+}
+
+void EnqueueEvent(CustomEvents newEvent)
+{
+  if (std::find(eventQueue.begin(), eventQueue.end(), newEvent) == eventQueue.end())
+    eventQueue.push_back(newEvent);
+}
+
+CustomEvents DequeueEvent()
+{
+  if (eventQueue.size() == 0)
+    return CustomEvents::EVENT_NONE;
+  CustomEvents returnEvent = eventQueue.front();
+  eventQueue.erase(eventQueue.begin());
+  return returnEvent;
+}
+
+void ConfigureTime()
+{
+  const char *ntpServer = "pool.ntp.org";
+  configTime(0, 0, ntpServer);
+}
+
+void UpdateStatus(bool BLE, bool OLED)
+{
+  if (OLED)
+    Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid, isCloudconnected);
+  if (BLE)
+    BLEupdateConnectionStatus(isWiFiconnected, isHomeConnected, isCloudconnected);
 }

@@ -44,6 +44,8 @@ portMUX_TYPE externalPinmux = portMUX_INITIALIZER_UNLOCKED;
 
 void EnqueueEvent(CustomEvents newEvent);
 CustomEvents DequeueEvent();
+void ConfigureTime();
+void UpdateStatus(bool BLE, bool OLED);
 
 AzureIoTHub azureIoT;
 Wireless wireless;

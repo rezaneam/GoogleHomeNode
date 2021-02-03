@@ -124,10 +124,10 @@ void OLEDDisplayExtended::ReferessStatusArea(bool isBLEadvertising, bool isBLEco
 {
     this->clearArea(Status_Area[0], Status_Area[1], Status_Area[2], Status_Area[3]);
     offset = 0;
-    if (isBLEadvertising)
-        this->drawIcon(OLEDDISPLAY_ICONS::BLE_ADVERTISING_ICON);
     if (isBLEconnected)
         this->drawIcon(OLEDDISPLAY_ICONS::BLE_CONNECTED_ICON);
+    else if (isBLEadvertising)
+        this->drawIcon(OLEDDISPLAY_ICONS::BLE_ADVERTISING_ICON);
     if (isHomeConencted)
         this->drawIcon(OLEDDISPLAY_ICONS::GOOGLE_HOME);
     if (isCloudConencted)

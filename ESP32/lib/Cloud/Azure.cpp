@@ -31,11 +31,13 @@ void static connection_status_callback(IOTHUB_CLIENT_CONNECTION_STATUS result, I
     // This sample DOES NOT take into consideration network outages.
     if (result == IOTHUB_CLIENT_CONNECTION_AUTHENTICATED)
     {
+        queueEvent(CustomEvents::EVENT_AZURE_IOT_HUB_CONNECTED);
         if (isVerbose)
             LogInfo("The device client is connected to iothub.");
     }
     else
     {
+        queueEvent(CustomEvents::EVENT_AZURE_IOT_HUB_DISCONNECTED);
         if (isVerbose)
             LogInfo("The device client has been disconnected.");
     }
@@ -134,7 +136,6 @@ bool AzureIoTHub::Initialize(char *securityKey, void (*event_queue_method)(Custo
     }
 
     LogInfo("IoT Device created.");
-
     return true;
 }
 

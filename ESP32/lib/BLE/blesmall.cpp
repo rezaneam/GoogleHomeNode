@@ -2,31 +2,10 @@
 
 NimBLEServer *pServer;
 
+bool isBLEverbose;
 bool isConnected = false;
 bool isAdvertising = false;
 void (*queueEventBLE)(CustomEvents);
-hw_timer_t *timer = NULL;
-portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;
-
-void IRAM_ATTR onStopAdvertise()
-{
-    portENTER_CRITICAL_ISR(&timerMux);
-    if (!isConnected)
-    {
-        timerStop(timer);
-        isAdvertising = false;
-    }
-    portEXIT_CRITICAL_ISR(&timerMux);
-}
-
-void initTimer()
-{
-    timer = timerBegin(0, 80, true);
-    timerAttachInterrupt(timer, &onStopAdvertise, true);
-    timerAlarmWrite(timer, 1000000 * BLE_ADVERTISE_TIMEOUT, true);
-    timerAlarmEnable(timer);
-    timerStop(timer);
-}
 
 /**  None of these are required as they will be handled by the library with defaults. **
  **                       Remove as you see fit for your needs                        */
@@ -136,7 +115,7 @@ class CharacteristicCallbacks : public NimBLECharacteristicCallbacks
         if (uuid.equals(BLEUUID((uint16_t)CHARACTERISTIC_UUID_GOOGLE_HOME_NAME)))
         {
             WriteFlashHomeName(pCharacteristic->getValue());
-            queueEventBLE(CustomEvents::EVENT_GOOGLE_HOME_NAME);
+            queueEventBLE(CustomEvents::EVENT_GOOGLE_HOME_TRY_CONNECT);
             return;
         }
         if (uuid.equals(BLEUUID((uint16_t)CHARACTERISTIC_UUID_AZURE_IOT_HUB_CONN)))
@@ -156,7 +135,7 @@ class CharacteristicCallbacks : public NimBLECharacteristicCallbacks
             }
             if (val[1] = '1') //
             {
-                queueEventBLE(CustomEvents::EVENT_GOOGLE_TYPE_CONNECT);
+                queueEventBLE(CustomEvents::EVENT_GOOGLE_HOME_TRY_CONNECT);
                 return;
             }
             if (val[2] = '1') //
@@ -230,13 +209,12 @@ class CharacteristicCallbacks : public NimBLECharacteristicCallbacks
     };
 };
 
-void BLEinit(std::string deviceName, void (*event_queue_method)(CustomEvents))
+void BLEinit(std::string deviceName, void (*event_queue_method)(CustomEvents), bool verbose)
 {
+    isBLEverbose = verbose;
     queueEventBLE = event_queue_method;
-    Serial.println("Free heap is " + String(ESP.getFreeHeap()));
     NimBLEDevice::init(deviceName);
     NimBLEDevice::setPower(ESP_PWR_LVL_P9); /** +9db */
-    Serial.println("Free heap is " + String(ESP.getFreeHeap()));
 
     pServer = NimBLEDevice::createServer();
     pServer->setCallbacks(new ServerCallbacks());
@@ -277,18 +255,16 @@ void BLEinit(std::string deviceName, void (*event_queue_method)(CustomEvents))
     pBatteryService->start();
     pSensorService->start();
     pAutomationService->start();
-
-    initTimer();
 }
 
-bool BLEgetAdvertiseStatus()
+bool BLEcanStopAdv()
 {
-    return isAdvertising;
+    return isAdvertising && !isConnected;
 }
 
 void BLEsetupAd()
 {
-    NimBLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
+    NimBLEAdvertising *pAdvertising = NimBLEDevice::getAdvertising();
 
     pAdvertising->addServiceUUID(BLEUUID((uint16_t)SERVICE_UUID_DEVICE_INFORMATION));
     pAdvertising->addServiceUUID(BLEUUID((uint16_t)SERVICE_UUID_BATTERY));
@@ -306,7 +282,15 @@ void BLEstartAd()
     isAdvertising = true;
     NimBLEDevice::startAdvertising();
     Serial.println("BLE starts advertising");
-    timerStart(timer);
+}
+
+void BLEstopAd()
+{
+    if (!isAdvertising)
+        return;
+    isAdvertising = false;
+    NimBLEDevice::stopAdvertising();
+    Serial.println("BLE stopped advertising");
 }
 
 void addCharacteristic(BLEService *pService, int uuid, uint32_t properties, std::string value, int descriptorUuid, std::string descriptorValue)

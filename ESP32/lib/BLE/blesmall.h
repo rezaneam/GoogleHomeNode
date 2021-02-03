@@ -6,7 +6,8 @@
 #include <sstream>
 #include <enums.h>
 
-#define BLE_ADVERTISE_TIMEOUT 60 // BLE advertising timeout
+#define BLE_ADVERTISE_TIMEOUT_S 60                              // BLE advertising timeout
+#define BLE_ADVERTISE_TIMEOUT_MS 1000 * BLE_ADVERTISE_TIMEOUT_S // BLE advertising timeout
 
 #define SERVICE_UUID_DEVICE_INFORMATION 0x180A   // Device Information
 #define SERVICE_UUID_ENVIROMENTAL_SENSING 0x181A // Environmental Sensing - Keeping BME280 Sensor data
@@ -68,15 +69,16 @@
 #define BLE_SOFTWARE_REVISION "v1"
 #define BLE_WIFI_PASS_WRITE_ONLY "WRITE ONLY"
 
-void BLEinit(std::string deviceName, void (*event_queue_method)(CustomEvents));
+void BLEinit(std::string deviceName, void (*event_queue_method)(CustomEvents), bool verbose = false);
 void BLEsetupAd();
 void BLEstartAd();
+void BLEstopAd();
 void addCharacteristic(BLEService *pService, int uuid, uint32_t properties, std::string value, int descriptorUuid = -1, std::string descriptorValue = "");
 void setCharacteristicValue(BLEUUID serviceUuid, BLEUUID charateristicsUuid, std::string value);
 void BLEsetSSIDs(std::string SSIDs);
 void BLEsetSSID(std::string value);
 void BLEsetGoogleHomeName(std::string value);
-bool BLEgetAdvertiseStatus();
+bool BLEcanStopAdv();
 void BLEupdateConnectionStatus(bool isWiFiConnected, bool isGoogleHomeConnected, bool isAzureConnected);
 std::string getCharacteristicValue(BLEUUID serviceUuid, BLEUUID charateristicsUuid);
 std::string BLEgetSSIDs();

@@ -8,7 +8,7 @@
 class Wireless
 {
 public:
-    void Initialize(void (*event_queue_method)(CustomEvents), char *hostname = "Google Home Node", bool verbose = false);
+    void Initialize(void (*event_queue_method)(CustomEvents), char *hostname = "Google-Home-Node", bool verbose = false);
     bool ScanNodes();
     bool TryConnect(std::string SSID, std::string Password);
     std::string SSIDs;
