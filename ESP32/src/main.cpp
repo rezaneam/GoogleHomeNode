@@ -65,8 +65,10 @@ void setup()
                      BME280::standby_duration::STANDBY_MS_1000);
   initializeTimer();
 
-  BLEinit(BLE_DEVICE_NAME, &EnqueueEvent);
-  BLEsetupAd();
+  BluetoothLE.Initialize(BLE_DEVICE_NAME, &EnqueueEvent, VERBOSE);
+  BluetoothLE.Setup();
+  //BLEinit(BLE_DEVICE_NAME, &EnqueueEvent);
+  //BLEsetupAd();
   pinMode(BLE_ADVERTISE_ENABLE_PIN, INPUT_PULLUP); // External PIN for triggering the advertise for BLE
   attachInterrupt(digitalPinToInterrupt(BLE_ADVERTISE_ENABLE_PIN), handleExternalInterrupt, FALLING);
 
@@ -111,13 +113,15 @@ void loop()
     UpdateStatus(false, true);
     break;
   case CustomEvents::EVENT_BLE_TRY_STOP_ADV:
-    BLEstopAd();
+    //BLEstopAd();
+    BluetoothLE.StopAdvertise();
     isBLEadvertising = false;
     ble_advertize_timeOut = BLE_ADVERTISE_TIMEOUT_MS;
     UpdateStatus(false, true);
     break;
   case CustomEvents::EVENT_BLE_TRY_START_ADV:
-    BLEstartAd();
+    //BLEstartAd();
+    BluetoothLE.StartAdvertise();
     isBLEadvertising = true;
     ble_advertize_timeOut = BLE_ADVERTISE_TIMEOUT_MS;
     UpdateStatus(false, true);
@@ -126,13 +130,15 @@ void loop()
     wireless.ScanNodes();
     break;
   case CustomEvents::EVENT_WIFI_SCAN_COMPLETED:
-    BLEsetSSIDs(wireless.SSIDs);
+    //BLEsetSSIDs(wireless.SSIDs);
+    BluetoothLE.SetSSIDs(wireless.SSIDs);
     break;
   case CustomEvents::EVENT_WIFI_TRY_CONNECT:
     wireless.TryConnect(GetFlashValue(EEPROM_VALUE::WiFi_SSID), GetFlashValue(EEPROM_VALUE::WiFi_Password));
   case CustomEvents::EVENT_WIFI_CONNECTED:
     isWiFiconnected = true;
-    BLEsetSSID(GetFlashValue(EEPROM_VALUE::WiFi_SSID));
+    //BLEsetSSID(GetFlashValue(EEPROM_VALUE::WiFi_SSID));
+    BluetoothLE.SetSSID(GetFlashValue(EEPROM_VALUE::WiFi_SSID));
     ssid = GetFlashValue(EEPROM_VALUE::WiFi_SSID);
     UpdateStatus(true, true);
     ConfigureTime();
@@ -150,7 +156,8 @@ void loop()
     break;
   case CustomEvents::EVENT_GOOGLE_HOME_CONNECTED:
     isHomeConnected = true;
-    BLEsetGoogleHomeName(GetFlashValue(EEPROM_VALUE::Google_Home_Name));
+    BluetoothLE.SetGoogleHomeName(GetFlashValue(EEPROM_VALUE::Google_Home_Name));
+    //BLEsetGoogleHomeName(GetFlashValue(EEPROM_VALUE::Google_Home_Name));
     UpdateStatus(true, true);
     break;
   case CustomEvents::EVENT_GOOGLE_REPORT_TEMPERATURE:
@@ -215,7 +222,8 @@ void loop()
     if (VERBOSE)
       printf(">> General Info %s Free Heap %d >> Temperature: %2.1fc Humidity: %2.1f%% Pressure: %2.2fatm\r\n",
              String(ctime(&now)).c_str(), ESP.getFreeHeap(), temperature, humidity, pressure / 101325);
-    UpdateSensorValues(temperature, humidity, pressure);
+    //UpdateSensorValues(temperature, humidity, pressure);
+    BluetoothLE.UpdateSensorValues(temperature, humidity, pressure);
     Oled.RefressSensorArea(temperature, humidity, pressure);
     readSenor = false;
   }
@@ -247,5 +255,6 @@ void UpdateStatus(bool BLE, bool OLED)
   if (OLED)
     Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid, isCloudconnected);
   if (BLE)
-    BLEupdateConnectionStatus(isWiFiconnected, isHomeConnected, isCloudconnected);
+    BluetoothLE.UpdateConnectionStatus(isWiFiconnected, isHomeConnected, isCloudconnected);
+  //BLEupdateConnectionStatus(isWiFiconnected, isHomeConnected, isCloudconnected);
 }

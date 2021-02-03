@@ -9,7 +9,8 @@
 #include <security.h>
 #include <Azure.h>
 #include <GoogleHome.h>
-#include <blesmall.h>
+//#include <blesmall.h>
+#include <BLElite.h>
 
 #define SDA_PIN 5
 #define SCL_PIN 4
@@ -50,3 +51,4 @@ void UpdateStatus(bool BLE, bool OLED);
 AzureIoTHub azureIoT;
 Wireless wireless;
 GoogleHome googleHome;
+BLElite BluetoothLE;
