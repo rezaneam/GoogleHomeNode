@@ -29,8 +29,7 @@ void CharacteristicCallbacks::onWrite(NimBLECharacteristic *pCharacteristic)
     }
     if (uuid.equals(BLEUUID((uint16_t)CHARACTERISTIC_UUID_WIFI_PASS)))
     {
-        // TODO : WriteFlashWiFi(BLElite::getSSID(), pCharacteristic->getValue());
-        // TODO :BLElite::setCharacteristicValue(BLEUUID((uint16_t)SERVICE_UUID_USER_DATA), uuid, BLE_WIFI_PASS_WRITE_ONLY);
+        queueEvent(CustomEvents::EVENT_WIFI_PASS_RECEIVED);
         return;
     }
     if (uuid.equals(BLEUUID((uint16_t)CHARACTERISTIC_UUID_GOOGLE_HOME_NAME)))
@@ -41,9 +40,7 @@ void CharacteristicCallbacks::onWrite(NimBLECharacteristic *pCharacteristic)
     }
     if (uuid.equals(BLEUUID((uint16_t)CHARACTERISTIC_UUID_AZURE_IOT_HUB_CONN)))
     {
-        WriteAzureIoTHub(pCharacteristic->getValue());
-        // TODO :BLElite::setCharacteristicValue(BLEUUID((uint16_t)SERVICE_UUID_USER_DATA), uuid, BLE_WIFI_PASS_WRITE_ONLY);
-        queueEvent(CustomEvents::EVENT_AZURE_IOT_HUB_TRY_CONNECT);
+        queueEvent(CustomEvents::EVENT_WIFI_AZURE_KEY_RECEIVED);
         return;
     }
     if (uuid.equals(BLEUUID((uint16_t)CHARACTERISTIC_UUID_CONNECTION_STAT)))

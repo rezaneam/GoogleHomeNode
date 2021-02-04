@@ -150,6 +150,13 @@ void loop()
     ssid = "";
     UpdateStatus(true, true);
     break;
+  case CustomEvents::EVENT_WIFI_PASS_RECEIVED:
+    BluetoothLE.StoreWiFiAuthentication();
+    break;
+  case CustomEvents::EVENT_WIFI_AZURE_KEY_RECEIVED:
+    BluetoothLE.StoreAzureAuthentication();
+    EnqueueEvent(CustomEvents::EVENT_AZURE_IOT_HUB_TRY_CONNECT);
+    break;
   case CustomEvents::EVENT_GOOGLE_HOME_TRY_CONNECT:
     if (isWiFiconnected && HasValidHome())
       googleHome.TryConnect(GetFlashValue(EEPROM_VALUE::Google_Home_Name));

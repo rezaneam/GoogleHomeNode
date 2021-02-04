@@ -166,6 +166,11 @@ std::string BLElite::getPassword()
     return getCharacteristicValue(BLEUUID((uint16_t)SERVICE_UUID_USER_DATA), BLEUUID((uint16_t)CHARACTERISTIC_UUID_WIFI_PASS));
 }
 
+std::string BLElite::getAzureAuthentication()
+{
+    return getCharacteristicValue(BLEUUID((uint16_t)SERVICE_UUID_USER_DATA), BLEUUID((uint16_t)CHARACTERISTIC_UUID_AZURE_IOT_HUB_CONN));
+}
+
 void BLElite::UpdateSensorValues(float temperature, float humidity, float pressure)
 {
     if (!IsConnected)
@@ -182,4 +187,16 @@ void BLElite::UpdateConnectionStatus(bool isWiFiConnected, bool isGoogleHomeConn
     status.push_back(isGoogleHomeConnected ? '2' : '0');
     status.push_back(isAzureConnected ? '2' : '0');
     setCharacteristicValue(BLEUUID((uint16_t)SERVICE_UUID_USER_DATA), BLEUUID((uint16_t)CHARACTERISTIC_UUID_CONNECTION_STAT), status);
+}
+
+void BLElite::StoreWiFiAuthentication()
+{
+    WriteFlashWiFi(getSSID(), getPassword());
+    BLElite::setCharacteristicValue(BLEUUID((uint16_t)SERVICE_UUID_USER_DATA), BLEUUID((uint16_t)CHARACTERISTIC_UUID_WIFI_PASS), BLE_WIFI_PASS_WRITE_ONLY);
+}
+
+void BLElite::StoreAzureAuthentication()
+{
+    WriteAzureIoTHub(getAzureAuthentication());
+    BLElite::setCharacteristicValue(BLEUUID((uint16_t)SERVICE_UUID_USER_DATA), BLEUUID((uint16_t)CHARACTERISTIC_UUID_AZURE_IOT_HUB_CONN), BLE_WIFI_PASS_WRITE_ONLY);
 }
