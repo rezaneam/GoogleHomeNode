@@ -9,7 +9,6 @@
 #include <security.h>
 #include <Azure.h>
 #include <GoogleHome.h>
-//#include <blesmall.h>
 #include <BLElite.h>
 
 #define SDA_PIN 5
