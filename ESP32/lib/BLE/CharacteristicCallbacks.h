@@ -11,6 +11,8 @@ public:
     CharacteristicCallbacks(void (*event_queue_method)(CustomEvents), bool verbose = false);
 
 private:
+    const char *returnCodeToString(int rc);
+    const char *returnStatusToString(Status status);
     void (*queueEvent)(CustomEvents);
     bool isVerbose;
 

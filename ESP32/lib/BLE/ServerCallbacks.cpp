@@ -10,7 +10,7 @@ ServerCallbacks::ServerCallbacks(void (*event_queue_method)(CustomEvents), bool 
 void ServerCallbacks::onConnect(NimBLEServer *pServer)
 {
     if (isVerbose)
-        printf("Client connected.\r\n Multi-connect support: start advertising\r\n");
+        printf("Client connected. Multi-connect support: start advertising\r\n");
     NimBLEDevice::startAdvertising();
 
     *isConnected = true;
