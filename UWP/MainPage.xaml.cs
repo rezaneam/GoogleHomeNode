@@ -86,7 +86,6 @@ namespace Config_Tool___Google_Home_Node
         public ObservableCollection<DeviceInformation> UnknownDevices = new ObservableCollection<DeviceInformation>();
         public ObservableCollection<string> FoundSSIDs = new ObservableCollection<string>();
         private DeviceWatcher deviceWatcher;
-        private string ssid;
 
         /// <summary>
         /// Starts a device watcher that looks for all nearby Bluetooth devices (paired or unpaired). 
@@ -416,7 +415,7 @@ namespace Config_Tool___Google_Home_Node
                 switch (sender.Uuid.ToString())
                 {
                     case SupportedUuids.UUID_CON_WIFI_SCAN:
-                        await Task.Delay(5000);
+                        await Task.Delay(2000);
                         FoundSSIDs.Clear();
                         var ssids = (await node.Config.FetchSSIDs()).Split(',').ToList();
                         Debug.WriteLine($"Received {ssids.Count - 1} SSIDs ");
@@ -426,7 +425,8 @@ namespace Config_Tool___Google_Home_Node
                             if (!string.IsNullOrEmpty(ssid) && !FoundSSIDs.Contains(ssid))
                                 FoundSSIDs.Add(ssid);
                         }
-
+                        ScanningProgressRing.IsActive = false;
+                        ScanningStatusTextBox.Text = "WiFi scan is completed.";
                         break;
 
                     case SupportedUuids.UUID_CON_DEVI_CONN:
@@ -462,19 +462,23 @@ namespace Config_Tool___Google_Home_Node
 
         private async void OnFindWiFi(object sender, RoutedEventArgs e)
         {
+            FoundSSIDs.Clear();
+            ScanningProgressRing.IsActive = true;
+            ScanningStatusTextBox.Text = "Please wait, Scanning WiFi ...";
             await node.Config.StartScan();
+            await WiFiScanContentDialog.ShowAsync();
         }
 
         private async void onConnectWiFi(object sender, RoutedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(ssid) & !string.IsNullOrEmpty(passwordBox.Password))
-                await node.Config.TryConnect(ssid, passwordBox.Password);
+            if (!string.IsNullOrEmpty(SSIDtextBlock.Text) & !string.IsNullOrEmpty(passwordBox.Password))
+                await node.Config.TryConnect(SSIDtextBlock.Text, passwordBox.Password);
         }
 
         private void FoundSSIDsListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (FoundSSIDsListView.SelectedIndex > -1)
-                ssid = (string)FoundSSIDsListView.SelectedItem;
+            PickSSIDButton.IsEnabled = FoundSSIDsListView.SelectedIndex > -1;
+                //SSIDtextBlock.Text = (string)FoundSSIDsListView.SelectedItem;
         }
 
         private async void OpenNodeResetOptions(object sender, RoutedEventArgs e)
@@ -513,6 +517,17 @@ namespace Config_Tool___Google_Home_Node
         private async void onUpdateConnectionString(object sender, RoutedEventArgs e)
         {
             await node.Config.SetAzureConnectionString(connectionstringBox.Password);
+        }
+
+        private void onCancelScanWiFi(object sender, RoutedEventArgs e)
+        {
+            WiFiScanContentDialog.Hide();
+        }
+
+        private void onSSIDselected(object sender, RoutedEventArgs e)
+        {
+            SSIDtextBlock.Text = (string)FoundSSIDsListView.SelectedItem;
+            WiFiScanContentDialog.Hide();
         }
     }
 }

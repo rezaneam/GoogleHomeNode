@@ -73,7 +73,7 @@ namespace ConfigTool.BLE
         {
             GattCharacteristic characteristic = characteristics.FirstOrDefault(item => item.Uuid.Equals(characteristicsUuid));
             if (characteristic == null) return null;
-            GattReadResult readResult = await characteristic.ReadValueAsync();
+            GattReadResult readResult = await characteristic.ReadValueAsync(BluetoothCacheMode.Uncached);
             if (readResult.Status != GattCommunicationStatus.Success) return null;
             string value = FormatToString(readResult.Value);
             values[characteristicsUuid] = value;
@@ -89,7 +89,7 @@ namespace ConfigTool.BLE
         {
             
             if (characteristic == null) return null;
-            GattReadResult readResult = await characteristic.ReadValueAsync();
+            GattReadResult readResult = await characteristic.ReadValueAsync(BluetoothCacheMode.Uncached);
             if (readResult.Status != GattCommunicationStatus.Success) return null;
             string value = FormatToString(readResult.Value);
             values[characteristic.Uuid] = value;

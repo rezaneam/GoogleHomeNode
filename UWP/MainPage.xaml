@@ -79,6 +79,82 @@
                 </StackPanel>
             </Button>
         </StackPanel>
+        <Grid x:Name="NodeConfiguration">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock  FontSize="24"  Text="&#xEC3F;" Margin="4,0" x:Name="WiFiStatus"
+                       HorizontalAlignment="Center" FontFamily="Segoe MDL2 Assets"/>
+                    <TextBlock VerticalAlignment="Center" Margin="8,0" >Wireless</TextBlock>
+                </StackPanel>
+
+                <TextBlock x:Name="CurrentWiFiStatusTextBlock" />
+                <Button Windows10version1809:CornerRadius="16" Margin="8" x:Name="FindWiFiButton"
+                    BorderBrush="DarkGreen" BorderThickness="1" Click="OnFindWiFi">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock  FontSize="20"  Text="&#xE93E;" Margin="4" 
+                       HorizontalAlignment="Center" FontFamily="Segoe MDL2 Assets" Foreground="DarkGreen"/>
+                        <TextBlock Text="Find WiFi" Margin="4"  />
+                    </StackPanel>
+                </Button>
+                <TextBox x:Name="SSIDtextBlock" PlaceholderText="Enter WiFi SSID" 
+                             Windows10version1809:CornerRadius="8" Margin="8,4"/>
+                <PasswordBox x:Name="passwordBox" PlaceholderText="Enter WiFi password" 
+                             Windows10version1809:CornerRadius="8" Margin="8,4"/>
+                <Button Windows10version1809:CornerRadius="16" Margin="8" 
+                    BorderBrush="DarkGreen" BorderThickness="1" Click="onConnectWiFi">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock  FontSize="20"  Text="&#xE92C;" Margin="4" 
+                       HorizontalAlignment="Center" FontFamily="Segoe MDL2 Assets" Foreground="DarkGreen"/>
+                        <TextBlock Text="Connect" Margin="4"  />
+                    </StackPanel>
+                </Button>
+                <StackPanel Orientation="Horizontal">
+                </StackPanel>
+            </StackPanel>
+            <StackPanel Grid.Column="1">
+                <StackPanel Orientation="Horizontal">
+
+                    <TextBlock  FontSize="24"  Text="&#xE80F;" Margin="4,0" x:Name="GoogleHomeStatus"
+                        FontFamily="Segoe MDL2 Assets"/>
+                    <TextBlock VerticalAlignment="Center" Margin="8,0" >Google Home</TextBlock>
+                </StackPanel>
+                <TextBox x:Name="GoogleHomeNameTextBox" PlaceholderText="Type in Google home name"
+                         Windows10version1809:CornerRadius="8" Margin="8"/>
+                <Button Windows10version1809:CornerRadius="16" Margin="8" 
+                    BorderBrush="DarkGreen" BorderThickness="1" Click="onUpdateGoogleHomeName">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock  FontSize="20"  Text="&#xE898;" Margin="4" 
+                       HorizontalAlignment="Center" FontFamily="Segoe MDL2 Assets" Foreground="DarkGreen"/>
+                        <TextBlock Text="Update" Margin="4"  />
+                    </StackPanel>
+                </Button>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock  FontSize="24"  Text="&#xE753;" Margin="4,0" x:Name="AzureStatus"
+                        FontFamily="Segoe MDL2 Assets"/>
+                    <TextBlock VerticalAlignment="Center" Margin="8,0">Cloud settings</TextBlock>
+                </StackPanel>
+                <PasswordBox x:Name="connectionstringBox" PlaceholderText="Enter connection string" 
+                             Windows10version1809:CornerRadius="8" Margin="8,4"/>
+                <Button Windows10version1809:CornerRadius="16" Margin="8" 
+                    BorderBrush="DarkGreen" BorderThickness="1" Click="onUpdateConnectionString">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock  FontSize="20"  Text="&#xE898;" Margin="4" 
+                       HorizontalAlignment="Center" FontFamily="Segoe MDL2 Assets" Foreground="DarkGreen"/>
+                        <TextBlock Text="Update" Margin="4"  />
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+
+            <StackPanel Grid.Column="2">
+
+
+            </StackPanel>
+        </Grid>
         <ContentDialog x:Name="BLEScanContentDialog" Windows10version1809:CornerRadius="16" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
             <StackPanel>
                 <StackPanel Orientation="Horizontal">
@@ -145,28 +221,12 @@
                 </Button>
             </Grid>
         </ContentDialog>
-        <Grid x:Name="NodeConfiguration">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="1*"/>
-            </Grid.ColumnDefinitions>
+        <ContentDialog x:Name="WiFiScanContentDialog" Windows10version1809:CornerRadius="16" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
             <StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock  FontSize="24"  Text="&#xEC3F;" Margin="4,0" x:Name="WiFiStatus"
-                       HorizontalAlignment="Center" FontFamily="Segoe MDL2 Assets"/>
-                    <TextBlock VerticalAlignment="Center" Margin="8,0" >Wireless</TextBlock>
+                    <ProgressRing x:Name="ScanningProgressRing" Height="24" Width="24" Margin="4"/>
+                    <TextBlock x:Name="ScanningStatusTextBox" Margin="4" FontWeight="Bold"/>
                 </StackPanel>
-                
-                <TextBlock x:Name="CurrentWiFiStatusTextBlock" />
-                <Button Windows10version1809:CornerRadius="16" Margin="8" x:Name="FindWiFiButton"
-                    BorderBrush="DarkGreen" BorderThickness="1" Click="OnFindWiFi">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock  FontSize="20"  Text="&#xE93E;" Margin="4" 
-                       HorizontalAlignment="Center" FontFamily="Segoe MDL2 Assets" Foreground="DarkGreen"/>
-                        <TextBlock Text="Find WiFi" Margin="4"  />
-                    </StackPanel>
-                </Button>
                 <ListView x:Name="FoundSSIDsListView" ItemsSource="{x:Bind FoundSSIDs}" SelectionChanged="FoundSSIDsListView_SelectionChanged">
                     <ListView.ContextFlyout>
                         <MenuFlyout>
@@ -174,60 +234,27 @@
                         </MenuFlyout>
                     </ListView.ContextFlyout>
                 </ListView>
-                <TextBox x:Name="SSIDtextBlock" PlaceholderText="Enter WiFi SSID" 
-                             Windows10version1809:CornerRadius="8" Margin="8,4"/>
-                <PasswordBox x:Name="passwordBox" PlaceholderText="Enter WiFi password" 
-                             Windows10version1809:CornerRadius="8" Margin="8,4"/>
-                <Button Windows10version1809:CornerRadius="16" Margin="8" 
-                    BorderBrush="DarkGreen" BorderThickness="1" Click="onConnectWiFi">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock  FontSize="20"  Text="&#xE92C;" Margin="4" 
-                       HorizontalAlignment="Center" FontFamily="Segoe MDL2 Assets" Foreground="DarkGreen"/>
-                        <TextBlock Text="Connect" Margin="4"  />
-                    </StackPanel>
-                </Button>
                 <StackPanel Orientation="Horizontal">
+                    <Button Windows10version1809:CornerRadius="16" Margin="8" x:Name="PickSSIDButton"
+                    HorizontalAlignment="Center" Width="144" Click="onSSIDselected" IsEnabled="False">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock  FontSize="20"  Text="&#xE896;" Margin="4" 
+                       HorizontalAlignment="Center" FontFamily="Segoe MDL2 Assets" Foreground="DarkGreen"/>
+                            <TextBlock Text="Pick Selected" Margin="4"  />
+                        </StackPanel>
+                    </Button>
+                    <Button Windows10version1809:CornerRadius="16" Margin="8" x:Name="CancelScanningButton"
+                    HorizontalAlignment="Center" Width="144" Click="onCancelScanWiFi">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock  FontSize="20"  Text="&#xE711;" Margin="4" 
+                       HorizontalAlignment="Center" FontFamily="Segoe MDL2 Assets" Foreground="Blue"/>
+                            <TextBlock Text="Cancel" Margin="4"  />
+                        </StackPanel>
+                    </Button>
                 </StackPanel>
             </StackPanel>
-            <StackPanel Grid.Column="1">
-                <StackPanel Orientation="Horizontal">
-                    
-                    <TextBlock  FontSize="24"  Text="&#xE80F;" Margin="4,0" x:Name="GoogleHomeStatus"
-                        FontFamily="Segoe MDL2 Assets"/>
-                    <TextBlock VerticalAlignment="Center" Margin="8,0" >Google Home</TextBlock>
-                </StackPanel>
-                <TextBox x:Name="GoogleHomeNameTextBox" PlaceholderText="Type in Google home name"
-                         Windows10version1809:CornerRadius="8" Margin="8"/>
-                <Button Windows10version1809:CornerRadius="16" Margin="8" 
-                    BorderBrush="DarkGreen" BorderThickness="1" Click="onUpdateGoogleHomeName">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock  FontSize="20"  Text="&#xE898;" Margin="4" 
-                       HorizontalAlignment="Center" FontFamily="Segoe MDL2 Assets" Foreground="DarkGreen"/>
-                        <TextBlock Text="Update" Margin="4"  />
-                    </StackPanel>
-                </Button>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock  FontSize="24"  Text="&#xE753;" Margin="4,0" x:Name="AzureStatus"
-                        FontFamily="Segoe MDL2 Assets"/>
-                    <TextBlock VerticalAlignment="Center" Margin="8,0">Cloud settings</TextBlock>
-                </StackPanel>
-                <PasswordBox x:Name="connectionstringBox" PlaceholderText="Enter connection string" 
-                             Windows10version1809:CornerRadius="8" Margin="8,4"/>
-                <Button Windows10version1809:CornerRadius="16" Margin="8" 
-                    BorderBrush="DarkGreen" BorderThickness="1" Click="onUpdateConnectionString">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock  FontSize="20"  Text="&#xE898;" Margin="4" 
-                       HorizontalAlignment="Center" FontFamily="Segoe MDL2 Assets" Foreground="DarkGreen"/>
-                        <TextBlock Text="Update" Margin="4"  />
-                    </StackPanel>
-                </Button>
-            </StackPanel>
-            
-            <StackPanel Grid.Column="2">
-               
-                
-            </StackPanel>
-        </Grid>
+        </ContentDialog>
+        
     </StackPanel>
 
 </Page>
