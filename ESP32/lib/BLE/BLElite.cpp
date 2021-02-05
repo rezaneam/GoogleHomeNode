@@ -30,8 +30,6 @@ void BLElite::Initialize(std::string deviceName, void (*event_queue_method)(Cust
 {
     queueEvent = event_queue_method;
     IsVerbose = verbose;
-    //serverCallback->Initialize(event_queue_method, &IsConnected, verbose);
-    //characteristicCallback->Initialize(event_queue_method, verbose);
 
     NimBLEDevice::init(deviceName);
     NimBLEDevice::setPower(ESP_PWR_LVL_P9); /** +9db */
@@ -62,7 +60,7 @@ void BLElite::Initialize(std::string deviceName, void (*event_queue_method)(Cust
     NimBLEService *pAutomationService = pServer->createService(BLEUUID((uint16_t)SERVICE_UUID_USER_DATA));
 
     addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_RESET_CONFIG, NIMBLE_PROPERTY::WRITE | NIMBLE_PROPERTY::READ, "0");
-    addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_WIFI_SSID_NAMES, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY, "");
+    addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_WIFI_SSID_NAMES, NIMBLE_PROPERTY::READ, "");
     addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_WIFI_SCANNING, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY | NIMBLE_PROPERTY::WRITE, BLE_WIFI_SCANNING_DEACTIVE, DESCRIPTOR_UUID_WIFI_SCAN, DESCRIPTOR_VAL_WIFI_SCAN);
     addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_WIFI_SSID, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE, "");
     addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_WIFI_PASS, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE, BLE_WIFI_PASS_WRITE_ONLY);
@@ -96,7 +94,8 @@ void BLElite::StartAdvertise()
         return;
     IsAdvertising = true;
     NimBLEDevice::startAdvertising();
-    Serial.println("BLE starts advertising");
+    if (IsVerbose)
+        printf("BluetoothLE starts advertising.\r\n");
 }
 
 void BLElite::StopAdvertise()
@@ -105,7 +104,8 @@ void BLElite::StopAdvertise()
         return;
     IsAdvertising = false;
     NimBLEDevice::stopAdvertising();
-    Serial.println("BLE stopped advertising");
+    if (IsVerbose)
+        printf("BluetoothLE stopped advertising.\r\n");
 }
 
 void BLElite::addCharacteristic(BLEService *pService, int uuid, uint32_t properties, std::string value, int descriptorUuid, std::string descriptorValue)

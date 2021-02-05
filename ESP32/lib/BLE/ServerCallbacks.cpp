@@ -10,7 +10,7 @@ ServerCallbacks::ServerCallbacks(void (*event_queue_method)(CustomEvents), bool 
 void ServerCallbacks::onConnect(NimBLEServer *pServer)
 {
     if (isVerbose)
-        printf("Client connected. Multi-connect support: start advertising\r\n");
+        printf("Client connected. Multi-connect support: start advertising.\r\n");
     NimBLEDevice::startAdvertising();
 
     *isConnected = true;
@@ -21,9 +21,9 @@ void ServerCallbacks::onConnect(NimBLEServer *pServer)
      */
 void ServerCallbacks::onConnect(NimBLEServer *pServer, ble_gap_conn_desc *desc)
 {
-    Serial.println("Client connected");
-    Serial.print("Client address: ");
-    Serial.println(NimBLEAddress(desc->peer_ota_addr).toString().c_str());
+    if (isVerbose)
+        printf("Client [%s] connected.\r\n", NimBLEAddress(desc->peer_ota_addr).toString().c_str());
+
     /** We can use the connection handle here to ask for different connection parameters.
          *  Args: connection handle, min connection interval, max connection interval
          *  latency, supervision timeout.
@@ -38,7 +38,8 @@ void ServerCallbacks::onConnect(NimBLEServer *pServer, ble_gap_conn_desc *desc)
 };
 void ServerCallbacks::onDisconnect(NimBLEServer *pServer)
 {
-    Serial.println("Client DisConnected - start advertising");
+    if (isVerbose)
+        printf("Client Disconnected -> Restart advertising.\r\n");
     NimBLEDevice::startAdvertising();
 
     *isConnected = false;
@@ -49,7 +50,8 @@ void ServerCallbacks::onDisconnect(NimBLEServer *pServer)
     ****** Note: these are the same return values as defaults ********/
 uint32_t ServerCallbacks::onPassKeyRequest()
 {
-    Serial.println("Server Passkey Request");
+    if (isVerbose)
+        printf("Server Passkey Request.\r\n");
     /** This should return a random 6 digit number for security
          *  or make your own static passkey as done here.
          */
@@ -58,8 +60,9 @@ uint32_t ServerCallbacks::onPassKeyRequest()
 
 bool ServerCallbacks::onConfirmPIN(uint32_t pass_key)
 {
-    Serial.print("The passkey YES/NO number: ");
-    Serial.println(pass_key);
+
+    if (isVerbose)
+        printf("The passkey YES/NO number: %d\r\n", pass_key);
     /** Return false if passkeys don't match. */
     return true;
 };
@@ -70,8 +73,10 @@ void ServerCallbacks::onAuthenticationComplete(ble_gap_conn_desc *desc)
     if (!desc->sec_state.encrypted)
     {
         NimBLEDevice::getServer()->disconnect(desc->conn_handle);
-        Serial.println("Encrypt connection failed - disconnecting client");
+        if (isVerbose)
+            printf("Encrypt connection failed - disconnecting client.\r\n");
         return;
     }
-    Serial.println("Starting BLE work!");
+    if (isVerbose)
+        printf("Starting BLE work!.\r\n");
 };
