@@ -36,9 +36,6 @@
 #define DESCRIPTOR_UUID_WIFI_CONN 0x3906   // Discriptor for WiFi connection status
 #define DESCRIPTOR_UUID_GLHM_NAME 0x3907   // Discriptor for Google Home name
 
-#define BLE_ADVERTISE_TIMEOUT_S 60                              // BLE advertising timeout
-#define BLE_ADVERTISE_TIMEOUT_MS 1000 * BLE_ADVERTISE_TIMEOUT_S // BLE advertising timeout
-
 #define DESCRIPTOR_VAL_BATTERY "Battery Level"
 #define DESCRIPTOR_VAL_TEMPEATURE "Temperature in centigrade scale"
 #define DESCRIPTOR_VAL_HUMIDITY "Humidity in percentage(%) scale"

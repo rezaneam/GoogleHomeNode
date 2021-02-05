@@ -1,46 +1,10 @@
 #include <main.h>
 
-// TODO: Code Clean up - Phase 1 (minimize the logic in the main.cpp)
-// TODO: Code Clean up - Phase 2 (organizing the process)
-// TODO: Code Clean up - Phase 3 (using the event system)
-
-// ? Timer Settings
-uint16_t ble_advertize_timeOut = BLE_ADVERTISE_TIMEOUT_MS;
-uint16_t timerCalls = 0;
-void IRAM_ATTR handleExternalInterrupt()
-{
-  portENTER_CRITICAL_ISR(&externalPinmux);
-  tryStartBLE = true;
-  portEXIT_CRITICAL_ISR(&externalPinmux);
-}
-
-void IRAM_ATTR onReadSensor()
-{
-  portENTER_CRITICAL_ISR(&sensorReadtimerMux);
-  timerCalls++;
-  if (timerCalls % 50 == 0)
-    fireIoT = true;
-  if (timerCalls == SENSOR_READ_INTERVAL * 1000)
-  { // Read sensor and update screen
-    readSenor = true;
-    timerCalls = 0;
-  }
-
-  if (isBLEadvertising && !isBLEconnected)
-    ble_advertize_timeOut--;
-
-  portEXIT_CRITICAL_ISR(&sensorReadtimerMux);
-}
-
-void initializeTimer()
-{
-  sensorReadTimer = timerBegin(1, 80, true);
-  timerAttachInterrupt(sensorReadTimer, &onReadSensor, true);
-  timerAlarmWrite(sensorReadTimer, 1000, true);
-  timerAlarmEnable(sensorReadTimer);
-}
-
-// ? Timer Settings
+// TODO: Adding Support for BME680
+// TODO: Adding Support for Device location
+// TODO: Adding Support for User verification
+// TODO: Adding Support for handling wider Azure commands
+// TODO: Improving the memory consumption & remove memory leaks
 
 void setup()
 {
