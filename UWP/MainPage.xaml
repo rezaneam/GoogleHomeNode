@@ -19,13 +19,6 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*" MinWidth="100"/>
                 </Grid.ColumnDefinitions>
-                <Grid.ContextFlyout>
-                    <MenuFlyout>
-                        <MenuFlyoutItem Text="Pair" Icon="Link" Click="onPairDevice"
-                                        Visibility="{Binding IsPaired, Converter={StaticResource InvBoolToVisibilityConverter}}"/>
-                        <MenuFlyoutItem Text="Connect" Icon="Setting" Click="onConnectDevice"/>
-                    </MenuFlyout>
-                </Grid.ContextFlyout>
                 <Image Source="{x:Bind GlyphBitmapImage, Mode=OneWay}" Stretch="UniformToFill" Grid.Column="0" Height="40" Width="40" Margin="5" VerticalAlignment="Top"/>
                 <StackPanel Grid.Column="1" Margin="5">
                     <TextBlock TextWrapping="WrapWholeWords" FontWeight="Bold" 
@@ -36,6 +29,14 @@
                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" Margin="4"
                                   Visibility="{x:Bind IsPaired, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"/>
                     </StackPanel>
+                    <Button Windows10version1809:CornerRadius="16" Padding="8,4"
+                    HorizontalAlignment="Center" Click="OnConnectDevice">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock  FontSize="14"  Text="&#xED5C;" Margin="4,2" 
+                       HorizontalAlignment="Center" FontFamily="Segoe MDL2 Assets" Foreground="Blue"/>
+                            <TextBlock Text="Connect" Margin="0" FontSize="12" FontWeight="Bold"/>
+                        </StackPanel>
+                    </Button>
                 </StackPanel>
             </Grid>
         </DataTemplate>
@@ -90,9 +91,9 @@
                     <TextBlock  FontSize="24"  Text="&#xEC3F;" Margin="4,0" x:Name="WiFiStatus"
                        HorizontalAlignment="Center" FontFamily="Segoe MDL2 Assets"/>
                     <TextBlock VerticalAlignment="Center" Margin="8,0" >Wireless</TextBlock>
+                    <TextBlock x:Name="CurrentWiFiStatusTextBlock" FontStyle="Italic" Margin="0,8"/>
                 </StackPanel>
 
-                <TextBlock x:Name="CurrentWiFiStatusTextBlock" />
                 <Button Windows10version1809:CornerRadius="16" Margin="8" x:Name="FindWiFiButton"
                     BorderBrush="DarkGreen" BorderThickness="1" Click="OnFindWiFi">
                     <StackPanel Orientation="Horizontal">
@@ -161,19 +162,13 @@
                     <ProgressRing x:Name="IsSearchingProgressRing" Height="32" Width="32"/>
                     <TextBlock x:Name="SearchStatusTextBlock" FontWeight="Bold" VerticalAlignment="Center" Margin="8"/>
                 </StackPanel>
-                <GridView ItemTemplate="{StaticResource DevicesListViewTemplate}"
+                <StackPanel x:Name="ScanBLEstackPanel">
+                    <GridView ItemTemplate="{StaticResource DevicesListViewTemplate}"
                       ItemsSource="{x:Bind KnownDevices, Mode=OneWay}"/>
-                <Button Windows10version1809:CornerRadius="8" Content="Close and Stop Searching"
-                        Click="onCancelSearchNodes"
+                    <Button Windows10version1809:CornerRadius="8" Content="Close and Stop Searching"
+                        Click="OnCancelSearchNodes"
                         Background="LightPink" BorderBrush="IndianRed" HorizontalAlignment="Center"/>
-
-
-            </StackPanel>
-        </ContentDialog>
-        <ContentDialog x:Name="InitializingBLEContentDialog" Windows10version1809:CornerRadius="16" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
-            <StackPanel Orientation="Horizontal">
-                <ProgressRing IsActive="True" Height="32" Width="32"/>
-                <TextBlock Text="Connecting to the Node" FontWeight="Bold" VerticalAlignment="Center" Margin="8"/>
+                </StackPanel>
             </StackPanel>
         </ContentDialog>
         <ContentDialog x:Name="RestNodeContentDialog" Windows10version1809:CornerRadius="16" Background="{ThemeResource SystemControlAcrylicWindowBrush}">

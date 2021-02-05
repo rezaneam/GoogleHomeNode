@@ -54,28 +54,30 @@ namespace Config_Tool___Google_Home_Node
         private async void OnSearchNodes(object sender, RoutedEventArgs e)
         {
             StartBleDeviceWatcher();
+            ScanBLEstackPanel.Visibility = Visibility.Visible;
             await BLEScanContentDialog.ShowAsync();
         }
 
-        private void onCancelSearchNodes(object sender, RoutedEventArgs e)
+        private void OnCancelSearchNodes(object sender, RoutedEventArgs e)
         {
             BLEScanContentDialog.Hide();
             StopBleDeviceWatcher();
         }
 
-        private void onPairDevice(object sender, RoutedEventArgs e)
+        private void OnPairDevice(object sender, RoutedEventArgs e)
         {
             PairDevice((sender as MenuFlyoutItem).DataContext as BluetoothLEDeviceDisplay);
         }
 
-        private async void onConnectDevice(object sender, RoutedEventArgs e)
+        private void OnConnectDevice(object sender, RoutedEventArgs e)
         {
-            BLEScanContentDialog.Hide();
-            var tmp = (sender as MenuFlyoutItem).DataContext as BluetoothLEDeviceDisplay;
+            ScanBLEstackPanel.Visibility = Visibility.Collapsed;
+            SearchStatusTextBlock.Text = "Connecting the BluetoothLE Node. Please wait ...";
+            IsSearchingProgressRing.IsActive = true;
+            var tmp = (sender as Button).DataContext as BluetoothLEDeviceDisplay;
             Debug.WriteLine(tmp.Name);
             StopBleDeviceWatcher();
             ConnectDevice(tmp.Id);
-            await InitializingBLEContentDialog.ShowAsync();
         }
 
 
@@ -144,8 +146,6 @@ namespace Config_Tool___Google_Home_Node
         /// </summary>
         public void StopBleDeviceWatcher()
         {
-            IsSearchingProgressRing.IsActive = false;
-            SearchStatusTextBlock.Text = "Search is stopped";
             if (deviceWatcher != null)
             {
                 // Unregister the event handlers.
@@ -364,7 +364,7 @@ namespace Config_Tool___Google_Home_Node
                 Debug.WriteLine("Bluetooth radio is not on.");
             }
 
-            InitializingBLEContentDialog.Hide();
+            BLEScanContentDialog.Hide();
         }
 
         //private void Characteristic_ValueChanged(GattCharacteristic sender, GattValueChangedEventArgs args)
@@ -449,9 +449,9 @@ namespace Config_Tool___Google_Home_Node
         private async void OnConfigNode(object sender, RoutedEventArgs e)
         {
             if (node.Config.ConnectionStatus[0] != '2')
-                CurrentWiFiStatusTextBlock.Text = "Node is not connected to any WiFi.";
+                CurrentWiFiStatusTextBlock.Text = "";
             else
-                CurrentWiFiStatusTextBlock.Text = $"WiFi is connected to {node.Config.SSID}";
+                CurrentWiFiStatusTextBlock.Text = node.Config.SSID;
 
             GoogleHomeNameTextBox.Text = node.Config.GoogleHomeName;
 
