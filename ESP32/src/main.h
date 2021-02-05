@@ -6,7 +6,6 @@
 #include <Wireless.h>
 #include <BME280.h>
 #include <vector>
-#include <security.h>
 #include <Azure.h>
 #include <GoogleHome.h>
 #include <BLElite.h>
@@ -19,7 +18,7 @@
 #define BLE_ADVERTISE_ENABLE_PIN 15
 
 #define SENSOR_READ_INTERVAL 60
-#define EEPROM_SIZE 128
+#define EEPROM_SIZE 256
 #define SERIAL_BAUDRATE 115200
 
 #define VERBOSE true

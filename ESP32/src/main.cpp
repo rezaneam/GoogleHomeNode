@@ -1,8 +1,5 @@
 #include <main.h>
 
-// TODO: Moving BLE stuff to a seperate class
-// TODO: Use connection string stored in the flash
-// TODO: Adding verbose flag for printing outputs
 // TODO: Code Clean up - Phase 1 (minimize the logic in the main.cpp)
 // TODO: Code Clean up - Phase 2 (organizing the process)
 // TODO: Code Clean up - Phase 3 (using the event system)
@@ -136,8 +133,8 @@ void loop()
     ssid = GetFlashValue(EEPROM_VALUE::WiFi_SSID);
     UpdateStatus(true, true);
     ConfigureTime();
-    EnqueueEvent(CustomEvents::EVENT_GOOGLE_HOME_TRY_CONNECT);
     EnqueueEvent(CustomEvents::EVENT_AZURE_IOT_HUB_TRY_CONNECT);
+    EnqueueEvent(CustomEvents::EVENT_GOOGLE_HOME_TRY_CONNECT);
     break;
   case CustomEvents::EVENT_WIFI_DISCONNECTED:
     isWiFiconnected = false;
@@ -177,9 +174,11 @@ void loop()
     }
     break;
   case CustomEvents::EVENT_AZURE_IOT_HUB_TRY_CONNECT:
+    if (!HasValidAzure())
+      return;
     struct tm timeinfo;
     if (getLocalTime(&timeinfo))
-      azureIoT.Initialize(DEVICE_CONNECTION_STRING, &EnqueueEvent, VERBOSE);
+      azureIoT.Initialize((GetFlashValue(EEPROM_VALUE::Azure_IoT_Hub)).c_str(), &EnqueueEvent, VERBOSE);
     break;
   case CustomEvents::EVENT_AZURE_IOT_HUB_CONNECTED:
     isCloudconnected = true;

@@ -141,6 +141,8 @@ std::string GetFlashValue(EEPROM_VALUE value, bool readFlash)
         return Storage_WiFi_Pass;
     case EEPROM_VALUE::Google_Home_Name:
         return Storage_Home_Name;
+    case EEPROM_VALUE::Azure_IoT_Hub:
+        return Storage_Azure_IoT;
     default:
         return "";
     }

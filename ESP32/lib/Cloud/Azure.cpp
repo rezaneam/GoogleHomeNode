@@ -86,18 +86,17 @@ int static device_method_callback(const char *method_name, const unsigned char *
     return result;
 }
 
-bool AzureIoTHub::Initialize(char *securityKey, void (*event_queue_method)(CustomEvents), bool verbose)
+bool AzureIoTHub::Initialize(const char *securityKey, void (*event_queue_method)(CustomEvents), bool verbose)
 {
     isVerbose = verbose;
     queueEvent = event_queue_method;
-    connectionString = securityKey;
 
     IOTHUB_CLIENT_TRANSPORT_PROVIDER protocol = MQTT_Protocol;
 
     // Used to initialize IoTHub SDK subsystem
     IoTHub_Init();
     // Create the iothub handle here
-    device_ll_handle = IoTHubDeviceClient_LL_CreateFromConnectionString(connectionString, protocol);
+    device_ll_handle = IoTHubDeviceClient_LL_CreateFromConnectionString(securityKey, protocol);
     LogInfo("Creating IoTHub Device handle.");
 
     if (device_ll_handle == NULL)
