@@ -1,6 +1,8 @@
 #include <Azure.h>
 
 void static (*queueEvent)(CustomEvents);
+const char *device_location;
+const char *user_name;
 bool static isVerbose;
 
 char *resolveValue(char *text, char *key)
@@ -51,6 +53,7 @@ int static device_method_callback(const char *method_name, const unsigned char *
     int result = 200;
     if (isVerbose)
         printf("%s is called [%d] payload size\r\n", method_name, size);
+
     if (strcmp("Google Home", method_name) == 0)
     {
         char *buffer;
@@ -60,22 +63,26 @@ int static device_method_callback(const char *method_name, const unsigned char *
         if (isVerbose)
             printf("Payload: %s\r\n", buffer);
 
-        char *message = resolveValue(buffer, "\"Key\"");
+        char *username = resolveValue(buffer, "\"UserID\"");
+        if (strlen(user_name) == 0 || strstr(username, user_name)) // if user name doesn't exist or username matches
+        {
+            char *message = resolveValue(buffer, "\"Key\"");
 
-        if (strstr(message, "temperature"))
-            queueEvent(CustomEvents::EVENT_GOOGLE_REPORT_TEMPERATURE);
-        else if (strstr(message, "humidity"))
-            queueEvent(CustomEvents::EVENT_GOOGLE_REPORT_HUMIDITY);
+            if (strstr(message, "temperature"))
+                queueEvent(CustomEvents::EVENT_GOOGLE_REPORT_TEMPERATURE);
+            else if (strstr(message, "humidity"))
+                queueEvent(CustomEvents::EVENT_GOOGLE_REPORT_HUMIDITY);
 
-        if (isVerbose)
-            printf("message is: %s\r\n", message);
-        free(buffer);
-        const char deviceMethodResponse[] = "{ \"Response\": \"GoogleHomeResponse\" }";
-        *response_size = sizeof(deviceMethodResponse) - 1;
-        *response = (unsigned char *)malloc(*response_size);
-        (void)memcpy(*response, deviceMethodResponse, *response_size);
-        result = 200;
-        return result;
+            if (isVerbose)
+                printf("message is: %s\r\n", message);
+            free(buffer);
+            const char deviceMethodResponse[] = "{ \"Response\": \"GoogleHomeResponse\" }";
+            *response_size = sizeof(deviceMethodResponse) - 1;
+            *response = (unsigned char *)malloc(*response_size);
+            (void)memcpy(*response, deviceMethodResponse, *response_size);
+            result = 200;
+            return result;
+        }
     }
     // All other entries are ignored.
     const char deviceMethodResponse[] = "{ }";
@@ -86,10 +93,12 @@ int static device_method_callback(const char *method_name, const unsigned char *
     return result;
 }
 
-bool AzureIoTHub::Initialize(const char *securityKey, void (*event_queue_method)(CustomEvents), bool verbose)
+bool AzureIoTHub::Initialize(const char *securityKey, void (*event_queue_method)(CustomEvents), const char *username, const char *devicelocation, bool verbose)
 {
     isVerbose = verbose;
     queueEvent = event_queue_method;
+    device_location = devicelocation;
+    user_name = username;
 
     IOTHUB_CLIENT_TRANSPORT_PROVIDER protocol = MQTT_Protocol;
 

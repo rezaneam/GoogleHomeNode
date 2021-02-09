@@ -9,7 +9,7 @@
 class AzureIoTHub
 {
 public:
-    bool Initialize(const char *securityKey, void (*event_queue_method)(CustomEvents), bool verbose = false);
+    bool Initialize(const char *securityKey, void (*event_queue_method)(CustomEvents), const char *username, const char *devicelocation, bool verbose = false);
     void HeartBeat();
 
 private:

@@ -2,7 +2,6 @@
 
 // TODO: Adding Support for BME680
 // TODO: Adding Support for Device location
-// TODO: Adding Support for User verification
 // TODO: Adding Support for handling wider Azure commands
 // TODO: Improving the memory consumption & remove memory leaks
 
@@ -142,7 +141,12 @@ void loop()
       return;
     struct tm timeinfo;
     if (getLocalTime(&timeinfo))
-      azureIoT.Initialize((GetFlashValue(EEPROM_VALUE::Azure_IoT_Hub)).c_str(), &EnqueueEvent, VERBOSE);
+      azureIoT.Initialize(
+          (GetFlashValue(EEPROM_VALUE::Azure_IoT_Hub)).c_str(),
+          &EnqueueEvent,
+          (GetFlashValue(EEPROM_VALUE::User_Name)).c_str(),
+          (GetFlashValue(EEPROM_VALUE::Device_Location)).c_str(),
+          VERBOSE);
     break;
   case CustomEvents::EVENT_AZURE_IOT_HUB_CONNECTED:
     isCloudconnected = true;
