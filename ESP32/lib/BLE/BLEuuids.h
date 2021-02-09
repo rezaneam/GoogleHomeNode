@@ -26,6 +26,7 @@
 #define CHARACTERISTIC_UUID_GOOGLE_HOME_NAME 0x4906   // Google Home name seats here
 #define CHARACTERISTIC_UUID_AZURE_IOT_HUB_CONN 0x4907 // Azure IoT Hub connection string seats here
 #define CHARACTERISTIC_UUID_DEVICE_LOCATION 0x4908    // Device Location
+#define CHARACTERISTIC_UUID_USER_NAME 0x4909          // User Name
 
 #define DESCRIPTOR_UUID_BATTERY 0x3900     // Discriptor for battery level
 #define DESCRIPTOR_UUID_PRESSURE 0x3901    // Discriptor for Pressure Sensor

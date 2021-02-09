@@ -68,6 +68,7 @@ void BLElite::Initialize(std::string deviceName, void (*event_queue_method)(Cust
     addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_GOOGLE_HOME_NAME, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY | NIMBLE_PROPERTY::WRITE, "", DESCRIPTOR_UUID_GLHM_NAME, DESCRIPTOR_VAL_GLHM_NAME);
     addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_AZURE_IOT_HUB_CONN, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE, "");
     addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_DEVICE_LOCATION, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE, "");
+    addCharacteristic(pAutomationService, CHARACTERISTIC_UUID_USER_NAME, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE, "");
 
     pDeviceInfoService->start();
     pBatteryService->start();

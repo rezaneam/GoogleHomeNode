@@ -54,6 +54,18 @@ void CharacteristicCallbacks::onWrite(NimBLECharacteristic *pCharacteristic)
             queueEvent(CustomEvents::EVENT_AZURE_IOT_HUB_TRY_CONNECT);
         return;
     }
+    if (uuid.equals(BLEUUID((uint16_t)CHARACTERISTIC_UUID_DEVICE_LOCATION)))
+    {
+        WriteFlashDeviceLocation(pCharacteristic->getValue());
+        queueEvent(CustomEvents::EVENT_NODE_DEVICE_LOCATION);
+        return;
+    }
+    if (uuid.equals(BLEUUID((uint16_t)CHARACTERISTIC_UUID_USER_NAME)))
+    {
+        WriteFlashUsername(pCharacteristic->getValue());
+        queueEvent(CustomEvents::EVENT_NODE_USER_NAME);
+        return;
+    }
     if (uuid.equals(BLEUUID((uint16_t)CHARACTERISTIC_UUID_RESET_CONFIG)))
     {
         std::string val = pCharacteristic->getValue();
