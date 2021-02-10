@@ -32,7 +32,7 @@ void WriteFlash(
 void WriteFlashUsername(std::string username);
 void WriteFlashDeviceLocation(std::string device_location);
 void WriteFlashHomeName(std::string home_name);
-void WriteAzureIoTHub(std::string connection_string);
+void WriteFlashAzureIoTHub(std::string connection_string);
 void WriteFlashWiFi(std::string wifi_ssid, std::string wifi_pass);
 bool HasValidWiFi();
 bool HasValidHome();

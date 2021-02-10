@@ -198,6 +198,6 @@ void BLElite::StoreWiFiAuthentication()
 
 void BLElite::StoreAzureAuthentication()
 {
-    WriteAzureIoTHub(getAzureAuthentication());
+    WriteFlashAzureIoTHub(getAzureAuthentication());
     BLElite::setCharacteristicValue(BLEUUID((uint16_t)SERVICE_UUID_USER_DATA), BLEUUID((uint16_t)CHARACTERISTIC_UUID_AZURE_IOT_HUB_CONN), BLE_WIFI_PASS_WRITE_ONLY);
 }

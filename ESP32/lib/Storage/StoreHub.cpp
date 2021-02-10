@@ -135,7 +135,7 @@ void WriteFlash(std::string wifi_ssid, std::string wifi_pass, std::string home_n
     EEPROM.commit();
 }
 
-void WriteAzureIoTHub(std::string connection_string)
+void WriteFlashAzureIoTHub(std::string connection_string)
 {
     WriteFlash(Storage_WiFi_SSID, Storage_WiFi_Pass, Storage_Home_Name, connection_string, Storage_Dev_Locat, Storage_User_Name);
 }
@@ -150,11 +150,11 @@ void WriteFlashHomeName(std::string home_name)
     WriteFlash(Storage_WiFi_SSID, Storage_WiFi_Pass, home_name, Storage_Azure_IoT, Storage_Dev_Locat, Storage_User_Name);
 }
 
-void WriteUsername(std::string username)
+void WriteFlashUsername(std::string username)
 {
     WriteFlash(Storage_WiFi_SSID, Storage_WiFi_Pass, Storage_Home_Name, Storage_Azure_IoT, Storage_Dev_Locat, username);
 }
-void WriteDeviceLocation(std::string device_location)
+void WriteFlashDeviceLocation(std::string device_location)
 {
     WriteFlash(Storage_WiFi_SSID, Storage_WiFi_Pass, Storage_Home_Name, Storage_Azure_IoT, device_location, Storage_User_Name);
 }
