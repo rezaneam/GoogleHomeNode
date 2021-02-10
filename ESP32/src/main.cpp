@@ -16,13 +16,14 @@ void setup()
 
   Oled.Initialize(true);
 
-  Sensor.begin();
-  Sensor.setSampling(BME280::sensor_mode::MODE_FORCED,
-                     BME280::sensor_sampling::SAMPLING_X1,
-                     BME280::sensor_sampling::SAMPLING_X1,
-                     BME280::sensor_sampling::SAMPLING_X1,
-                     BME280::sensor_filter::FILTER_OFF,
-                     BME280::standby_duration::STANDBY_MS_1000);
+  Sensor.Initialize();
+  // Sensor.begin();
+  // Sensor.setSampling(BME280::sensor_mode::MODE_FORCED,
+  //                    BME280::sensor_sampling::SAMPLING_X1,
+  //                    BME280::sensor_sampling::SAMPLING_X1,
+  //                    BME280::sensor_sampling::SAMPLING_X1,
+  //                    BME280::sensor_filter::FILTER_OFF,
+  //                    BME280::standby_duration::STANDBY_MS_1000);
   initializeTimer();
 
   BluetoothLE.Initialize(BLE_DEVICE_NAME, &EnqueueEvent, VERBOSE);
@@ -37,8 +38,8 @@ void setup()
   if (HasValidWiFi())
     EnqueueEvent(CustomEvents::EVENT_WIFI_TRY_CONNECT);
 
-  Sensor.takeForcedMeasurement();
-  Oled.RefressSensorArea(Sensor.readTemperature(), Sensor.readHumidity(), Sensor.readPressure());
+  Sensor.TakeSample();
+  Oled.RefressSensorArea(Sensor.readTemperature(), Sensor.readHumidity(), Sensor.readPressure(), Sensor.readAirQuality());
 }
 
 void loop()
@@ -182,15 +183,23 @@ void loop()
     time_t now;
     time(&now);
 
-    Sensor.takeForcedMeasurement();
-    float temperature = Sensor.readTemperature();
-    float humidity = Sensor.readHumidity();
-    float pressure = Sensor.readPressure();
-    if (VERBOSE)
-      printf(">> General Info %s Free Heap %d >> Temperature: %2.1fc Humidity: %2.1f%% Pressure: %2.2fatm\r\n",
-             String(ctime(&now)).c_str(), ESP.getFreeHeap(), temperature, humidity, pressure / 101325);
-    BluetoothLE.UpdateSensorValues(temperature, humidity, pressure);
-    Oled.RefressSensorArea(temperature, humidity, pressure);
+    if (Sensor.TakeSample())
+    {
+      float temperature = Sensor.readTemperature();
+      float humidity = Sensor.readHumidity();
+      float pressure = Sensor.readPressure();
+      float airQuality = Sensor.readAirQuality();
+      if (VERBOSE)
+        printf(">> General Info %s Free Heap %d >> Temperature: %2.1fc Humidity: %2.1f%% Pressure: %2.2fatm AirQuality: %2.2f\r\n",
+               String(ctime(&now)).c_str(), ESP.getFreeHeap(), temperature, humidity, pressure / 101325, airQuality);
+      BluetoothLE.UpdateSensorValues(temperature, humidity, pressure);
+      Oled.RefressSensorArea(temperature, humidity, pressure);
+    }
+    else
+    {
+      printf(">> General Info %s Free Heap %d\r\n",
+             String(ctime(&now)).c_str(), ESP.getFreeHeap());
+    }
     readSenor = false;
   }
 }

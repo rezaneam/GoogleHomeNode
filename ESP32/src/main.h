@@ -4,7 +4,7 @@
 #include <string>
 #include <SSD1306.h>
 #include <Wireless.h>
-#include <BME280.h>
+#include <EnvironmentSensor.h>
 #include <vector>
 #include <Azure.h>
 #include <GoogleHome.h>
@@ -25,7 +25,7 @@
 
 #define VERBOSE true
 
-BME280 Sensor = BME280();
+EnvironmentSensor Sensor;
 SSD1306Wire Oled(OLED_Address, SDA_PIN, SCL_PIN);
 
 bool tryStartBLE = false;
