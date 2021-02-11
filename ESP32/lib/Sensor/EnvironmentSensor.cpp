@@ -8,6 +8,7 @@ bool EnvironmentSensor::Initialize()
     if (isBME680)
     {
         printf("BME680 sensor found.\r\n");
+        printf("BSEC library version %d.%d.%d.%d\r\n", bme680.version.major, bme680.version.minor, bme680.version.major_bugfix, bme680.version.minor_bugfix);
         initializeBME680();
         //free(bmx280);
         return true;
@@ -26,6 +27,17 @@ bool EnvironmentSensor::Initialize()
     printf("No sensor found.\r\n");
     //free(bmx280);
     return false;
+}
+
+bool EnvironmentSensor::CheckStatus()
+{
+    if (!(isBME280 || isBME680 || isBMP280))
+        return false;
+
+    if (isBME680)
+        return checkIaqSensorStatus();
+
+    return true;
 }
 
 bool EnvironmentSensor::TakeSample()
@@ -80,12 +92,13 @@ float EnvironmentSensor::readAirQuality()
     return -1;
 }
 
-void EnvironmentSensor::initializeBME680()
+bool EnvironmentSensor::initializeBME680()
 {
-    bme680.updateSubscription(sensorList, 10, 0.033333f);
+    bme680.updateSubscription(sensorList, 10, BSEC_SAMPLE_RATE_LP);
+    return checkIaqSensorStatus();
 }
 
-void EnvironmentSensor::initializeBMx280()
+bool EnvironmentSensor::initializeBMx280()
 {
     bmx280.setSampling(BME280::sensor_mode::MODE_FORCED,
                        BME280::sensor_sampling::SAMPLING_X1,
@@ -93,4 +106,31 @@ void EnvironmentSensor::initializeBMx280()
                        BME280::sensor_sampling::SAMPLING_X1,
                        BME280::sensor_filter::FILTER_OFF,
                        BME280::standby_duration::STANDBY_MS_1000);
+    return true;
+}
+
+// Helper function definitions
+bool EnvironmentSensor::checkIaqSensorStatus(void)
+{
+    if (bme680.status != BSEC_OK)
+    {
+        if (bme680.status < BSEC_OK)
+            printf("BSEC error code : %d\r\n", bme680.status);
+        else
+            printf("BSEC warning code : %d\r\n", bme680.status);
+
+        return false;
+    }
+
+    if (bme680.bme680Status != BME680_OK)
+    {
+        if (bme680.bme680Status < BME680_OK)
+            printf("BME680 error code : %d\r\n", bme680.bme680Status);
+        else
+            printf("BME680 warning code : %d\r\n", bme680.bme680Status);
+
+        return false;
+    }
+
+    return true;
 }

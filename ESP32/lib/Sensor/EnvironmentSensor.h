@@ -6,6 +6,7 @@ class EnvironmentSensor
 public:
     bool Initialize();
     bool TakeSample();
+    bool CheckStatus();
     float readTemperature();
     float readPressure();
     float readHumidity();
@@ -37,6 +38,7 @@ private:
         BSEC_OUTPUT_SENSOR_HEAT_COMPENSATED_HUMIDITY,
     };
 
-    void initializeBMx280();
-    void initializeBME680();
+    bool initializeBMx280();
+    bool initializeBME680();
+    bool checkIaqSensorStatus(void);
 };

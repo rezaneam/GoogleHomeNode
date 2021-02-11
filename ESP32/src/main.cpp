@@ -37,9 +37,11 @@ void setup()
 
   if (HasValidWiFi())
     EnqueueEvent(CustomEvents::EVENT_WIFI_TRY_CONNECT);
-
-  Sensor.TakeSample();
-  Oled.RefressSensorArea(Sensor.readTemperature(), Sensor.readHumidity(), Sensor.readPressure(), Sensor.readAirQuality());
+  if (Sensor.CheckStatus())
+  {
+    Sensor.TakeSample();
+    Oled.RefressSensorArea(Sensor.readTemperature(), Sensor.readHumidity(), Sensor.readPressure(), Sensor.readAirQuality());
+  }
 }
 
 void loop()
@@ -183,8 +185,9 @@ void loop()
     time_t now;
     time(&now);
 
-    if (Sensor.TakeSample())
+    if (Sensor.CheckStatus())
     {
+      Sensor.TakeSample();
       float temperature = Sensor.readTemperature();
       float humidity = Sensor.readHumidity();
       float pressure = Sensor.readPressure();
@@ -193,7 +196,7 @@ void loop()
         printf(">> General Info %s Free Heap %d >> Temperature: %2.1fc Humidity: %2.1f%% Pressure: %2.2fatm AirQuality: %2.2f\r\n",
                String(ctime(&now)).c_str(), ESP.getFreeHeap(), temperature, humidity, pressure / 101325, airQuality);
       BluetoothLE.UpdateSensorValues(temperature, humidity, pressure);
-      Oled.RefressSensorArea(temperature, humidity, pressure);
+      Oled.RefressSensorArea(temperature, humidity, pressure, airQuality);
     }
     else
     {
