@@ -152,8 +152,37 @@
             </StackPanel>
 
             <StackPanel Grid.Column="2">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock  FontSize="24"  Text="&#xE77B;" Margin="4,0"
+                        FontFamily="Segoe MDL2 Assets"/>
+                    <TextBlock VerticalAlignment="Center" Margin="8,0" >User ID</TextBlock>
+                </StackPanel>
+                <TextBox x:Name="UsernameTextBox" PlaceholderText="Type in username/userID"
+                         Windows10version1809:CornerRadius="8" Margin="8"/>
+                <Button Windows10version1809:CornerRadius="16" Margin="8" 
+                    BorderBrush="DarkGreen" BorderThickness="1" Click="onUpdateUsername">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock  FontSize="20"  Text="&#xE898;" Margin="4" 
+                       HorizontalAlignment="Center" FontFamily="Segoe MDL2 Assets" Foreground="DarkGreen"/>
+                        <TextBlock Text="Update" Margin="4"  />
+                    </StackPanel>
+                </Button>
 
-
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock  FontSize="24"  Text="&#xE731;" Margin="4,0"
+                        FontFamily="Segoe MDL2 Assets"/>
+                    <TextBlock VerticalAlignment="Center" Margin="8,0" >Node Location</TextBlock>
+                </StackPanel>
+                <TextBox x:Name="DeviceLocationTextBox" PlaceholderText="Type in the node location"
+                         Windows10version1809:CornerRadius="8" Margin="8"/>
+                <Button Windows10version1809:CornerRadius="16" Margin="8" 
+                    BorderBrush="DarkGreen" BorderThickness="1" Click="onNodeLocation">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock  FontSize="20"  Text="&#xE898;" Margin="4" 
+                       HorizontalAlignment="Center" FontFamily="Segoe MDL2 Assets" Foreground="DarkGreen"/>
+                        <TextBlock Text="Update" Margin="4"  />
+                    </StackPanel>
+                </Button>
             </StackPanel>
         </Grid>
         <ContentDialog x:Name="BLEScanContentDialog" Windows10version1809:CornerRadius="16" Background="{ThemeResource SystemControlAcrylicWindowBrush}">

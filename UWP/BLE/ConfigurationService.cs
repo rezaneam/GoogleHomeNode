@@ -54,6 +54,16 @@ namespace ConfigTool.BLE
             await SetCharacteristicValue(new Guid(SupportedUuids.UUID_CON_HOME_NAME), name);
         }
 
+        public async Task SetNodeLocation(string name)
+        {
+            await SetCharacteristicValue(new Guid(SupportedUuids.UUID_CON_DEVIC_LOC), name);
+        }
+
+        public async Task SetUsername(string name)
+        {
+            await SetCharacteristicValue(new Guid(SupportedUuids.UUID_CON_USERNAME), name);
+        }
+
         public async Task SetAzureConnectionString(string connection)
         {
             await SetCharacteristicValue(new Guid(SupportedUuids.UUID_CON_AZURE_IOT), connection);
@@ -69,5 +79,8 @@ namespace ConfigTool.BLE
         public string SSID => values.TryGetValue(new Guid(SupportedUuids.UUID_CON_WIFI_SSID), out string response) ? response : string.Empty;
         public string ConnectionStatus => values.TryGetValue(new Guid(SupportedUuids.UUID_CON_DEVI_CONN), out string response) ? response : string.Empty;
         public string GoogleHomeName => values.TryGetValue(new Guid(SupportedUuids.UUID_CON_HOME_NAME), out string response) ? response : string.Empty;
+        public string UserID => values.TryGetValue(new Guid(SupportedUuids.UUID_CON_USERNAME), out string response) ? response : string.Empty;
+        public string NodeLocation => values.TryGetValue(new Guid(SupportedUuids.UUID_CON_DEVIC_LOC), out string response) ? response : string.Empty;
+
     }
 }

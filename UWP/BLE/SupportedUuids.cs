@@ -37,6 +37,7 @@ namespace ConfigTool.BLE
         public const string UUID_CON_HOME_NAME = "00004906-0000-1000-8000-00805f9b34fb";
         public const string UUID_CON_AZURE_IOT = "00004907-0000-1000-8000-00805f9b34fb";
         public const string UUID_CON_DEVIC_LOC = "00004908-0000-1000-8000-00805f9b34fb";
+        public const string UUID_CON_USERNAME = "00004909-0000-1000-8000-00805f9b34fb";
 
         private static Dictionary<Guid, string> supportedServices = new Dictionary<Guid, string>()
         {
@@ -71,7 +72,10 @@ namespace ConfigTool.BLE
             { new Guid(UUID_CON_WIFI_SSID), "WiFi SSID" },
             { new Guid(UUID_CON_WIFI_PASS), "WiFi Password" },
             { new Guid(UUID_CON_DEVI_CONN), "WiFi, Google Home, Cloud connection status" },
-            { new Guid(UUID_CON_HOME_NAME), "Google Home Name" }
+            { new Guid(UUID_CON_HOME_NAME), "Google Home Name" },
+            { new Guid(UUID_CON_AZURE_IOT), "Azure Connection String" },
+            { new Guid(UUID_CON_DEVIC_LOC), "Device Location" },
+            { new Guid(UUID_CON_USERNAME), "Username" }
         };
 
         public static string TranslateUuid(Guid uuid)

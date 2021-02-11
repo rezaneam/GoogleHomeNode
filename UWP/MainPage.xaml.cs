@@ -458,6 +458,9 @@ namespace Config_Tool___Google_Home_Node
             UpdateConntionStatus(await node.Config.GetConnectionStatus());
 
             NodeConfiguration.Visibility = Visibility.Visible;
+
+            UsernameTextBox.Text = node.Config.UserID;
+            DeviceLocationTextBox.Text = node.Config.NodeLocation;
         }
 
         private async void OnFindWiFi(object sender, RoutedEventArgs e)
@@ -528,6 +531,16 @@ namespace Config_Tool___Google_Home_Node
         {
             SSIDtextBlock.Text = (string)FoundSSIDsListView.SelectedItem;
             WiFiScanContentDialog.Hide();
+        }
+
+        private async void onUpdateUsername(object sender, RoutedEventArgs e)
+        {
+            await node.Config.SetGoogleHomeName(UsernameTextBox.Text);
+        }
+
+        private async void onNodeLocation(object sender, RoutedEventArgs e)
+        {
+            await node.Config.SetGoogleHomeName(DeviceLocationTextBox.Text);
         }
     }
 }
