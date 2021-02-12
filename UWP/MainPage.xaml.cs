@@ -535,12 +535,12 @@ namespace Config_Tool___Google_Home_Node
 
         private async void onUpdateUsername(object sender, RoutedEventArgs e)
         {
-            await node.Config.SetGoogleHomeName(UsernameTextBox.Text);
+            await node.Config.SetUsername(UsernameTextBox.Text);
         }
 
         private async void onNodeLocation(object sender, RoutedEventArgs e)
         {
-            await node.Config.SetGoogleHomeName(DeviceLocationTextBox.Text);
+            await node.Config.SetDeviceLocation(DeviceLocationTextBox.Text);
         }
     }
 }

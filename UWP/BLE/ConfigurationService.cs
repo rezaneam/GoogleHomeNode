@@ -17,6 +17,9 @@ namespace ConfigTool.BLE
                 OnPropertyChanged(nameof(FoundSSIDs));
                 OnPropertyChanged(nameof(SSID));
                 OnPropertyChanged(nameof(ConnectionStatus));
+                OnPropertyChanged(nameof(GoogleHomeName));
+                OnPropertyChanged(nameof(UserID));
+                OnPropertyChanged(nameof(NodeLocation));
             });
         }
 
