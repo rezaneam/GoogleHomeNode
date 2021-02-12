@@ -13,6 +13,7 @@ void setup()
     printf("ESP-IDF version is : %s\r\n", esp_get_idf_version());
 
   EEPROM.begin(EEPROM_SIZE);
+  ReadFlash();
 
   Oled.Initialize(true);
 
