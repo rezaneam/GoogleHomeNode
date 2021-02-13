@@ -1,0 +1,69 @@
+﻿<Page
+    x:Class="Config_Tool___Google_Home_Node.Pages.HomePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Config_Tool___Google_Home_Node.Pages"
+    xmlns:converter="using:ConfigTool.Converters"
+    xmlns:ble="using:ConfigTool.BLE"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Page.Resources>
+        <converter:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <converter:InvBoolToVisibilityConverter x:Key="InvBoolToVisibilityConverter"/>
+        <DataTemplate x:Key="DevicesListViewTemplate" x:DataType="ble:BluetoothLEDeviceDisplay">
+            <Grid Margin="8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*" MinWidth="100"/>
+                </Grid.ColumnDefinitions>
+                <Image Source="{x:Bind GlyphBitmapImage, Mode=OneWay}" Stretch="UniformToFill" Grid.Column="0" Height="40" Width="40" Margin="5" VerticalAlignment="Top"/>
+                <StackPanel Grid.Column="1" Margin="5">
+                    <TextBlock TextWrapping="WrapWholeWords" FontWeight="Bold" 
+                               Text="{x:Bind Name, Mode=OneWay}" />
+                    <StackPanel Orientation="Horizontal">
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE703;" Margin="4"
+                                  Visibility="{x:Bind IsConnected, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" Margin="4"
+                                  Visibility="{x:Bind IsPaired, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                    </StackPanel>
+                    <Button CornerRadius="16" Padding="8,4"
+                    HorizontalAlignment="Center" Click="OnConnectDevice">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock  FontSize="14"  Text="&#xED5C;" Margin="4,2" 
+                       HorizontalAlignment="Center" FontFamily="Segoe MDL2 Assets" Foreground="Blue"/>
+                            <TextBlock Text="Connect" Margin="0" FontSize="12" FontWeight="Bold"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+    </Page.Resources>
+    <Grid>
+        <Button Click="OnSearchNodes" CornerRadius="16" x:Name="FindNodeButton"
+                HorizontalAlignment="Center"
+                    Margin="8" BorderBrush="DarkBlue" BorderThickness="1" IsEnabled="True">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock  FontSize="20"  Text="&#xEDE4;" Margin="4" 
+                       HorizontalAlignment="Center" FontFamily="Segoe MDL2 Assets" Foreground="Blue"/>
+                <TextBlock Text="Find Nodes" Margin="4"  />
+            </StackPanel>
+        </Button>
+        <ContentDialog x:Name="BLEScanContentDialog" CornerRadius="16" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <ProgressRing x:Name="IsSearchingProgressRing" Height="32" Width="32"/>
+                    <TextBlock x:Name="SearchStatusTextBlock" FontWeight="Bold" VerticalAlignment="Center" Margin="8"/>
+                </StackPanel>
+                <StackPanel x:Name="ScanBLEstackPanel">
+                    <GridView ItemTemplate="{StaticResource DevicesListViewTemplate}"
+                      ItemsSource="{x:Bind KnownDevices, Mode=OneWay}"/>
+                    <Button CornerRadius="8" Content="Close and Stop Searching"
+                        Click="OnCancelSearchNodes"
+                        Background="LightPink" BorderBrush="IndianRed" HorizontalAlignment="Center"/>
+                </StackPanel>
+            </StackPanel>
+        </ContentDialog>
+    </Grid>
+</Page>

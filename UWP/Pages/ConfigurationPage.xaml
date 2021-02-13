@@ -1,0 +1,149 @@
+﻿<Page
+    x:Class="Config_Tool___Google_Home_Node.Pages.ConfigurationPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Config_Tool___Google_Home_Node.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="0">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock  FontSize="24"  Text="&#xEC3F;" Margin="4,0" x:Name="WiFiStatus"
+                       HorizontalAlignment="Center" FontFamily="Segoe MDL2 Assets"/>
+                <TextBlock VerticalAlignment="Center" Margin="8,0" >Wireless</TextBlock>
+                <TextBlock x:Name="CurrentWiFiStatusTextBlock" FontStyle="Italic" Margin="0,8"/>
+            </StackPanel>
+
+            <Button CornerRadius="16" Margin="8" x:Name="FindWiFiButton"
+                    BorderBrush="DarkGreen" BorderThickness="1" Click="OnFindWiFi">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock  FontSize="20"  Text="&#xE93E;" Margin="4" 
+                       HorizontalAlignment="Center" FontFamily="Segoe MDL2 Assets" Foreground="DarkGreen"/>
+                    <TextBlock Text="Find WiFi" Margin="4"  />
+                </StackPanel>
+            </Button>
+            <TextBox x:Name="SSIDtextBlock" PlaceholderText="Enter WiFi SSID" 
+                             CornerRadius="8" Margin="8,4"/>
+            <PasswordBox x:Name="passwordBox" PlaceholderText="Enter WiFi password" 
+                             CornerRadius="8" Margin="8,4"/>
+            <Button CornerRadius="16" Margin="8" 
+                    BorderBrush="DarkGreen" BorderThickness="1" Click="onConnectWiFi">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock  FontSize="20"  Text="&#xE92C;" Margin="4" 
+                       HorizontalAlignment="Center" FontFamily="Segoe MDL2 Assets" Foreground="DarkGreen"/>
+                    <TextBlock Text="Connect" Margin="4"  />
+                </StackPanel>
+            </Button>
+            <StackPanel Orientation="Horizontal">
+            </StackPanel>
+        </StackPanel>
+        <StackPanel Grid.Column="1">
+            <StackPanel Orientation="Horizontal">
+
+                <TextBlock  FontSize="24"  Text="&#xE80F;" Margin="4,0" x:Name="GoogleHomeStatus"
+                        FontFamily="Segoe MDL2 Assets"/>
+                <TextBlock VerticalAlignment="Center" Margin="8,0" >Google Home</TextBlock>
+            </StackPanel>
+            <TextBox x:Name="GoogleHomeNameTextBox" PlaceholderText="Type in Google home name"
+                         CornerRadius="8" Margin="8"/>
+            <Button CornerRadius="16" Margin="8" 
+                    BorderBrush="DarkGreen" BorderThickness="1" Click="onUpdateGoogleHomeName">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock  FontSize="20"  Text="&#xE898;" Margin="4" 
+                       HorizontalAlignment="Center" FontFamily="Segoe MDL2 Assets" Foreground="DarkGreen"/>
+                    <TextBlock Text="Update" Margin="4"  />
+                </StackPanel>
+            </Button>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock  FontSize="24"  Text="&#xE753;" Margin="4,0" x:Name="AzureStatus"
+                        FontFamily="Segoe MDL2 Assets"/>
+                <TextBlock VerticalAlignment="Center" Margin="8,0">Cloud settings</TextBlock>
+            </StackPanel>
+            <PasswordBox x:Name="connectionstringBox" PlaceholderText="Enter connection string" 
+                             CornerRadius="8" Margin="8,4"/>
+            <Button CornerRadius="16" Margin="8" 
+                    BorderBrush="DarkGreen" BorderThickness="1" Click="onUpdateConnectionString">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock  FontSize="20"  Text="&#xE898;" Margin="4" 
+                       HorizontalAlignment="Center" FontFamily="Segoe MDL2 Assets" Foreground="DarkGreen"/>
+                    <TextBlock Text="Update" Margin="4"  />
+                </StackPanel>
+            </Button>
+        </StackPanel>
+        <StackPanel Grid.Column="2">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock  FontSize="24"  Text="&#xE77B;" Margin="4,0"
+                        FontFamily="Segoe MDL2 Assets"/>
+                <TextBlock VerticalAlignment="Center" Margin="8,0" >User ID</TextBlock>
+            </StackPanel>
+            <TextBox x:Name="UsernameTextBox" PlaceholderText="Type in username/userID"
+                         CornerRadius="8" Margin="8"/>
+            <Button CornerRadius="16" Margin="8" 
+                    BorderBrush="DarkGreen" BorderThickness="1" Click="onUpdateUsername">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock  FontSize="20"  Text="&#xE898;" Margin="4" 
+                       HorizontalAlignment="Center" FontFamily="Segoe MDL2 Assets" Foreground="DarkGreen"/>
+                    <TextBlock Text="Update" Margin="4"  />
+                </StackPanel>
+            </Button>
+
+            <StackPanel Orientation="Horizontal">
+                <TextBlock  FontSize="24"  Text="&#xE731;" Margin="4,0"
+                        FontFamily="Segoe MDL2 Assets"/>
+                <TextBlock VerticalAlignment="Center" Margin="8,0" >Node Location</TextBlock>
+            </StackPanel>
+            <TextBox x:Name="DeviceLocationTextBox" PlaceholderText="Type in the node location"
+                         CornerRadius="8" Margin="8"/>
+            <Button CornerRadius="16" Margin="8" 
+                    BorderBrush="DarkGreen" BorderThickness="1" Click="onNodeLocation">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock  FontSize="20"  Text="&#xE898;" Margin="4" 
+                       HorizontalAlignment="Center" FontFamily="Segoe MDL2 Assets" Foreground="DarkGreen"/>
+                    <TextBlock Text="Update" Margin="4"  />
+                </StackPanel>
+            </Button>
+        </StackPanel>
+        <ContentDialog x:Name="WiFiScanContentDialog" CornerRadius="16" 
+                       Background="{ThemeResource SystemControlAcrylicWindowBrush}">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <ProgressRing x:Name="ScanningProgressRing" Height="24" Width="24" Margin="4"/>
+                    <TextBlock x:Name="ScanningStatusTextBox" Margin="4" FontWeight="Bold"/>
+                </StackPanel>
+                <ListView x:Name="FoundSSIDsListView" ItemsSource="{x:Bind FoundSSIDs}" SelectionChanged="FoundSSIDsListView_SelectionChanged">
+                    <ListView.ContextFlyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem Text="Connect" Icon="Setting" Click="onConnectWiFi"/>
+                        </MenuFlyout>
+                    </ListView.ContextFlyout>
+                </ListView>
+                <StackPanel Orientation="Horizontal">
+                    <Button CornerRadius="16" Margin="8" x:Name="PickSSIDButton"
+                    HorizontalAlignment="Center" Width="144" Click="onSSIDselected" IsEnabled="False">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock  FontSize="20"  Text="&#xE896;" Margin="4" 
+                       HorizontalAlignment="Center" FontFamily="Segoe MDL2 Assets" Foreground="DarkGreen"/>
+                            <TextBlock Text="Pick Selected" Margin="4"  />
+                        </StackPanel>
+                    </Button>
+                    <Button CornerRadius="16" Margin="8" x:Name="CancelScanningButton"
+                    HorizontalAlignment="Center" Width="144" Click="onCancelScanWiFi">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock  FontSize="20"  Text="&#xE711;" Margin="4" 
+                       HorizontalAlignment="Center" FontFamily="Segoe MDL2 Assets" Foreground="Blue"/>
+                            <TextBlock Text="Cancel" Margin="4"  />
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </StackPanel>
+        </ContentDialog>
+    </Grid>
+</Page>
