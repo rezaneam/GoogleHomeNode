@@ -23,8 +23,8 @@ namespace ConfigTool.BLE
         private ObservableCollection<GattCharacteristic> characteristics = new ObservableCollection<GattCharacteristic>();
         protected Dictionary<Guid, string> values = new Dictionary<Guid, string>();
         private Guid serviceUuid;
-        private TypedEventHandler<GattCharacteristic, GattValueChangedEventArgs> valueChanged;
         protected TypedEventHandler<GattCharacteristic, GattValueChangedEventArgs> localValueChanged;
+        protected TypedEventHandler<GattCharacteristic, GattValueChangedEventArgs> valueChanged;
 
         public ServiceBase(string Uuid)
         {
@@ -59,6 +59,12 @@ namespace ConfigTool.BLE
             return true;
         }
 
+        public void SetValueChangedEvent(TypedEventHandler<GattCharacteristic, GattValueChangedEventArgs> eventValuechanged)
+        {
+            valueChanged = eventValuechanged;
+        }
+
+     
         public void Dispose()
         {
             foreach (var item in characteristics)

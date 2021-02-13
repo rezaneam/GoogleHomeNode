@@ -336,17 +336,20 @@ namespace Config_Tool___Google_Home_Node
 
         #region Enumerating Services
 
+        private void BLEDevice_ConnectionStatusChanged(BluetoothLEDevice sender, object args)
+        {
+
+        }
+
         private async void ConnectDevice(string deviceId)
         {
             try
             {
                 node = new Node();
-                if (!await node.InitializeDevice(deviceId))
+                if (!await node.InitializeDevice(deviceId, BLEDevice_ConnectionStatusChanged))
                     Debug.WriteLine("Failed to connect to device.");
                 else
-                    if (!await node.InitializeService(
-                        new TypedEventHandler<GattCharacteristic, GattValueChangedEventArgs>
-                        (GattCharacteristic_ValueChanged)))
+                    if (!await node.InitializeService())
                     Debug.WriteLine("Device unreachable");
                 else
                 {
@@ -481,35 +484,6 @@ namespace Config_Tool___Google_Home_Node
         private void FoundSSIDsListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             PickSSIDButton.IsEnabled = FoundSSIDsListView.SelectedIndex > -1;
-                //SSIDtextBlock.Text = (string)FoundSSIDsListView.SelectedItem;
-        }
-
-        private async void OpenNodeResetOptions(object sender, RoutedEventArgs e)
-        {
-            await RestNodeContentDialog.ShowAsync();
-        }
-
-        private void CancelRest(object sender, RoutedEventArgs e)
-        {
-            RestNodeContentDialog.Hide();
-        }
-
-        private async void OnRestartSensor(object sender, RoutedEventArgs e)
-        {
-            RestNodeContentDialog.Hide();
-            await node.Config.ResetNode("1");
-        }
-
-        private async void OnHardReset(object sender, RoutedEventArgs e)
-        {
-            RestNodeContentDialog.Hide();
-            await node.Config.ResetNode("2");
-        }
-
-        private async void OnSafeHardResetNode(object sender, RoutedEventArgs e)
-        {
-            RestNodeContentDialog.Hide();
-            await node.Config.ResetNode("3");
         }
 
         private async void onUpdateGoogleHomeName(object sender, RoutedEventArgs e)
@@ -542,5 +516,37 @@ namespace Config_Tool___Google_Home_Node
         {
             await node.Config.SetDeviceLocation(DeviceLocationTextBox.Text);
         }
+
+        #region Reset sensor
+
+        private async void OpenNodeResetOptions(object sender, RoutedEventArgs e)
+        {
+            await RestNodeContentDialog.ShowAsync();
+        }
+
+        private void CancelRest(object sender, RoutedEventArgs e)
+        {
+            RestNodeContentDialog.Hide();
+        }
+
+        private async void OnRestartSensor(object sender, RoutedEventArgs e)
+        {
+            RestNodeContentDialog.Hide();
+            await node.Config.ResetNode("1");
+        }
+
+        private async void OnHardReset(object sender, RoutedEventArgs e)
+        {
+            RestNodeContentDialog.Hide();
+            await node.Config.ResetNode("2");
+        }
+
+        private async void OnSafeHardResetNode(object sender, RoutedEventArgs e)
+        {
+            RestNodeContentDialog.Hide();
+            await node.Config.ResetNode("3");
+        }
+
+        #endregion
     }
 }

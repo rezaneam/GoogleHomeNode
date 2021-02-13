@@ -14,6 +14,7 @@ namespace ConfigTool.BLE
                 OnPropertyChanged(nameof(Temperature));
                 OnPropertyChanged(nameof(Pressure));
                 OnPropertyChanged(nameof(Humidity));
+                valueChanged?.Invoke(sender, args);
             });
         }
 

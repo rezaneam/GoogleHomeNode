@@ -18,6 +18,8 @@ namespace ConfigTool.BLE
                 OnPropertyChanged(nameof(HardwareNumber));
                 OnPropertyChanged(nameof(SoftwareNumber));
                 OnPropertyChanged(nameof(Manufacturer));
+                if (valueChanged != null)
+                    valueChanged.Invoke(sender, args);
             });
         }
         public string SystemID => values.TryGetValue(new Guid(SupportedUuids.UUID_INF_SYSID), out string response) ? response : string.Empty;

@@ -12,6 +12,7 @@ namespace ConfigTool.BLE
             {
                 await GetCharacteristicValue(sender);
                 OnPropertyChanged(nameof(BatteryLevel));
+                valueChanged?.Invoke(sender, args);
             });
         }
 

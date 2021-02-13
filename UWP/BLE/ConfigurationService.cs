@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
@@ -20,6 +21,7 @@ namespace ConfigTool.BLE
                 OnPropertyChanged(nameof(GoogleHomeName));
                 OnPropertyChanged(nameof(UserID));
                 OnPropertyChanged(nameof(NodeLocation));
+                valueChanged?.Invoke(sender, args);
             });
         }
 

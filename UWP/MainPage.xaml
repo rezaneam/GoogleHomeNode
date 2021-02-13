@@ -150,7 +150,6 @@
                     </StackPanel>
                 </Button>
             </StackPanel>
-
             <StackPanel Grid.Column="2">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock  FontSize="24"  Text="&#xE77B;" Margin="4,0"
@@ -245,6 +244,7 @@
                 </Button>
             </Grid>
         </ContentDialog>
+        
         <ContentDialog x:Name="WiFiScanContentDialog" Windows10version1809:CornerRadius="16" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
             <StackPanel>
                 <StackPanel Orientation="Horizontal">
