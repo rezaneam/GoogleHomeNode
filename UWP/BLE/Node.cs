@@ -50,8 +50,14 @@ namespace ConfigTool.BLE
             Sensors.SetValueChangedEvent(valuechanged);
             Config.SetValueChangedEvent(valuechanged);
         }
+        
         public void Dispose()
         {
+            DeviceInfo.Dispose();
+            Battery.Dispose();
+            Sensors.Dispose();
+            Config.Dispose();
+            BLEDevice.Dispose();
             GC.SuppressFinalize(this);
         }
 

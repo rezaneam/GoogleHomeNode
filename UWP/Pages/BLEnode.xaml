@@ -11,7 +11,7 @@
     <StackPanel>
         <StackPanel Margin="8" Orientation="Horizontal" HorizontalAlignment="Center">
             <Button CornerRadius="16" Margin="8" x:Name="DisconnectSensorButton"
-                    BorderBrush="DarkRed" BorderThickness="1" IsEnabled="False" Click="OpenNodeResetOptions">
+                    BorderBrush="DarkRed" BorderThickness="1" IsEnabled="False" Click="OnDisconnectNode">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock  FontSize="20"  Text="&#xE92D;" Margin="4" 
                        HorizontalAlignment="Center" FontFamily="Segoe MDL2 Assets" Foreground="DarkRed"/>
@@ -26,6 +26,26 @@
                     <TextBlock Text="Rest Node" Margin="4"  />
                 </StackPanel>
             </Button>
+
+            <Button Click="OnConfigNode" CornerRadius="16" Margin="8" x:Name="ConfigNodeButton"
+                    BorderBrush="IndianRed" BorderThickness="1" IsEnabled="False">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock  FontSize="20"  Text="&#xE713;" Margin="4" 
+                       HorizontalAlignment="Center" FontFamily="Segoe MDL2 Assets" Foreground="OrangeRed"/>
+                    <TextBlock Text="Configure Node" Margin="4"  />
+                </StackPanel>
+            </Button>
+
+            <Button Click="OnReadSensors" CornerRadius="16" Margin="8" x:Name="ReadSensorButton"
+                    BorderBrush="DarkGreen" BorderThickness="1" IsEnabled="False">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock  FontSize="20"  Text="&#xE957;" Margin="4" 
+                       HorizontalAlignment="Center" FontFamily="Segoe MDL2 Assets" Foreground="DarkGreen"/>
+                    <TextBlock Text="Read Sensor" Margin="4"  />
+                </StackPanel>
+            </Button>
+
+            
         </StackPanel>
         <StackPanel x:Name="BLEconnectingStackPanel">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">

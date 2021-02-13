@@ -68,10 +68,10 @@ namespace ConfigTool.BLE
         public void Dispose()
         {
             foreach (var item in characteristics)
-                item.ValueChanged -= valueChanged;
-            service = null;
-            characteristics = null;
-            values = null;
+                item.ValueChanged -= localValueChanged;
+
+            service?.Dispose();
+
             GC.SuppressFinalize(this);
         }
 

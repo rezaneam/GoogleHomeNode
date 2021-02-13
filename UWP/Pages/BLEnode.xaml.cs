@@ -49,7 +49,11 @@ namespace Config_Tool___Google_Home_Node.Pages
         private async void onConnectionStatusChanged(BluetoothLEDevice sender, object args)
         {
             if (sender.ConnectionStatus == BluetoothConnectionStatus.Disconnected)
-                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { Frame.Navigate(typeof(HomePage)); });
+                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => 
+                {
+                    node.Dispose();
+                    Frame.Navigate(typeof(HomePage)); 
+                });
                 
         }
 
@@ -75,13 +79,8 @@ namespace Config_Tool___Google_Home_Node.Pages
             BLEconnectingStackPanel.Visibility = Visibility.Collapsed;
             DisconnectSensorButton.IsEnabled = true;
             ResetSensorButton.IsEnabled = true;
-            node.ValueChanged += Node_ValueChanged;
+            ReadSensorButton.IsEnabled = true;
             mainFrame.Navigate(typeof(ConfigurationPage), node);
-        }
-
-        private void Node_ValueChanged(GattCharacteristic sender, GattValueChangedEventArgs args)
-        {
-            Debug.WriteLine($"BLE NODE : {SupportedUuids.TranslateUuid(sender.Uuid)} : {SupportedUuids.FormatToString(args.CharacteristicValue)}");
         }
 
         #endregion
@@ -120,7 +119,28 @@ namespace Config_Tool___Google_Home_Node.Pages
 
         private void onCancelConnect(object sender, RoutedEventArgs e)
         {
+            node.Dispose();
+            Frame.Navigate(typeof(HomePage));
+        }
 
+        private void OnReadSensors(object sender, RoutedEventArgs e)
+        {
+            ReadSensorButton.IsEnabled = false;
+            ConfigNodeButton.IsEnabled = true;
+            mainFrame.Navigate(typeof(SensorPage), node);
+        }
+
+        private void OnConfigNode(object sender, RoutedEventArgs e)
+        {
+            ReadSensorButton.IsEnabled = true;
+            ConfigNodeButton.IsEnabled = false;
+            mainFrame.Navigate(typeof(ConfigurationPage), node);
+        }
+
+        private void OnDisconnectNode(object sender, RoutedEventArgs e)
+        {
+            node.Dispose();
+            Frame.Navigate(typeof(HomePage));
         }
     }
 }
