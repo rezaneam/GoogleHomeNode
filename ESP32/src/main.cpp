@@ -18,13 +18,7 @@ void setup()
   Oled.Initialize(true);
 
   Sensor.Initialize();
-  // Sensor.begin();
-  // Sensor.setSampling(BME280::sensor_mode::MODE_FORCED,
-  //                    BME280::sensor_sampling::SAMPLING_X1,
-  //                    BME280::sensor_sampling::SAMPLING_X1,
-  //                    BME280::sensor_sampling::SAMPLING_X1,
-  //                    BME280::sensor_filter::FILTER_OFF,
-  //                    BME280::standby_duration::STANDBY_MS_1000);
+
   initializeTimer();
 
   BluetoothLE.Initialize(BLE_DEVICE_NAME, &EnqueueEvent, VERBOSE);

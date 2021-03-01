@@ -1,0 +1,46 @@
+EESchema-LIBRARY Version 2.4
+#encoding utf-8
+#
+# Eaton 0603ESDA2-TR2
+#
+DEF 0603ESDA2-TR2 D 0 40 Y Y 1 L N
+F0 "D" 0 300 50 H V L CNN 
+F1 "0603ESDA2-TR2" 0 400 50 H V L CNN 
+F2 "Eaton-0603ESDA-0-0-*" 0 500 50 H I L CNN 
+F3 "http://www.cooperindustries.com/content/dam/public/bussmann/Electronics/Resources/product-datasheets/bus-elx-ds-4419-0603esda2-tr2.pdf" 0 600 50 H I L CNN 
+F4 "Diode" 0 700 50 H I L CNN "category"
+F5 "35V" 0 800 50 H I L CNN "clamping voltage"
+F6 "Circuit Protection" 0 900 50 H I L CNN "device class L1"
+F7 "TVS Diodes" 0 1000 50 H I L CNN "device class L2"
+F8 "unset" 0 1100 50 H I L CNN "device class L3"
+F9 "SUPPRESSOR ESD 30VDC 0603 SMD" 0 1200 50 H I L CNN "digikey description"
+F10 "283-4156-1-ND" 0 1300 50 H I L CNN "digikey part number"
+F11 "Bidirectional" 0 1400 50 H I L CNN "direction"
+F12 "0.7mm" 0 1500 50 H I L CNN "height"
+F13 "yes" 0 1600 50 H I L CNN "lead free"
+F14 "b9b7301627e297c3" 0 1700 50 H I L CNN "library id"
+F15 "Eaton" 0 1800 50 H I L CNN "manufacturer"
+F16 "MLP Series 60 V 0.1 pF Bi-Directional 0603 Surface Mount ESD Suppressor" 0 1900 50 H I L CNN "mouser description"
+F17 "504-0603ESDA2-TR2" 0 2000 50 H I L CNN "mouser part number"
+F18 "0603 (1608 metric)" 0 2100 50 H I L CNN "package"
+F19 "30A" 0 2200 50 H I L CNN "peak pulse current"
+F20 "yes" 0 2300 50 H I L CNN "rohs"
+F21 "+105°C" 0 2400 50 H I L CNN "temperature range high"
+F22 "-55°C" 0 2500 50 H I L CNN "temperature range low"
+DRAW
+X 1 1 100 0 100 R 40 0 1 1 P 
+X 2 2 700 0 100 L 40 0 1 1 P 
+P 2 1 1 0 200 100 200 -100 N
+P 2 1 1 0 200 -100 400 0 N
+P 2 1 1 0 400 0 200 100 N
+P 2 1 1 0 400 0 600 100 N
+P 2 1 1 0 600 100 600 -100 N
+P 2 1 1 0 600 -100 400 0 N
+P 2 1 1 0 400 100 400 -100 N
+P 2 1 1 0 400 -100 370 -140 N
+P 2 1 1 0 100 0 200 0 N
+P 2 1 1 0 400 110 440 150 N
+ENDDRAW
+ENDDEF
+#
+# End Library
