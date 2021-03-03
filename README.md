@@ -3,6 +3,15 @@
 This project is introducing a proof of concept for a Smart Home Device/Sensor/Monitoring with different approach.
 In this project Bosch enviroment sensors (BMP280, BME280, BME680) were utilized to monitor the temperature, humidity, pressure, and air-quality.
 
+## What is innovative in this project
+
+- The main IoT node configuration is very simple and you can update it anything.
+- The main IoT node pushes realtime update via BluetoothLE to multiple connected devices.
+- Agains many avaiable solutions you don't need to open port in your router/modem/firewall. that's really cumbersome and maybe risky.
+- You don't need to deal with DNS and static IP address. that's a real pain.
+- You don't need to register on expensive and complex services (Azure IoT Hub service has free plan).
+- You can customize the whole project with a little effort.
+
 # Components
 
 This project includes following components
