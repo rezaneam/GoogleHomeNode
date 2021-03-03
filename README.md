@@ -7,27 +7,42 @@ In this project Bosch enviroment sensors (BMP280, BME280, BME680) were utilized 
 
 This project includes following components
 
-- ESP32
-  It's the main IoT device which basicaly is an ESP32 module connected to an enviroment sensor. The module needs to connect to Internet via WiFi and connect to Azure services. This project is written in Platform IO so it should take care of everything (external libraries) if you use Platform IO.
+- ESP32:
+  It's the main IoT device which basicaly is an ESP32 module connected to an enviroment sensor. The module needs to connect to Internet via WiFi and connect to Azure services. This project is written in `Platform IO` so it should take care of everything (external libraries) if you use `Platform IO`.
   You should be able to connect to the device and configure it via BluetoothLE and at anytime you can update the sensor configuration without any need to reset it.
   WiFi name, Password, Azure Connection string, Google Home, device location (for example kitchen, livingroom) are configuration values needed to be set. Hopefully UWP and Xamarin applicaitons will help you to do it with any challenges.
 
 - UWP Application
   This application is just for configuring the Google Home node. It's basically a Windows 10 application and will show up in Windows store soon :)
-  By the way, you can run on Desktop, Windows Mobile, and Windows IoT Core (Raspberry Pi).
+  By the way, you can run on Desktop, Windows Mobile, and Windows IoT Core (`Raspberry Pi`).
 
 - Xamarin Application
-  This project is an extended version of UWP Application for Android and iOS platform. Not ready yet.
+  This project is an extended version of UWP Application for `Android` and `iOS` platform. Not ready yet.
 
 - Azure
-  This is an azure Function app if you want to use your own Azure service. contact me if you can't follow me.
+  This is an azure Function app if you want to use your own `Azure service`. contact me if you can't follow me.
 
 # How it is working
 
 The following figure shows the overal concept of the project.
 <img src="assets/Diagram.png?raw=true" width="500px">
+The Google Home Node (main ESP32 module) starts to connect to Azure IoT service (as set in the configuration) and tries to find the local `Google Home speaker` (namly Google Home, Google Home Mini, or any Google Home enable speaker). It of course drives the OLED and the sensor.
+The Google Home Node is always in listening mode (at least for now) and doesn't send any information to `Azure IoT Hub`.
+
+When you ask `Google Assistant` to give you the home temperature (or specific location/node), Google Assistant (not Google Home speaker) triggers an action in the IFTTT (which you have previously defined).
+
+IFTTT triggers a webhook (better to a http request) which actually an Azure Function with a some inputs (username, keywords).
+The receive information from Azure Function is sent to the Azure IoT and evantually received by the Google Home Node.
+
+Google Home Node take actions if the receive information matches (username, location, etc). So Google Home Node asks the Google Home speaker (already linked) to say the temperature, humidity, ... values.
+I used [esp8266 Google TTS](https://github.com/horihiro/esp8266-google-tts) to generate audio file and [esp8266 Google Home Notifier](https://github.com/horihiro/esp8266-google-home-notifier) to push the message/nofication to the Google Home Speaker.
 
 # How set it up
+
+- Google Home Node
+- IFTTT
+- Azure Function
+- Azure IoT Hub
 
 # Platform/IDE(s)
 
@@ -61,3 +76,4 @@ The following figure shows the overal concept of the project.
 - Support for User/location
 - Multi-language support
 - Find a way to integrate with Google Assistant
+- Connect to [HASS](https://www.home-assistant.io/)
