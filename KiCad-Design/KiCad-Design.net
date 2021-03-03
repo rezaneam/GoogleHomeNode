@@ -1,7 +1,7 @@
 (export (version D)
   (design
     (source C:\CODE\GoogleHomeNode\KiCad-Design\KiCad-Design.sch)
-    (date "3/2/2021 9:44:37 PM")
+    (date "3/2/2021 11:49:03 PM")
     (tool "Eeschema (5.1.9)-1")
     (sheet (number 1) (name /) (tstamps /)
       (title_block
