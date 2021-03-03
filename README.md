@@ -12,7 +12,7 @@ In this project Bosch enviroment sensors (BMP280, BME280, BME680) were utilized 
 - You don't need to register on expensive and complex services (Azure IoT Hub service has free plan).
 - You can customize the whole project with a little effort.
 
-# Components
+## Components
 
 This project includes following components
 
@@ -31,7 +31,14 @@ This project includes following components
 - Azure
   This is an azure Function app if you want to use your own `Azure service`. contact me if you can't follow me.
 
-# How it is working
+## How set it up
+
+- Google Home Node
+- IFTTT
+- Azure Function
+- Azure IoT Hub
+
+## How it is working
 
 The following figure shows the overal concept of the project.
 <img src="assets/Diagram.png?raw=true" width="500px">
@@ -46,25 +53,18 @@ The receive information from Azure Function is sent to the Azure IoT and evantua
 Google Home Node take actions if the receive information matches (username, location, etc). So Google Home Node asks the Google Home speaker (already linked) to say the temperature, humidity, ... values.
 I used [esp8266 Google TTS](https://github.com/horihiro/esp8266-google-tts) to generate audio file and [esp8266 Google Home Notifier](https://github.com/horihiro/esp8266-google-home-notifier) to push the message/nofication to the Google Home Speaker.
 
-# How set it up
-
-- Google Home Node
-- IFTTT
-- Azure Function
-- Azure IoT Hub
-
-# Platform/IDE(s)
+## Platform/IDE(s)
 
 - [Platform IO](https://platformio.org/)
 - [Arduino](https://www.arduino.cc/)
 - [Espressif ESP-32](https://www.espressif.com/en/products/socs/esp32)
 
-# Supported Sensors
+## Supported Sensors
 
 - [Bosch BMP280](https://www.bosch-sensortec.com/products/environmental-sensors/pressure-sensors/bmp280/)
 - [Bosch BME280](https://www.bosch-sensortec.com/products/environmental-sensors/humidity-sensors-bme280/)
 
-# Dependent Libraries
+## Dependent Libraries
 
 - [Azure IoT Arduino](https://github.com/Azure/azure-iot-arduino)
 - [Azure IoT Protocol HTTP](https://github.com/Azure/azure-iot-arduino-protocol-http)
@@ -76,7 +76,7 @@ I used [esp8266 Google TTS](https://github.com/horihiro/esp8266-google-tts) to g
 - [Adafruit BME280 Library](https://github.com/adafruit/Adafruit_BME280_Library) - Locally/Modified in the project
 - [Adafruit SSD1306](https://github.com/adafruit/Adafruit_SSD1306) - Extensively modified and locally imported.
 
-# Future Improvment
+## Future Improvment
 
 - Bosch BME680
 - Improve the UWP Application layout and code
