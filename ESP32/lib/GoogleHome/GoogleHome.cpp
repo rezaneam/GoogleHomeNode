@@ -58,10 +58,17 @@ bool GoogleHome::NotifyTemperature(int temperature)
     return Notify(this->deviceName, buffer);
 }
 
-bool GoogleHome::NotifyPressure(int pressure)
+bool GoogleHome::NotifyHumidity(int humidity)
 {
     char buffer[200];
     byte index = rand() % 3;
-    sprintf(buffer, HUMIDITY_EN[index], pressure);
+    sprintf(buffer, HUMIDITY_EN[index], humidity);
+    return Notify(this->deviceName, buffer);
+}
+
+bool GoogleHome::NotifyPressure(float pressure)
+{
+    char buffer[200];
+    sprintf(buffer, "The current temperature level is %2.1f atm", pressure);
     return Notify(this->deviceName, buffer);
 }
