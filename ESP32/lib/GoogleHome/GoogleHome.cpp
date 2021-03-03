@@ -8,6 +8,7 @@ bool GoogleHome::Initialize(void (*event_queue_method)(CustomEvents), bool verbo
 
 bool GoogleHome::TryConnect(std::string deviceName)
 {
+    this->deviceName = deviceName;
     if (Connected)
         return true;
 
@@ -47,4 +48,20 @@ bool GoogleHome::Notify(std::string deviceName, std::string message)
         return false;
     }
     return true;
+}
+
+bool GoogleHome::NotifyTemperature(int temperature)
+{
+    char buffer[200];
+    byte index = rand() % 3;
+    sprintf(buffer, Temperature_EN[index], temperature);
+    return Notify(this->deviceName, buffer);
+}
+
+bool GoogleHome::NotifyPressure(int pressure)
+{
+    char buffer[200];
+    byte index = rand() % 3;
+    sprintf(buffer, HUMIDITY_EN[index], pressure);
+    return Notify(this->deviceName, buffer);
 }

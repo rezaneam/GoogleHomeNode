@@ -121,17 +121,14 @@ void loop()
   case CustomEvents::EVENT_GOOGLE_REPORT_TEMPERATURE:
     if (isHomeConnected)
     {
-      char buffer[200];
-      sprintf(buffer, "The current temperature is %d", (int)Sensor.readTemperature());
-      googleHome.Notify(GetFlashValue(EEPROM_VALUE::Google_Home_Name), buffer);
+      googleHome.NotifyTemperature((int)Sensor.readTemperature());
     }
     break;
   case CustomEvents::EVENT_GOOGLE_REPORT_HUMIDITY:
     if (isHomeConnected)
     {
       char buffer[200];
-      sprintf(buffer, "The current humidity is %d", (int)Sensor.readHumidity());
-      googleHome.Notify(GetFlashValue(EEPROM_VALUE::Google_Home_Name), buffer);
+      googleHome.NotifyHumidity((int)Sensor.readHumidity());
     }
     break;
   case CustomEvents::EVENT_AZURE_IOT_HUB_TRY_CONNECT:
