@@ -48,9 +48,16 @@ VCC <-> ESP32 3.3v
 GND <-> ESP32 GND
 
 You can also use the PCB design to make your custom compact module with more functionality and battery support.
-Find the attached 3.5x3.5 cm [PCB design](https://github.com/rezaneam/GoogleHomeNode/blob/master/KiCad-Design/KiCad-Design.kicad_pcb).
+Find the attached 3.5x3.5 cm [PCB design](/KiCad-Design/KiCad-Design.kicad_pcb).
+
+PCB layout
+
+<img src="assets/KiCad-Design-Front.jpg?raw=true" width="500px">
+
+<img src="assets/KiCad-Design-Back.jpg?raw=true" width="500px">
 
 - Azure Function
+
 - Azure IoT Hub
 
 - IFTTT
