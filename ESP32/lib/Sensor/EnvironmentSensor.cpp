@@ -134,3 +134,35 @@ bool EnvironmentSensor::checkIaqSensorStatus(void)
 
     return true;
 }
+
+bool EnvironmentSensor::UpdateMeasurments()
+{
+    if (!TakeSample())
+        return false;
+
+    Measurments.cur_temperature = readTemperature();
+    if (Measurments.min_temperature > Measurments.cur_temperature)
+        Measurments.min_temperature = Measurments.cur_temperature;
+    if (Measurments.max_temperature < Measurments.cur_temperature)
+        Measurments.max_temperature = Measurments.cur_temperature;
+
+    Measurments.cur_humidity = readHumidity();
+    if (Measurments.min_humidity > Measurments.cur_humidity)
+        Measurments.cur_humidity = Measurments.cur_humidity;
+    if (Measurments.max_humidity < Measurments.cur_humidity)
+        Measurments.max_humidity = Measurments.cur_humidity;
+
+    Measurments.cur_pressure = readPressure();
+    if (Measurments.min_temperature > Measurments.cur_pressure)
+        Measurments.min_temperature = Measurments.cur_pressure;
+    if (Measurments.max_temperature < Measurments.cur_pressure)
+        Measurments.max_temperature = Measurments.cur_pressure;
+
+    Measurments.cur_airQuality = readAirQuality();
+    if (Measurments.min_air_quality > Measurments.cur_airQuality)
+        Measurments.min_air_quality = Measurments.cur_pressure;
+    if (Measurments.max_air_quality < Measurments.cur_pressure)
+        Measurments.max_air_quality = Measurments.cur_pressure;
+
+    return true;
+}

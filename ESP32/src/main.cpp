@@ -34,8 +34,12 @@ void setup()
     EnqueueEvent(CustomEvents::EVENT_WIFI_TRY_CONNECT);
   if (Sensor.CheckStatus())
   {
-    Sensor.TakeSample();
-    Oled.RefressSensorArea(Sensor.readTemperature(), Sensor.readHumidity(), Sensor.readPressure(), Sensor.readAirQuality());
+    if (Sensor.UpdateMeasurments())
+      Oled.RefressSensorArea(
+          Sensor.Measurments.cur_temperature,
+          Sensor.Measurments.cur_humidity,
+          Sensor.Measurments.cur_pressure,
+          Sensor.Measurments.cur_airQuality);
   }
 }
 
@@ -120,11 +124,11 @@ void loop()
     break;
   case CustomEvents::EVENT_GOOGLE_REPORT_TEMPERATURE:
     if (isHomeConnected)
-      googleHome.NotifyTemperature((int)Sensor.readTemperature());
+      googleHome.NotifyTemperature((int)Sensor.Measurments.cur_temperature);
     break;
   case CustomEvents::EVENT_GOOGLE_REPORT_HUMIDITY:
     if (isHomeConnected)
-      googleHome.NotifyHumidity((int)Sensor.readHumidity());
+      googleHome.NotifyHumidity((int)Sensor.Measurments.cur_humidity);
     break;
   case CustomEvents::EVENT_AZURE_IOT_HUB_TRY_CONNECT:
     if (!HasValidAzure())
@@ -171,19 +175,20 @@ void loop()
   {
     time_t now;
     time(&now);
-
     if (Sensor.CheckStatus())
     {
-      Sensor.TakeSample();
-      float temperature = Sensor.readTemperature();
-      float humidity = Sensor.readHumidity();
-      float pressure = Sensor.readPressure();
-      float airQuality = Sensor.readAirQuality();
-      if (VERBOSE)
-        printf(">> General Info %s Free Heap %d >> Temperature: %2.1fc Humidity: %2.1f%% Pressure: %2.2fatm AirQuality: %2.2f\r\n",
-               String(ctime(&now)).c_str(), ESP.getFreeHeap(), temperature, humidity, pressure / 101325, airQuality);
-      BluetoothLE.UpdateSensorValues(temperature, humidity, pressure);
-      Oled.RefressSensorArea(temperature, humidity, pressure, airQuality);
+      if (Sensor.UpdateMeasurments())
+      {
+        float temperature = Sensor.Measurments.cur_temperature;
+        float humidity = Sensor.Measurments.cur_humidity;
+        float pressure = Sensor.Measurments.cur_pressure;
+        float airQuality = Sensor.Measurments.cur_airQuality;
+        if (VERBOSE)
+          printf(">> General Info %s Free Heap %d >> Temperature: %2.1fc Humidity: %2.1f%% Pressure: %2.2fatm AirQuality: %2.2f\r\n",
+                 String(ctime(&now)).c_str(), ESP.getFreeHeap(), temperature, humidity, pressure / 101325, airQuality);
+        BluetoothLE.UpdateSensorValues(temperature, humidity, pressure);
+        Oled.RefressSensorArea(temperature, humidity, pressure, airQuality);
+      }
     }
     else
     {
@@ -221,4 +226,8 @@ void UpdateStatus(bool BLE, bool OLED)
     Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid, isCloudconnected);
   if (BLE)
     BluetoothLE.UpdateConnectionStatus(isWiFiconnected, isHomeConnected, isCloudconnected);
+}
+
+void UpdateDailyReport(float temperature, float humidity, float pressure, float air_quality)
+{
 }

@@ -1,23 +1,31 @@
 #include <bsec.h>
 #include <BME280.h>
 
+typedef struct
+{
+    float cur_temperature;
+    float cur_pressure;
+    float cur_humidity;
+    float cur_airQuality;
+    float min_temperature;
+    float min_humidity;
+    float min_pressure;
+    float min_air_quality;
+    float max_temperature;
+    float max_humidity;
+    float max_pressure;
+    float max_air_quality;
+} EnvironmentMeasurement;
+
 class EnvironmentSensor
 {
 public:
     bool Initialize();
-    bool TakeSample();
+    bool UpdateMeasurments();
     bool CheckStatus();
-    float readTemperature();
-    float readPressure();
-    float readHumidity();
-    float readAirQuality();
+    EnvironmentMeasurement Measurments;
 
 private:
-    float temperature;
-    float pressure;
-    float humidity;
-    float airQuality;
-
     bool isBME680;
     bool isBME280;
     bool isBMP280;
@@ -41,4 +49,9 @@ private:
     bool initializeBMx280();
     bool initializeBME680();
     bool checkIaqSensorStatus(void);
+    bool TakeSample();
+    float readTemperature();
+    float readPressure();
+    float readHumidity();
+    float readAirQuality();
 };
