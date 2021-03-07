@@ -43,6 +43,8 @@ const char *resolveAzureKey(AzureKeys key, Languages lang)
             return "pressure";
         case AzureKeys::AirQuality:
             return "air quality";
+        case AzureKeys::Summary:
+            return "summary";
         }
         break;
     case Languages::Deutsch:
@@ -56,6 +58,8 @@ const char *resolveAzureKey(AzureKeys key, Languages lang)
             return "Druck";
         case AzureKeys::AirQuality:
             return "Luftqualität";
+        case AzureKeys::Summary:
+            return "Zusammenfassung";
         }
         break;
     }
@@ -64,9 +68,9 @@ const char *resolveAzureKey(AzureKeys key, Languages lang)
 
 Languages getLanguage()
 {
-    if (strstr(azure_language,"en"))
+    if (strstr(azure_language, "en"))
         return Languages::English;
-    if (strstr(azure_language,"de"))
+    if (strstr(azure_language, "de"))
         return Languages::Deutsch;
     return Languages::NotSupported;
 }
@@ -83,13 +87,13 @@ void static connection_status_callback(IOTHUB_CLIENT_CONNECTION_STATUS result, I
     {
         queueEvent(CustomEvents::EVENT_AZURE_IOT_HUB_CONNECTED);
         if (isVerbose)
-            LogInfo("The device client is connected to iothub.");
+            LogInfo(">> Azure Log >> The device client is connected to iothub.");
     }
     else
     {
         queueEvent(CustomEvents::EVENT_AZURE_IOT_HUB_DISCONNECTED);
         if (isVerbose)
-            LogInfo("The device client has been disconnected.");
+            LogInfo(">> Azure Log >> The device client has been disconnected.");
     }
 }
 
@@ -100,11 +104,11 @@ int static device_method_callback(
     void *userContextCallback)
 {
     if (isVerbose)
-        printf("device_method_callback: \r\n", String(method_name));
+        printf(">> Azure Log >> device_method_callback: \r\n", String(method_name));
 
     int result = 200;
     if (isVerbose)
-        printf("%s is called [%d] payload size\r\n", method_name, size);
+        printf(">> Azure Log >> %s is called [%d] payload size\r\n", method_name, size);
 
     if (strcmp(AzureMethodName, method_name) == 0)
     {
@@ -113,29 +117,35 @@ int static device_method_callback(
         strncpy(buffer, (char *)payload, size);
         buffer[size] = '\0';
         if (isVerbose)
-            printf("Payload: %s\r\n", buffer);
+            printf(">> Azure Log >> Payload: %s\r\n", buffer);
 
         char *userId = resolveValue(buffer, USERID);
-        printf("UserId is set to %S\r\n", userId);
 
         azure_language = resolveValue(buffer, LANGUAGE);
-        printf("Language is set to %S\r\n", azure_language);
 
         if (strlen(username) == 0 || strstr(userId, username)) // if user name doesn't exist or username matches
         {
             char *message = resolveValue(buffer, KEY);
             if (isVerbose)
-                printf("message is: %s\r\n", message);
-            printf("Language is %s and temperature key is %s\r\n",
-                   String(getLanguage()),
-                   resolveAzureKey(AzureKeys::Temperature, getLanguage()));
-            if (strstr(message, resolveAzureKey(AzureKeys::Temperature, getLanguage())))
             {
-                printf("temperture request received \r\n");
-                queueEvent(CustomEvents::EVENT_GOOGLE_REPORT_TEMPERATURE);
+                printf(">> Azure Log >> UserId: %S\r\n", userId);
+                printf(">> Azure Log >> Language: %S\r\n", azure_language);
+                printf(">> Azure Log >> message is: %s\r\n", message);
             }
+
+            bool isSummary = strstr(message, resolveAzureKey(AzureKeys::Summary, getLanguage()));
+
+            if (strstr(message, resolveAzureKey(AzureKeys::Temperature, getLanguage())))
+                queueEvent(isSummary ? CustomEvents::EVENT_GOOGLE_REPORT_TEMPERATURE_SUMMARY : CustomEvents::EVENT_GOOGLE_REPORT_TEMPERATURE);
+
             else if (strstr(message, resolveAzureKey(AzureKeys::Humidity, getLanguage())))
-                queueEvent(CustomEvents::EVENT_GOOGLE_REPORT_HUMIDITY);
+                queueEvent(isSummary ? CustomEvents::EVENT_GOOGLE_REPORT_HUMIDITY_SUMMARY : CustomEvents::EVENT_GOOGLE_REPORT_HUMIDITY);
+
+            else if (strstr(message, resolveAzureKey(AzureKeys::Pressure, getLanguage())))
+                queueEvent(isSummary ? CustomEvents::EVENT_GOOGLE_REPORT_PRESSURE_SUMMARY : CustomEvents::EVENT_GOOGLE_REPORT_PRESSURE);
+
+            else if (strstr(message, resolveAzureKey(AzureKeys::Pressure, getLanguage())))
+                queueEvent(isSummary ? CustomEvents::EVENT_GOOGLE_REPORT_AIR_QUALITY_SUMMARY : CustomEvents::EVENT_GOOGLE_REPORT_AIR_QUALITY);
 
             free(buffer);
             const char deviceMethodResponse[] = "{ \"Response\": \"GoogleHomeResponse\" }";
