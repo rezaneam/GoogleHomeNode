@@ -7,14 +7,14 @@ typedef struct
     float cur_pressure;
     float cur_humidity;
     float cur_airQuality;
-    float min_temperature;
-    float min_humidity;
-    float min_pressure;
-    float min_air_quality;
-    float max_temperature;
-    float max_humidity;
-    float max_pressure;
-    float max_air_quality;
+    float min_temperature = 1000;
+    float min_humidity = 1000;
+    float min_pressure = 1000;
+    float min_air_quality = 1000;
+    float max_temperature = -1000;
+    float max_humidity = -1000;
+    float max_pressure = -1000;
+    float max_air_quality = -1000;
 } EnvironmentMeasurement;
 
 class EnvironmentSensor

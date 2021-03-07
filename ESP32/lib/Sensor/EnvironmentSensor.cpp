@@ -148,15 +148,15 @@ bool EnvironmentSensor::UpdateMeasurments()
 
     Measurments.cur_humidity = readHumidity();
     if (Measurments.min_humidity > Measurments.cur_humidity)
-        Measurments.cur_humidity = Measurments.cur_humidity;
+        Measurments.min_humidity = Measurments.cur_humidity;
     if (Measurments.max_humidity < Measurments.cur_humidity)
         Measurments.max_humidity = Measurments.cur_humidity;
 
     Measurments.cur_pressure = readPressure();
-    if (Measurments.min_temperature > Measurments.cur_pressure)
-        Measurments.min_temperature = Measurments.cur_pressure;
-    if (Measurments.max_temperature < Measurments.cur_pressure)
-        Measurments.max_temperature = Measurments.cur_pressure;
+    if (Measurments.min_pressure > Measurments.cur_pressure)
+        Measurments.min_pressure = Measurments.cur_pressure;
+    if (Measurments.max_pressure < Measurments.cur_pressure)
+        Measurments.max_pressure = Measurments.cur_pressure;
 
     Measurments.cur_airQuality = readAirQuality();
     if (Measurments.min_air_quality > Measurments.cur_airQuality)
