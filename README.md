@@ -71,7 +71,9 @@ You need to make a IFTTT account (it's free) and make a scenario called
 ## How it is working
 
 The following figure shows the overal concept of the project.
-<img src="assets/Diagram.png" width="800px">
+<p align="center">
+  <img width="460" width="500px" src="assets/Diagram.png">
+</p>
 
 The Google Home Node (main ESP32 module) starts to connect to Azure IoT service (as set in the configuration) and tries to find the local `Google Home speaker` (namly Google Home, Google Home Mini, or any Google Home enable speaker). It of course drives the OLED and the sensor.
 The Google Home Node is always in listening mode (at least for now) and doesn't send any information to `Azure IoT Hub`.
