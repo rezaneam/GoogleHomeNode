@@ -28,5 +28,19 @@ enum CustomEvents
     EVENT_FACTORY_RESET,
     EVENT_FACTORY_RESET_SAFE,
     EVENT_RESTART,
+};
 
+enum Languages
+{
+    English,
+    Deutsch,
+    NotSupported
+};
+
+enum AzureKeys
+{
+    Temperature,
+    Humidity,
+    Pressure,
+    AirQuality
 };

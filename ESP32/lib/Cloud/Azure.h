@@ -6,11 +6,19 @@
 #include <iothubtransportmqtt.h>
 #include <enums.h>
 
+#define AzureMethodName "Google Home"
+
 class AzureIoTHub
 {
 public:
-    bool Initialize(const char *securityKey, void (*event_queue_method)(CustomEvents), const char *username, const char *devicelocation, bool verbose = false);
+    bool Initialize(
+        const char *securityKey,
+        void (*event_queue_method)(CustomEvents),
+        const char *username,
+        const char *devicelocation,
+        bool verbose = false);
     void HeartBeat();
+    Languages GetLanguage();
 
 private:
     IOTHUB_DEVICE_CLIENT_LL_HANDLE device_ll_handle;

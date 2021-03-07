@@ -37,6 +37,7 @@ bool isBLEadvertising = false;
 bool isBLEconnected = false;
 bool isWiFiconnected = false;
 bool isCloudconnected = false;
+
 std::vector<CustomEvents> eventQueue;
 
 std::string ssid;
@@ -57,6 +58,7 @@ portMUX_TYPE externalPinmux = portMUX_INITIALIZER_UNLOCKED;
 
 uint16_t ble_advertize_timeOut = BLE_ADVERTISE_TIMEOUT_MS;
 uint16_t timerCalls = 0;
+
 void IRAM_ATTR handleExternalInterrupt()
 {
     portENTER_CRITICAL_ISR(&externalPinmux);

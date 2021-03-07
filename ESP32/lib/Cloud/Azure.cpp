@@ -2,10 +2,15 @@
 
 void static (*queueEvent)(CustomEvents);
 const char *device_location;
-const char *user_name;
-bool static isVerbose;
+const char *username;
+static bool isVerbose;
+static char *azure_language;
 
-char *resolveValue(char *text, char *key)
+const char *USERID = "\"UserID\"";
+const char *KEY = "\"Key\"";
+const char *LANGUAGE = "\"NodeName\"";
+
+char *resolveValue(char *text, char const *key)
 {
     char *pch = strstr(text, key);
     uint8_t pos1, pos2;
@@ -21,6 +26,49 @@ char *resolveValue(char *text, char *key)
     returnValue[pos2 - pos1 - 1] = '\0';
 
     return returnValue;
+}
+
+const char *resolveAzureKey(AzureKeys key, Languages lang)
+{
+    switch (lang)
+    {
+    case Languages::English:
+        switch (key)
+        {
+        case AzureKeys::Temperature:
+            return "temperature";
+        case AzureKeys::Humidity:
+            return "humidity";
+        case AzureKeys::Pressure:
+            return "pressure";
+        case AzureKeys::AirQuality:
+            return "air quality";
+        }
+        break;
+    case Languages::Deutsch:
+        switch (key)
+        {
+        case AzureKeys::Temperature:
+            return "Temperatur";
+        case AzureKeys::Humidity:
+            return "Luftfeuchtigkeit";
+        case AzureKeys::Pressure:
+            return "Druck";
+        case AzureKeys::AirQuality:
+            return "Luftqualität";
+        }
+        break;
+    }
+    return "not supported";
+}
+
+Languages getLanguage()
+{
+    if (strstr(azure_language,"en"))
+        return Languages::English;
+    if (strstr(azure_language,"de"))
+        return Languages::Deutsch;
+    return Languages::NotSupported;
 }
 
 /* -- connection_status_callback --
@@ -45,7 +93,11 @@ void static connection_status_callback(IOTHUB_CLIENT_CONNECTION_STATUS result, I
     }
 }
 
-int static device_method_callback(const char *method_name, const unsigned char *payload, size_t size, unsigned char **response, size_t *response_size, void *userContextCallback)
+int static device_method_callback(
+    const char *method_name,
+    const unsigned char *payload, size_t size,
+    unsigned char **response, size_t *response_size,
+    void *userContextCallback)
 {
     if (isVerbose)
         printf("device_method_callback: \r\n", String(method_name));
@@ -54,7 +106,7 @@ int static device_method_callback(const char *method_name, const unsigned char *
     if (isVerbose)
         printf("%s is called [%d] payload size\r\n", method_name, size);
 
-    if (strcmp("Google Home", method_name) == 0)
+    if (strcmp(AzureMethodName, method_name) == 0)
     {
         char *buffer;
         buffer = (char *)malloc(sizeof(char) * (size + 1));
@@ -63,18 +115,28 @@ int static device_method_callback(const char *method_name, const unsigned char *
         if (isVerbose)
             printf("Payload: %s\r\n", buffer);
 
-        char *username = resolveValue(buffer, "\"UserID\"");
-        if (strlen(user_name) == 0 || strstr(username, user_name)) // if user name doesn't exist or username matches
+        char *userId = resolveValue(buffer, USERID);
+        printf("UserId is set to %S\r\n", userId);
+
+        azure_language = resolveValue(buffer, LANGUAGE);
+        printf("Language is set to %S\r\n", azure_language);
+
+        if (strlen(username) == 0 || strstr(userId, username)) // if user name doesn't exist or username matches
         {
-            char *message = resolveValue(buffer, "\"Key\"");
-
-            if (strstr(message, "temperature"))
-                queueEvent(CustomEvents::EVENT_GOOGLE_REPORT_TEMPERATURE);
-            else if (strstr(message, "humidity"))
-                queueEvent(CustomEvents::EVENT_GOOGLE_REPORT_HUMIDITY);
-
+            char *message = resolveValue(buffer, KEY);
             if (isVerbose)
                 printf("message is: %s\r\n", message);
+            printf("Language is %s and temperature key is %s\r\n",
+                   String(getLanguage()),
+                   resolveAzureKey(AzureKeys::Temperature, getLanguage()));
+            if (strstr(message, resolveAzureKey(AzureKeys::Temperature, getLanguage())))
+            {
+                printf("temperture request received \r\n");
+                queueEvent(CustomEvents::EVENT_GOOGLE_REPORT_TEMPERATURE);
+            }
+            else if (strstr(message, resolveAzureKey(AzureKeys::Humidity, getLanguage())))
+                queueEvent(CustomEvents::EVENT_GOOGLE_REPORT_HUMIDITY);
+
             free(buffer);
             const char deviceMethodResponse[] = "{ \"Response\": \"GoogleHomeResponse\" }";
             *response_size = sizeof(deviceMethodResponse) - 1;
@@ -93,12 +155,22 @@ int static device_method_callback(const char *method_name, const unsigned char *
     return result;
 }
 
-bool AzureIoTHub::Initialize(const char *securityKey, void (*event_queue_method)(CustomEvents), const char *username, const char *devicelocation, bool verbose)
+Languages AzureIoTHub::GetLanguage()
+{
+    return getLanguage();
+}
+
+bool AzureIoTHub::Initialize(
+    const char *securityKey,
+    void (*event_queue_method)(CustomEvents),
+    const char *userId,
+    const char *devicelocation,
+    bool verbose)
 {
     isVerbose = verbose;
     queueEvent = event_queue_method;
     device_location = devicelocation;
-    user_name = username;
+    username = userId;
 
     IOTHUB_CLIENT_TRANSPORT_PROVIDER protocol = MQTT_Protocol;
 
