@@ -27,7 +27,7 @@ WiFi name, Password, Azure Connection string, Google Home, device location (for 
 This application is just for configuring the Google Home node. It's basically a `Windows 10` application and will show up in `Windows store` soon :)
 By the way, you can run on Desktop, Windows Mobile, and `Windows IoT Core` (`Raspberry Pi`).
 
-- Xamarin Application:
+- ~~Xamarin Application~~: (not ready yet)
 
 This project is an extended version of UWP Application for `Android` and `iOS` platform. Not ready yet.
 
@@ -42,9 +42,13 @@ This is an azure Function app if you want to use your own `Azure service`. conta
 First thing first. You need to build the Google Home Node device and program it.
 I would recommand you first test it with a very basic ESP32 evaluation board and a BMP280/BME280 breakout board. This setup would cost you less than 5 USD. Of course having a `SSD1306` is a plus.
 Wire the sensor as follows and flash the board via Platform IO in `Visual Studio Code`.
+
 SDA <-> ESP32 Pin5
+
 SCL <-> ESP32 Pin4
+
 VCC <-> ESP32 3.3v
+
 GND <-> ESP32 GND
 
 You can also use the PCB design to make your custom compact module with more functionality and battery support.
@@ -67,7 +71,7 @@ You need to make a IFTTT account (it's free) and make a scenario called
 ## How it is working
 
 The following figure shows the overal concept of the project.
-<img src="assets/Diagram.png?raw=true" width="500px">
+<img src="assets/Diagram.png" width="800px">
 
 The Google Home Node (main ESP32 module) starts to connect to Azure IoT service (as set in the configuration) and tries to find the local `Google Home speaker` (namly Google Home, Google Home Mini, or any Google Home enable speaker). It of course drives the OLED and the sensor.
 The Google Home Node is always in listening mode (at least for now) and doesn't send any information to `Azure IoT Hub`.
