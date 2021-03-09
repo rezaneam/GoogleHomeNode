@@ -34,6 +34,15 @@ enum CustomEvents
     EVENT_RESTART,
 };
 
+enum Sensors
+{
+    TemperatureSensor,
+    HumiditySensor,
+    PressureSensor,
+    AirQualitySensor,
+    AllSensors
+};
+
 enum Languages
 {
     English,

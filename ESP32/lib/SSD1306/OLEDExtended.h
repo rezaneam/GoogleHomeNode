@@ -1,5 +1,14 @@
 #include <Arduino.h>
 #include <OLEDDisplay.h>
+#include <enums.h>
+
+const unsigned char Arrow_Down_icon_img[] PROGMEM = {
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF,
+    0x7E, 0x3C, 0x18, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+const unsigned char Arrow_Up_icon_img[] PROGMEM = {
+    0x00, 0x00, 0x00, 0x00, 0x18, 0x3C, 0x7E, 0xFF,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
 const unsigned char BLE_advertising_icon_img[] PROGMEM = {
     0x80, 0x01, 0x80, 0x03, 0x80, 0x07, 0x98, 0x0F,
@@ -107,8 +116,10 @@ const int16_t status_icon_pos[] PROGMEM = {0, 0, 16, 16};
 const int16_t SSID_Area[] PROGMEM = {32, 0, 96, 16};
 // const int16_t Sensor_Area[] PROGMEM = {0, 16, 128, 48};
 const int16_t sensor_icon_pos[] PROGMEM = {0, 16, 32, 32};
+const int16_t arrow_icon_pos[] PROGMEM = {0, 0, 8, 16};
 const int16_t Sensor_Icon_Area[] PROGMEM = {0, 16, 128, 32};
 const int16_t Sensor_Text_Area[] PROGMEM = {0, 48, 128, 16};
+const int16_t Sensor_Area[] PROGMEM = {0, 16, 128, 48};
 const int16_t Status_Area[] PROGMEM = {0, 0, 128, 16};
 
 enum OLEDDISPLAY_ICONS
@@ -142,6 +153,7 @@ public:
     void Initialize(bool flip = false);
 
     void RefressSensorArea(float temperature, float humidity, float pressure, float air_quality = -1);
+    void ShowMixMax(float current, float min, float max, Sensors sensor);
 
     void ReferessStatusArea(bool isBLEadvertising, bool isBLEconnected, bool isHomeConencted, bool isWiFiconnected, std::string ssid, bool isCloudConencted);
 

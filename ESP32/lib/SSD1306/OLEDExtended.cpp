@@ -64,7 +64,47 @@ void OLEDDisplayExtended::drawIcon(OLEDDISPLAY_ICONS icon)
     }
     offset += 16;
 }
+void OLEDDisplayExtended::ShowMixMax(float current, float min, float max, Sensors sensor)
+{
+    setTextAlignment(TEXT_ALIGN_LEFT);
+    setFont(ArialMT_Plain_16);
+    this->clearArea(Sensor_Area[0], Sensor_Area[1], Sensor_Area[2], Sensor_Area[3]);
 
+    switch (sensor)
+    {
+    case Sensors::TemperatureSensor:
+        this->drawXbm(sensor_icon_pos[0], sensor_icon_pos[1], sensor_icon_pos[2], sensor_icon_pos[3], Temperature_Sensor_icon_img);
+        this->drawString(Sensor_Text_Area[0], Sensor_Text_Area[1], String(current, 1));
+        this->drawString(Sensor_Text_Area[0] + 42, Sensor_Text_Area[1], String(min, 1));
+        this->drawString(Sensor_Text_Area[0] + 84, Sensor_Text_Area[1], String(max, 1));
+        break;
+    case Sensors::HumiditySensor:
+        this->drawXbm(sensor_icon_pos[0], sensor_icon_pos[1], sensor_icon_pos[2], sensor_icon_pos[3], Humidity_Sensor_icon_img);
+        this->drawString(Sensor_Text_Area[0], Sensor_Text_Area[1], String(current, 1));
+        this->drawString(Sensor_Text_Area[0] + 42, Sensor_Text_Area[1], String(min, 1));
+        this->drawString(Sensor_Text_Area[0] + 84, Sensor_Text_Area[1], String(max, 1));
+        break;
+    case Sensors::PressureSensor:
+        this->drawXbm(sensor_icon_pos[0], sensor_icon_pos[1], sensor_icon_pos[2], sensor_icon_pos[3], Barometer_Sensor_icon_img);
+        this->drawString(Sensor_Text_Area[0], Sensor_Text_Area[1], String(current / 101325, 2));
+        this->drawString(Sensor_Text_Area[0] + 42, Sensor_Text_Area[1], String(min / 101325, 2));
+        this->drawString(Sensor_Text_Area[0] + 84, Sensor_Text_Area[1], String(max / 101325, 2));
+
+        break;
+    case Sensors::AirQualitySensor:
+        this->drawXbm(sensor_icon_pos[0], sensor_icon_pos[1], sensor_icon_pos[2], sensor_icon_pos[3], Air_Quality_Sensor_icon_img);
+        this->drawString(Sensor_Text_Area[0], Sensor_Text_Area[1], String(current, 0));
+        this->drawString(Sensor_Text_Area[0] + 42, Sensor_Text_Area[1], String(min, 0));
+        this->drawString(Sensor_Text_Area[0] + 84, Sensor_Text_Area[1], String(max, 0));
+        break;
+    default:
+        break;
+    }
+    setFont(ArialMT_Plain_16);
+    this->drawString(46, 24, "Min");
+    this->drawString(88, 24, "Max");
+    this->display();
+}
 void OLEDDisplayExtended::RefressSensorArea(float temperature, float humidity, float pressure, float air_quality)
 {
     bool isBME680 = air_quality != -1;
