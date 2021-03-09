@@ -45,6 +45,8 @@ bool Wireless::ScanNodes()
 bool Wireless::TryConnect(std::string ssid, std::string password)
 {
 
+    if (isVerbose)
+        printf("Trying to connect to %s\r\n", ssid.c_str());
     WiFi.begin(ssid.c_str(), password.c_str());
     uint8_t connectionStatus = WiFi.waitForConnectResult();
     if (connectionStatus == WL_CONNECTED)
@@ -59,7 +61,7 @@ bool Wireless::TryConnect(std::string ssid, std::string password)
         if (connectionStatus == WL_NO_SSID_AVAIL)
             printf("WiFi connection failed. SSID is not available.\r\n");
         else
-            printf("WiFi Connection failed. Code %d", connectionStatus);
+            printf("WiFi Connection failed. Code %d\r\n", connectionStatus);
     }
     queueEventWiFi(CustomEvents::EVENT_WIFI_DISCONNECTED);
     WiFi.disconnect();
