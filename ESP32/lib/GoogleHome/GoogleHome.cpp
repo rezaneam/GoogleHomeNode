@@ -8,6 +8,7 @@ bool GoogleHome::Initialize(void (*event_queue_method)(CustomEvents), bool verbo
 
 bool GoogleHome::TryConnect(std::string deviceName)
 {
+    //const IPAddress ip = IPAddress(192, 168, 1, 108); //= "192.168.1.108";
     this->deviceName = deviceName;
     if (Connected)
         return true;
@@ -27,14 +28,19 @@ bool GoogleHome::TryConnect(std::string deviceName)
             printf("Found Google Home(%s : %d).\r\n",
                    googleHomeNotifier.getIPAddress().toString().c_str(),
                    googleHomeNotifier.getPort());
-        // if (googleHomeNotifier.notify(Notifier_WELCOME_MSG) != true)
-        // {
-        //     if (isVerbose)
-        //   printf("Google Home notify error: %s\r\n", googleHomeNotifier.getLastError());
-        //   Connected = false;
-        // }
+
+        char buffer[200];
+        sprintf(buffer, "Hey there. Sensor is now connected to %s!\r\n", deviceName.c_str());
+        if (!googleHomeNotifier.notify(buffer))
+        {
+            if (isVerbose)
+                printf("Google Home notify error: %s\r\n", googleHomeNotifier.getLastError());
+            Connected = false;
+        }
     }
-    queueEvent(CustomEvents::EVENT_GOOGLE_HOME_CONNECTED);
+
+    if (Connected)
+        queueEvent(CustomEvents::EVENT_GOOGLE_HOME_CONNECTED);
 
     return Connected;
 }
@@ -79,6 +85,25 @@ bool GoogleHome::NotifyTemperature(int temperature, Languages language)
         break;
     case Languages::Deutsch:
         sprintf(buffer, Temperature_DE[index], temperature);
+        break;
+    default:
+        break;
+    }
+    return notify(this->deviceName, buffer, language);
+}
+
+bool GoogleHome::NotifyTemperatureSummary(int min, int max, Languages language)
+{
+    char buffer[200];
+    byte index = rand() % 3;
+
+    switch (language)
+    {
+    case Languages::English:
+        sprintf(buffer, Temperature_Summary_EN[index], min, max);
+        break;
+    case Languages::Deutsch:
+        sprintf(buffer, Temperature_Summary_DE[index], min, max);
         break;
     default:
         break;
