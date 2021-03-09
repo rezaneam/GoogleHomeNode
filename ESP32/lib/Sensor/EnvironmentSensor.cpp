@@ -160,9 +160,9 @@ bool EnvironmentSensor::UpdateMeasurments()
 
     Measurments.cur_airQuality = readAirQuality();
     if (Measurments.min_air_quality > Measurments.cur_airQuality)
-        Measurments.min_air_quality = Measurments.cur_pressure;
-    if (Measurments.max_air_quality < Measurments.cur_pressure)
-        Measurments.max_air_quality = Measurments.cur_pressure;
+        Measurments.min_air_quality = Measurments.cur_airQuality;
+    if (Measurments.max_air_quality < Measurments.cur_airQuality)
+        Measurments.max_air_quality = Measurments.cur_airQuality;
 
     return true;
 }
