@@ -19,7 +19,7 @@ void OLEDDisplayExtended::ShowRestMessage(String message)
 {
     clear();
     setTextAlignment(TEXT_ALIGN_LEFT);
-    setFont(ArialMT_Plain_24);
+    setFont(ArialMT_Plain_16);
     this->drawString(sensor_icon_pos[0], sensor_icon_pos[1], message);
 
     setFont(ArialMT_Plain_16);
