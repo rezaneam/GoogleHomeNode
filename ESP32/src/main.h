@@ -30,6 +30,7 @@ SSD1306Wire Oled(OLED_Address, SDA_PIN, SCL_PIN);
 
 bool tryStartBLE = false;
 bool readSenor = false;
+bool secondFlag = false;
 bool fireIoT = false;
 
 bool isHomeConnected = false;
@@ -46,6 +47,7 @@ void EnqueueEvent(CustomEvents newEvent);
 CustomEvents DequeueEvent();
 void ConfigureTime();
 void UpdateStatus(bool BLE, bool OLED);
+void RefreshOLED();
 
 AzureIoTHub azureIoT;
 Wireless wireless;
@@ -58,6 +60,7 @@ portMUX_TYPE externalPinmux = portMUX_INITIALIZER_UNLOCKED;
 
 uint16_t ble_advertize_timeOut = BLE_ADVERTISE_TIMEOUT_MS;
 uint16_t timerCalls = 0;
+uint8_t changeDisplayTimeout = 4;
 
 void IRAM_ATTR handleExternalInterrupt()
 {
@@ -72,6 +75,8 @@ void IRAM_ATTR onReadSensor()
     timerCalls++;
     if (timerCalls % 50 == 0)
         fireIoT = true;
+    if (timerCalls % 1000 == 0)
+        secondFlag = true;
     if (timerCalls == SENSOR_READ_INTERVAL * 1000)
     { // Read sensor and update screen
         readSenor = true;

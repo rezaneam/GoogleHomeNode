@@ -177,7 +177,6 @@ void loop()
   default:
     break;
   }
-
   if (readSenor)
   {
     time_t now;
@@ -191,13 +190,16 @@ void loop()
         float pressure = Sensor.Measurments.cur_pressure;
         float airQuality = Sensor.Measurments.cur_airQuality;
         if (VERBOSE)
-          printf(">> General Info %s Free Heap %d%% >> Temperature: %2.1fc(%2.1f-%2.1f) Humidity: %2.1f%%(%2.1f-%2.1f) Pressure: %2.2fatm AirQuality: %2.2f\r\n",
-                 String(ctime(&now)).c_str(), 100 * ESP.getFreeHeap() / ESP.getHeapSize(),
-                 temperature, Sensor.Measurments.min_temperature, Sensor.Measurments.max_temperature,
-                 humidity, Sensor.Measurments.min_humidity, Sensor.Measurments.max_humidity,
-                 pressure / 101325, airQuality);
+          printf(
+              ">> General Info %s Free Heap %d%% >> Temperature: %2.1fc(%2.1f-%2.1f) Humidity: %2.1f%%(%2.1f-%2.1f) Pressure: %2.2fatm(%2.2f-%2.2f) AirQuality: %2.0f(%2.0f-%2.0f)\r\n",
+              String(ctime(&now)).c_str(), 100 * ESP.getFreeHeap() / ESP.getHeapSize(),
+              temperature, Sensor.Measurments.min_temperature, Sensor.Measurments.max_temperature,
+              humidity, Sensor.Measurments.min_humidity, Sensor.Measurments.max_humidity,
+              pressure / 101325, Sensor.Measurments.min_pressure / 101325, Sensor.Measurments.max_pressure / 101325,
+              airQuality, Sensor.Measurments.min_air_quality, Sensor.Measurments.max_air_quality);
         BluetoothLE.UpdateSensorValues(temperature, humidity, pressure);
-        Oled.RefressSensorArea(temperature, humidity, pressure, airQuality);
+        //Oled.RefressSensorArea(temperature, humidity, pressure, airQuality);
+        //Oled.ShowMixMax(temperature, Sensor.Measurments.min_temperature, Sensor.Measurments.max_temperature, Sensors::TemperatureSensor);
       }
     }
     else
@@ -206,6 +208,11 @@ void loop()
              String(ctime(&now)).c_str(), 100 * ESP.getFreeHeap() / ESP.getHeapSize());
     }
     readSenor = false;
+  }
+  if (secondFlag)
+  {
+    RefreshOLED();
+    secondFlag = false;
   }
 }
 
@@ -238,6 +245,48 @@ void UpdateStatus(bool BLE, bool OLED)
     BluetoothLE.UpdateConnectionStatus(isWiFiconnected, isHomeConnected, isCloudconnected);
 }
 
-void UpdateDailyReport(float temperature, float humidity, float pressure, float air_quality)
+void RefreshOLED()
 {
+  changeDisplayTimeout--;
+  if (changeDisplayTimeout > 0)
+    return;
+  bool isBME680 = Sensor.Measurments.cur_airQuality >= 0;
+  bool isBME280 = !isBME680 && Sensor.Measurments.cur_humidity >= 0;
+  switch (Oled.CurrentShow)
+  {
+  case Sensors::AllSensors:
+    Oled.ShowMixMax(Sensor.Measurments.cur_temperature, Sensor.Measurments.min_temperature, Sensor.Measurments.max_temperature, Sensors::TemperatureSensor);
+    changeDisplayTimeout = 2;
+    break;
+  case Sensors::TemperatureSensor:
+    Oled.ShowMixMax(Sensor.Measurments.cur_pressure, Sensor.Measurments.min_pressure, Sensor.Measurments.max_pressure, Sensors::PressureSensor);
+    changeDisplayTimeout = 2;
+    break;
+  case Sensors::PressureSensor:
+    if (isBME280 | isBME680)
+    {
+      Oled.ShowMixMax(Sensor.Measurments.cur_humidity, Sensor.Measurments.min_humidity, Sensor.Measurments.max_humidity, Sensors::HumiditySensor);
+      changeDisplayTimeout = 2;
+    }
+    else
+    {
+      Oled.RefressSensorArea(Sensor.Measurments.cur_temperature, Sensor.Measurments.cur_humidity, Sensor.Measurments.cur_pressure, Sensor.Measurments.cur_airQuality);
+      changeDisplayTimeout = 4;
+    }
+    break;
+  case Sensors::HumiditySensor:
+    if (isBME680)
+    {
+      Oled.ShowMixMax(Sensor.Measurments.cur_airQuality, Sensor.Measurments.cur_airQuality, Sensor.Measurments.cur_airQuality, Sensors::AirQualitySensor);
+      changeDisplayTimeout = 2;
+    }
+    else
+    {
+      Oled.RefressSensorArea(Sensor.Measurments.cur_temperature, Sensor.Measurments.cur_humidity, Sensor.Measurments.cur_pressure, Sensor.Measurments.cur_airQuality);
+      changeDisplayTimeout = 4;
+    }
+    break;
+  default:
+    break;
+  }
 }

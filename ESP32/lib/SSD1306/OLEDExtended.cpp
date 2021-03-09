@@ -100,6 +100,7 @@ void OLEDDisplayExtended::ShowMixMax(float current, float min, float max, Sensor
     default:
         break;
     }
+    CurrentShow = sensor;
     setFont(ArialMT_Plain_16);
     this->drawString(46, 24, "Min");
     this->drawString(88, 24, "Max");
@@ -112,8 +113,8 @@ void OLEDDisplayExtended::RefressSensorArea(float temperature, float humidity, f
     setTextAlignment(TEXT_ALIGN_LEFT);
     setFont(ArialMT_Plain_16);
     this->clearArea(Sensor_Text_Area[0], Sensor_Text_Area[1], Sensor_Text_Area[2], Sensor_Text_Area[3]);
-    if (!isSensorIconDrawn)
-        drawSensorIcon(isBME280, isBME680);
+
+    drawSensorIcon(isBME280, isBME680);
     if (isBME280)
     {
 
@@ -133,12 +134,12 @@ void OLEDDisplayExtended::RefressSensorArea(float temperature, float humidity, f
         this->drawString(Sensor_Text_Area[0] + 16, Sensor_Text_Area[1], String(temperature, 1));
         this->drawString(Sensor_Text_Area[0] + 80, Sensor_Text_Area[1], String(pressure / 101325));
     }
+    CurrentShow = Sensors::AllSensors;
     this->display();
 }
 
 void OLEDDisplayExtended::drawSensorIcon(bool isBME280, bool isBME680)
 {
-    isSensorIconDrawn = true;
     this->clearArea(Sensor_Icon_Area[0], Sensor_Icon_Area[1], Sensor_Icon_Area[2], Sensor_Icon_Area[3]);
     if (isBME680)
     {
