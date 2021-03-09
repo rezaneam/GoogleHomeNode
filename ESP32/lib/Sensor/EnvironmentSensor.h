@@ -9,7 +9,7 @@ typedef struct
     float cur_airQuality;
     float min_temperature = 1000;
     float min_humidity = 1000;
-    float min_pressure = 1000;
+    float min_pressure = 1000000;
     float min_air_quality = 1000;
     float max_temperature = -1000;
     float max_humidity = -1;
