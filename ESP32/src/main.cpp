@@ -138,7 +138,7 @@ void loop()
       googleHome.NotifyHumidity((int)Sensor.Measurments.cur_humidity, azureIoT.GetLanguage());
     break;
   case CustomEvents::EVENT_AZURE_IOT_HUB_TRY_CONNECT:
-    if (!HasValidAzure())
+    if (!HasValidAzure() | !isWiFiconnected)
       return;
     struct tm timeinfo;
     if (getLocalTime(&timeinfo))
@@ -277,7 +277,7 @@ void RefreshOLED()
   case Sensors::HumiditySensor:
     if (isBME680)
     {
-      Oled.ShowMixMax(Sensor.Measurments.cur_airQuality, Sensor.Measurments.cur_airQuality, Sensor.Measurments.cur_airQuality, Sensors::AirQualitySensor);
+      Oled.ShowMixMax(Sensor.Measurments.cur_airQuality, Sensor.Measurments.min_air_quality, Sensor.Measurments.max_air_quality, Sensors::AirQualitySensor);
       changeDisplayTimeout = 2;
     }
     else
@@ -285,6 +285,10 @@ void RefreshOLED()
       Oled.RefressSensorArea(Sensor.Measurments.cur_temperature, Sensor.Measurments.cur_humidity, Sensor.Measurments.cur_pressure, Sensor.Measurments.cur_airQuality);
       changeDisplayTimeout = 4;
     }
+    break;
+  case Sensors::AirQualitySensor:
+    Oled.RefressSensorArea(Sensor.Measurments.cur_temperature, Sensor.Measurments.cur_humidity, Sensor.Measurments.cur_pressure, Sensor.Measurments.cur_airQuality);
+    changeDisplayTimeout = 4;
     break;
   default:
     break;
