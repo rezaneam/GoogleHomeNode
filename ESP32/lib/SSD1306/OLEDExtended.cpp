@@ -7,10 +7,10 @@ void OLEDDisplayExtended::Initialize(bool flip)
         flipScreenVertically();
     clear();
     setTextAlignment(TEXT_ALIGN_LEFT);
-    setFont(ArialMT_Plain_24);
+    setFont(Roboto_Condensed_24);
     this->drawString(sensor_icon_pos[0], sensor_icon_pos[1], "Initializing...");
 
-    setFont(ArialMT_Plain_16);
+    setFont(Roboto_Condensed_16);
     this->drawString(Sensor_Text_Area[0], Sensor_Text_Area[1], "Please wait.");
     this->display();
 }
@@ -19,10 +19,10 @@ void OLEDDisplayExtended::ShowRestMessage(String message)
 {
     clear();
     setTextAlignment(TEXT_ALIGN_LEFT);
-    setFont(ArialMT_Plain_16);
+    setFont(Roboto_Condensed_20);
     this->drawString(sensor_icon_pos[0], sensor_icon_pos[1], message);
 
-    setFont(ArialMT_Plain_16);
+    setFont(Roboto_Condensed_16);
     this->drawString(Sensor_Text_Area[0], Sensor_Text_Area[1], "Please wait.");
     this->display();
 }
@@ -67,7 +67,7 @@ void OLEDDisplayExtended::drawIcon(OLEDDISPLAY_ICONS icon)
 void OLEDDisplayExtended::ShowMixMax(float current, float min, float max, Sensors sensor)
 {
     setTextAlignment(TEXT_ALIGN_LEFT);
-    setFont(ArialMT_Plain_16);
+    setFont(Roboto_Condensed_16);
     this->clearArea(Sensor_Area[0], Sensor_Area[1], Sensor_Area[2], Sensor_Area[3]);
 
     switch (sensor)
@@ -86,9 +86,9 @@ void OLEDDisplayExtended::ShowMixMax(float current, float min, float max, Sensor
         break;
     case Sensors::PressureSensor:
         this->drawXbm(sensor_icon_pos[0], sensor_icon_pos[1], sensor_icon_pos[2], sensor_icon_pos[3], Barometer_Sensor_icon_img);
-        this->drawString(Sensor_Text_Area[0], Sensor_Text_Area[1], String(current / 101325, 2));
-        this->drawString(Sensor_Text_Area[0] + 42, Sensor_Text_Area[1], String(min / 101325, 2));
-        this->drawString(Sensor_Text_Area[0] + 84, Sensor_Text_Area[1], String(max / 101325, 2));
+        this->drawString(Sensor_Text_Area[0], Sensor_Text_Area[1], String(current / 101325, 3));
+        this->drawString(Sensor_Text_Area[0] + 42, Sensor_Text_Area[1], String(min / 101325, 3));
+        this->drawString(Sensor_Text_Area[0] + 84, Sensor_Text_Area[1], String(max / 101325, 3));
 
         break;
     case Sensors::AirQualitySensor:
@@ -101,9 +101,9 @@ void OLEDDisplayExtended::ShowMixMax(float current, float min, float max, Sensor
         break;
     }
     CurrentShow = sensor;
-    setFont(ArialMT_Plain_16);
-    this->drawString(46, 24, "Min");
-    this->drawString(88, 24, "Max");
+    setFont(Roboto_Condensed_20);
+    this->drawString(42, 24, "Min");
+    this->drawString(84, 24, "Max");
     this->display();
 }
 void OLEDDisplayExtended::RefressSensorArea(float temperature, float humidity, float pressure, float air_quality)
@@ -177,7 +177,7 @@ void OLEDDisplayExtended::ReferessStatusArea(bool isBLEadvertising, bool isBLEco
     {
         this->drawIcon(OLEDDISPLAY_ICONS::WIFI_ICON);
         setTextAlignment(TEXT_ALIGN_LEFT);
-        setFont(ArialMT_Plain_10);
+        setFont(Roboto_Condensed_12);
         this->drawString(Status_Area[0] + offset, Status_Area[1], ssid.c_str());
     }
     this->display();
