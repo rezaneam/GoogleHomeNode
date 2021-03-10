@@ -137,8 +137,6 @@ class OLEDDisplayExtended : public OLEDDisplay
 private:
     int16_t offset = 0;
 
-public:
-    Sensors CurrentShow;
     // Clearing a rectangualr area of the screen
     void clearArea(int16_t x, int16_t y, int16_t width, int16_t height);
 
@@ -150,6 +148,10 @@ public:
 
     void drawSensorIcon(bool isBME280, bool isBME680);
 
+
+public:
+    Sensors CurrentShow;
+    
     void Initialize(bool flip = false);
 
     void RefressSensorArea(float temperature, float humidity, float pressure, float air_quality = -1);
