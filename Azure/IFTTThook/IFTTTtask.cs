@@ -15,16 +15,15 @@ namespace IFTTThook
     public class Payload
     {
         public Payload() { }
-        public Payload(string nodeName, string sensorName, string userID, string key)
+        public Payload(string userID, string lang, string key)
         {
-            NodeName = nodeName;
-            SensorName = sensorName;
+
+            Language = lang;
             UserID = userID;
             Key = key;
         }
 
-        public string NodeName;
-        public string SensorName;
+        public string Language;
         public string UserID;
         public string Key;
     }
@@ -48,14 +47,13 @@ namespace IFTTThook
             methodName ??= data?.Action;
             if (!string.IsNullOrEmpty(methodName))
             {
-                string nodeName = data?.NodeName ?? "";
                 string userID = data?.UserID ?? "";
-                string sensorName = data?.SensorName ?? "";
+                string language = data?.Language ?? "";
                 string key = data?.Key ?? "";
 
                 var command = new CloudToDeviceMethod(methodName) { ResponseTimeout = TimeSpan.FromSeconds(30) };
 
-                string payload = JsonConvert.SerializeObject(new Payload(nodeName, sensorName, userID, key));
+                string payload = JsonConvert.SerializeObject(new Payload(userID, language ,key));
                 command.SetPayloadJson(payload);
 
                 string connectionString = $"HostName={IoTHunName}.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey={IoTSharedAccessKey}";
