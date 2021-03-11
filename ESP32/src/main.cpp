@@ -23,6 +23,8 @@ void setup()
 
   BluetoothLE.Initialize(BLE_DEVICE_NAME, &EnqueueEvent, VERBOSE);
   BluetoothLE.Setup();
+  pinMode(BLE_ADVERTISE_LED_PIN, OUTPUT);
+  digitalWrite(BLE_ADVERTISE_LED_PIN, LOW);
   pinMode(BLE_ADVERTISE_ENABLE_PIN, INPUT_PULLUP); // External PIN for triggering the advertise for BLE
   attachInterrupt(digitalPinToInterrupt(BLE_ADVERTISE_ENABLE_PIN), handleExternalInterrupt, FALLING);
 
@@ -74,6 +76,7 @@ void loop()
     break;
   case CustomEvents::EVENT_BLE_TRY_STOP_ADV:
     BluetoothLE.StopAdvertise();
+    digitalWrite(BLE_ADVERTISE_LED_PIN, LOW);
     isBLEadvertising = false;
     ble_advertize_timeOut = BLE_ADVERTISE_TIMEOUT_MS;
     UpdateStatus(false, true);

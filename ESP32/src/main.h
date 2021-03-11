@@ -18,6 +18,7 @@
 #define BLE_ADVERTISE_TIMEOUT_S 60                              // BLE advertising timeout
 #define BLE_ADVERTISE_TIMEOUT_MS 1000 * BLE_ADVERTISE_TIMEOUT_S // BLE advertising timeout
 #define BLE_ADVERTISE_ENABLE_PIN 15
+#define BLE_ADVERTISE_LED_PIN 12
 #define SENSOR_READ_INTERVAL 60
 
 #define EEPROM_SIZE 256
@@ -77,6 +78,13 @@ void IRAM_ATTR onReadSensor()
         fireIoT = true;
     if (timerCalls % 1000 == 0)
         secondFlag = true;
+    if (isBLEadvertising)
+    {
+        if (timerCalls % 1000 == 0)
+            digitalWrite(BLE_ADVERTISE_LED_PIN, HIGH);
+        else if (timerCalls % 50 == 0)
+            digitalWrite(BLE_ADVERTISE_LED_PIN, LOW);
+    }
     if (timerCalls == SENSOR_READ_INTERVAL * 1000)
     { // Read sensor and update screen
         readSenor = true;
