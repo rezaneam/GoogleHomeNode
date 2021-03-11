@@ -78,6 +78,7 @@ void OLEDDisplayExtended::ShowDateTime(tm *time)
     setFont(Roboto_Condensed_24);
     this->drawString(36, 36, buffer);
     this->display();
+    CurrentShow = DisplayStatus::Time;
 }
 
 const char *OLEDDisplayExtended::resolveMonth(int month)

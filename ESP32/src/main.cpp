@@ -250,6 +250,7 @@ void UpdateStatus(bool BLE, bool OLED)
 
 void RefreshOLED()
 {
+
   changeDisplayTimeout--;
   if (changeDisplayTimeout > 0)
     return;
@@ -257,43 +258,46 @@ void RefreshOLED()
   bool isBME280 = !isBME680 && Sensor.Measurments.cur_humidity >= 0;
   switch (Oled.CurrentShow)
   {
-  case Sensors::AllSensors:
-    Oled.ShowMixMax(Sensor.Measurments.cur_temperature, Sensor.Measurments.min_temperature, Sensor.Measurments.max_temperature, Sensors::TemperatureSensor);
+  case DisplayStatus::AllSensors:
+    Oled.ShowMixMax(Sensor.Measurments.cur_temperature, Sensor.Measurments.min_temperature, Sensor.Measurments.max_temperature, DisplayStatus::TemperatureSensor);
     changeDisplayTimeout = 2;
-    break;
-  case Sensors::TemperatureSensor:
-    Oled.ShowMixMax(Sensor.Measurments.cur_pressure, Sensor.Measurments.min_pressure, Sensor.Measurments.max_pressure, Sensors::PressureSensor);
+    return;
+  case DisplayStatus::TemperatureSensor:
+    Oled.ShowMixMax(Sensor.Measurments.cur_pressure, Sensor.Measurments.min_pressure, Sensor.Measurments.max_pressure, DisplayStatus::PressureSensor);
     changeDisplayTimeout = 2;
-    break;
-  case Sensors::PressureSensor:
+    return;
+  case DisplayStatus::PressureSensor:
     if (isBME280 | isBME680)
     {
-      Oled.ShowMixMax(Sensor.Measurments.cur_humidity, Sensor.Measurments.min_humidity, Sensor.Measurments.max_humidity, Sensors::HumiditySensor);
+      Oled.ShowMixMax(Sensor.Measurments.cur_humidity, Sensor.Measurments.min_humidity, Sensor.Measurments.max_humidity, DisplayStatus::HumiditySensor);
       changeDisplayTimeout = 2;
-    }
-    else
-    {
-      Oled.RefressSensorArea(Sensor.Measurments.cur_temperature, Sensor.Measurments.cur_humidity, Sensor.Measurments.cur_pressure, Sensor.Measurments.cur_airQuality);
-      changeDisplayTimeout = 4;
+      return;
     }
     break;
-  case Sensors::HumiditySensor:
+  case DisplayStatus::HumiditySensor:
     if (isBME680)
     {
-      Oled.ShowMixMax(Sensor.Measurments.cur_airQuality, Sensor.Measurments.min_air_quality, Sensor.Measurments.max_air_quality, Sensors::AirQualitySensor);
+      Oled.ShowMixMax(Sensor.Measurments.cur_airQuality, Sensor.Measurments.min_air_quality, Sensor.Measurments.max_air_quality, DisplayStatus::AirQualitySensor);
       changeDisplayTimeout = 2;
-    }
-    else
-    {
-      Oled.RefressSensorArea(Sensor.Measurments.cur_temperature, Sensor.Measurments.cur_humidity, Sensor.Measurments.cur_pressure, Sensor.Measurments.cur_airQuality);
-      changeDisplayTimeout = 4;
+      return;
     }
     break;
-  case Sensors::AirQualitySensor:
-    Oled.RefressSensorArea(Sensor.Measurments.cur_temperature, Sensor.Measurments.cur_humidity, Sensor.Measurments.cur_pressure, Sensor.Measurments.cur_airQuality);
-    changeDisplayTimeout = 4;
+  case DisplayStatus::AirQualitySensor:
+
     break;
   default:
     break;
   }
+
+  if (Oled.CurrentShow != DisplayStatus::Time && isWiFiconnected)
+  {
+    time_t now;
+    time(&now);
+    tm *ltm = localtime(&now);
+    Oled.ShowDateTime(ltm);
+    changeDisplayTimeout = 2;
+    return;
+  }
+  Oled.RefressSensorArea(Sensor.Measurments.cur_temperature, Sensor.Measurments.cur_humidity, Sensor.Measurments.cur_pressure, Sensor.Measurments.cur_airQuality);
+  changeDisplayTimeout = 4;
 }
