@@ -14,7 +14,6 @@ namespace IFTTThook
 
     public class Payload
     {
-        public Payload() { }
         public Payload(string userID, string lang, string key)
         {
 
@@ -59,7 +58,7 @@ namespace IFTTThook
                 string connectionString = $"HostName={IoTHunName}.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey={IoTSharedAccessKey}";
 
                 ServiceClient serviceClient = ServiceClient.CreateFromConnectionString(connectionString, TransportType.Amqp);
-                //await serviceClient.OpenAsync();
+                
                 await serviceClient.InvokeDeviceMethodAsync(IoTDeviceName, command);
             }
 
