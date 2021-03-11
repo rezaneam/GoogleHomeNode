@@ -148,16 +148,20 @@ private:
 
     void drawSensorIcon(bool isBME280, bool isBME680);
 
+    const char *resolveWeekDay(int day);
+    const char *resolveMonth(int month);
 
 public:
-    Sensors CurrentShow;
-    
+    DisplayStatus CurrentShow;
+
     void Initialize(bool flip = false);
 
     void RefressSensorArea(float temperature, float humidity, float pressure, float air_quality = -1);
-    void ShowMixMax(float current, float min, float max, Sensors sensor);
+    void ShowMixMax(float current, float min, float max, DisplayStatus status);
 
     void ReferessStatusArea(bool isBLEadvertising, bool isBLEconnected, bool isHomeConencted, bool isWiFiconnected, std::string ssid, bool isCloudConencted);
 
     void ShowRestMessage(String message);
+
+    void ShowDateTime(tm *ltm);
 };

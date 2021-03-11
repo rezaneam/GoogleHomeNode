@@ -34,13 +34,14 @@ enum CustomEvents
     EVENT_RESTART,
 };
 
-enum Sensors
+enum DisplayStatus
 {
     TemperatureSensor,
     HumiditySensor,
     PressureSensor,
     AirQualitySensor,
-    AllSensors
+    AllSensors,
+    Time
 };
 
 enum Languages

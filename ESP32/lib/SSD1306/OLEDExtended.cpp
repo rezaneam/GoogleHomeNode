@@ -64,7 +64,78 @@ void OLEDDisplayExtended::drawIcon(OLEDDISPLAY_ICONS icon)
     }
     offset += 16;
 }
-void OLEDDisplayExtended::ShowMixMax(float current, float min, float max, Sensors sensor)
+
+void OLEDDisplayExtended::ShowDateTime(tm *time)
+{
+    setTextAlignment(TEXT_ALIGN_LEFT);
+    setFont(Roboto_Condensed_20);
+    char buffer[200];
+
+    this->clearArea(Sensor_Area[0], Sensor_Area[1], Sensor_Area[2], Sensor_Area[3]);
+    sprintf(buffer, "%s %s %d %d\r\n", resolveWeekDay(time->tm_wday), resolveMonth(time->tm_mon), time->tm_mday, 1900 + time->tm_year);
+    this->drawString(0, 16, buffer);
+    sprintf(buffer, "%d:%d\r\n", time->tm_hour, time->tm_min);
+    setFont(Roboto_Condensed_24);
+    this->drawString(36, 36, buffer);
+    this->display();
+}
+
+const char *OLEDDisplayExtended::resolveMonth(int month)
+{
+    switch (month)
+    {
+    case 0:
+        return (const char *)"Jan";
+    case 1:
+        return (const char *)"Feb";
+    case 2:
+        return (const char *)"Mar";
+    case 3:
+        return (const char *)"Apr";
+    case 4:
+        return (const char *)"May";
+    case 5:
+        return (const char *)"Jun";
+    case 6:
+        return (const char *)"Jul";
+    case 7:
+        return (const char *)"Aug";
+    case 8:
+        return (const char *)"Sep";
+    case 9:
+        return (const char *)"Oct";
+    case 10:
+        return (const char *)"Nov";
+    case 11:
+        return (const char *)"Dec";
+    default:
+        return (const char *)"Err";
+    }
+}
+const char *OLEDDisplayExtended::resolveWeekDay(int day)
+{
+    switch (day)
+    {
+    case 0:
+        return (const char *)"Sun";
+    case 1:
+        return (const char *)"Mon";
+    case 2:
+        return (const char *)"Tue";
+    case 3:
+        return (const char *)"Wed";
+    case 4:
+        return (const char *)"Thr";
+    case 5:
+        return (const char *)"Fri";
+    case 6:
+        return (const char *)"Sat";
+    default:
+        return (const char *)"Err";
+    }
+}
+
+void OLEDDisplayExtended::ShowMixMax(float current, float min, float max, DisplayStatus sensor)
 {
     setTextAlignment(TEXT_ALIGN_LEFT);
     setFont(Roboto_Condensed_16);
@@ -72,26 +143,26 @@ void OLEDDisplayExtended::ShowMixMax(float current, float min, float max, Sensor
 
     switch (sensor)
     {
-    case Sensors::TemperatureSensor:
+    case DisplayStatus::TemperatureSensor:
         this->drawXbm(sensor_icon_pos[0], sensor_icon_pos[1], sensor_icon_pos[2], sensor_icon_pos[3], Temperature_Sensor_icon_img);
         this->drawString(Sensor_Text_Area[0], Sensor_Text_Area[1], String(current, 1));
         this->drawString(Sensor_Text_Area[0] + 42, Sensor_Text_Area[1], String(min, 1));
         this->drawString(Sensor_Text_Area[0] + 84, Sensor_Text_Area[1], String(max, 1));
         break;
-    case Sensors::HumiditySensor:
+    case DisplayStatus::HumiditySensor:
         this->drawXbm(sensor_icon_pos[0], sensor_icon_pos[1], sensor_icon_pos[2], sensor_icon_pos[3], Humidity_Sensor_icon_img);
         this->drawString(Sensor_Text_Area[0], Sensor_Text_Area[1], String(current, 1));
         this->drawString(Sensor_Text_Area[0] + 42, Sensor_Text_Area[1], String(min, 1));
         this->drawString(Sensor_Text_Area[0] + 84, Sensor_Text_Area[1], String(max, 1));
         break;
-    case Sensors::PressureSensor:
+    case DisplayStatus::PressureSensor:
         this->drawXbm(sensor_icon_pos[0], sensor_icon_pos[1], sensor_icon_pos[2], sensor_icon_pos[3], Barometer_Sensor_icon_img);
         this->drawString(Sensor_Text_Area[0], Sensor_Text_Area[1], String(current / 101325, 3));
         this->drawString(Sensor_Text_Area[0] + 42, Sensor_Text_Area[1], String(min / 101325, 3));
         this->drawString(Sensor_Text_Area[0] + 84, Sensor_Text_Area[1], String(max / 101325, 3));
 
         break;
-    case Sensors::AirQualitySensor:
+    case DisplayStatus::AirQualitySensor:
         this->drawXbm(sensor_icon_pos[0], sensor_icon_pos[1], sensor_icon_pos[2], sensor_icon_pos[3], Air_Quality_Sensor_icon_img);
         this->drawString(Sensor_Text_Area[0], Sensor_Text_Area[1], String(current, 0));
         this->drawString(Sensor_Text_Area[0] + 42, Sensor_Text_Area[1], String(min, 0));
@@ -134,7 +205,7 @@ void OLEDDisplayExtended::RefressSensorArea(float temperature, float humidity, f
         this->drawString(Sensor_Text_Area[0] + 16, Sensor_Text_Area[1], String(temperature, 1));
         this->drawString(Sensor_Text_Area[0] + 80, Sensor_Text_Area[1], String(pressure / 101325));
     }
-    CurrentShow = Sensors::AllSensors;
+    CurrentShow = DisplayStatus::AllSensors;
     this->display();
 }
 
