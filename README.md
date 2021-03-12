@@ -66,7 +66,17 @@ PCB layout
 
 - IFTTT
 
-You need to make an IFTTT account (it's free) and make a scenario called
+You need to make an IFTTT account (it's free) and make a scenario called.
+Try to create an applet in IFTTT, add `Google Assistant` as a trigger source. Remember to pick _say a phrase with a text ingredient_
+Type in your preferred keywords followed by $ sign and provide a response for that.
+Then pick `Webhooks` (web request) as the service. So copy and paste the Azure Function URL in URL field. You pick either Get or Post request and for the content type choose JSON. paste the following structure there.
+
+{
+  "Action": "Google Home",
+  "Language": "en"
+  "UserID": "YourUserID",
+  "Key": "TextField"
+}
 
 ## How it is working
 
