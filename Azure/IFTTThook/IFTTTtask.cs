@@ -28,9 +28,9 @@ namespace IFTTThook
     }
     public static class IFTTTtask
     {
-        const string IoTHunName = "Type IoT Hub Name";
+        const string IoTHubName = "Type IoT Hub Name";
         const string IoTDeviceName = "Type IoT Device Name";
-        const string IoTSharedAccessKey = "Type IoT Share Access Key";
+        const string IoTSharedAccessKey = "Type IoT Share Access Key"; // find it in Shared access policies>iothubowner
 
         [FunctionName("IFTTTtask")]
         public static async Task<IActionResult> Run(
@@ -55,7 +55,7 @@ namespace IFTTThook
                 string payload = JsonConvert.SerializeObject(new Payload(userID, language ,key));
                 command.SetPayloadJson(payload);
 
-                string connectionString = $"HostName={IoTHunName}.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey={IoTSharedAccessKey}";
+                string connectionString = $"HostName={IoTHubName}.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey={IoTSharedAccessKey}";
 
                 ServiceClient serviceClient = ServiceClient.CreateFromConnectionString(connectionString, TransportType.Amqp);
                 
