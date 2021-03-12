@@ -19,7 +19,7 @@
                     <ColumnDefinition Width="*" MinWidth="100"/>
                 </Grid.ColumnDefinitions>
                 <Image Source="{x:Bind GlyphBitmapImage, Mode=OneWay}" Stretch="UniformToFill" Grid.Column="0" Height="40" Width="40" Margin="5" VerticalAlignment="Top"/>
-                <StackPanel Grid.Column="1" Margin="5">
+                <StackPanel Grid.Column="1" Margin="5" MinHeight="64">
                     <TextBlock TextWrapping="WrapWholeWords" FontWeight="Bold" 
                                Text="{x:Bind Name, Mode=OneWay}" />
                     <StackPanel Orientation="Horizontal">
@@ -28,7 +28,7 @@
                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE71B;" Margin="4"
                                   Visibility="{x:Bind IsPaired, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"/>
                     </StackPanel>
-                    <Button CornerRadius="16" Padding="8,4"
+                    <Button CornerRadius="8" Padding="8,4"
                     HorizontalAlignment="Center" Click="OnConnectDevice">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock  FontSize="14"  Text="&#xED5C;" Margin="4,2" 
