@@ -4,6 +4,10 @@
 // TODO: Adding Support for Device location
 // TODO: Adding Support for handling wider Azure commands
 // TODO: Improving the memory consumption & remove memory leaks
+// TODO: Support for internet conenction
+// TODO: Support for continues WiFi connectivity & pinging the gateway
+// TODO: Investigate the break-down when Sensor failing
+// TODO: Adding support for HDC1080
 
 void setup()
 {
@@ -95,6 +99,7 @@ void loop()
     break;
   case CustomEvents::EVENT_WIFI_TRY_CONNECT:
     wireless.TryConnect(GetFlashValue(EEPROM_VALUE::WiFi_SSID), GetFlashValue(EEPROM_VALUE::WiFi_Password));
+    break;
   case CustomEvents::EVENT_WIFI_CONNECTED:
     isWiFiconnected = true;
     BluetoothLE.SetSSID(GetFlashValue(EEPROM_VALUE::WiFi_SSID));
