@@ -73,7 +73,7 @@ Then pick `Webhooks` (web request) as the service. So copy and paste the Azure F
 
 {
   "Action": "Google Home",
-  "Language": "en"
+  "Language": "en",
   "UserID": "YourUserID",
   "Key": "TextField"
 }
