@@ -7,15 +7,15 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="b1d0357c-ff87-487a-bac2-5962fe105cad"
-    Publisher="CN=mrnae"
+    Name="33645RSSystems.ConfiguretoolforSmartIoTSensor"
+    Publisher="CN=FB3330C6-EA2C-4467-8521-2F1F93C09FF6"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="b1d0357c-ff87-487a-bac2-5962fe105cad" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="b5a02ef0-9b90-4160-922f-0cc0b668be4d" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>Configure tool for Smart IoT Sensor</DisplayName>
-    <PublisherDisplayName>MReza Naeemabadi</PublisherDisplayName>
+    <PublisherDisplayName>RS Systems</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -37,10 +37,11 @@
         Square44x44Logo="Assets\Square44x44Logo.png"
         Description="This appication is a configuration and monitoring tool for a Smart IoT Sensor that communicates with Google Home Speakers."
         BackgroundColor="transparent">
-        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"/>
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png"/>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
         <uap:InitialRotationPreference>
           <uap:Rotation Preference="landscape"/></uap:InitialRotationPreference>
+        <uap:LockScreen BadgeLogo="Assets\BadgeLogo.png" Notification="badgeAndTileText"/>
       </uap:VisualElements>
     </Application>
   </Applications>
