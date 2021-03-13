@@ -60,10 +60,15 @@ PCB layout
 
 <img src="assets/KiCad-Design-Back.jpg?raw=true" width="500px">
 
-- Azure Function
-
 - Azure IoT Hub
 
+After creating the `Azure` account the first step is to make a new `IoT Hub` service in your Azure account. To do so just type in IoT Hub and create a new account (you pick F1 which is entirely free). Then Navigate to the IoT Hub service you created and make an IoT Device.
+Click on the IoT Device that you have just created and copy the connection string. You need to set this connection string in your Google Home node.
+To test if this part is working properly just send a direct method with the following payload and check the logs in your serial port.
+So, now you are done with this part.
+
+- Azure Function
+In the same way make an Azure Function service in your Azure account.
 - IFTTT
 
 You need to make an IFTTT account (it's free) and make a scenario called.
