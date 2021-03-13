@@ -14,8 +14,8 @@
   <mp:PhoneIdentity PhoneProductId="b1d0357c-ff87-487a-bac2-5962fe105cad" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>Config Tool - Google Home Node</DisplayName>
-    <PublisherDisplayName>mrnae</PublisherDisplayName>
+    <DisplayName>Configure tool for Smart IoT Sensor</DisplayName>
+    <PublisherDisplayName>MReza Naeemabadi</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -32,13 +32,15 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="Config_Tool___Google_Home_Node.App">
       <uap:VisualElements
-        DisplayName="Config Tool - Google Home Node"
+        DisplayName="Configure tool for Smart IoT Sensor"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png"
-        Description="Config Tool - Google Home Node"
+        Description="This appication is a configuration and monitoring tool for a Smart IoT Sensor that communicates with Google Home Speakers."
         BackgroundColor="transparent">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"/>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
+        <uap:InitialRotationPreference>
+          <uap:Rotation Preference="landscape"/></uap:InitialRotationPreference>
       </uap:VisualElements>
     </Application>
   </Applications>
