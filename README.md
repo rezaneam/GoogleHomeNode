@@ -1,4 +1,4 @@
-# Google Home Node
+# Smart IoT Sensor (Google Home Speaker)
 
 This project introduces proof of concept for a Smart Home Device/Sensor/Monitoring with a different approach.
 In this project, Bosch environment sensors (BMP280, BME280, BME680) were utilized to monitor the temperature, humidity, pressure, and air quality.
@@ -76,7 +76,7 @@ To test if this part is working properly just send a direct method with the foll
 So, now you are done with this part.
 
 - Azure Function
-- 
+
 In the same way make an `Azure Function App` service in your Azure account. Pick .Net 3.1 version and Free version in the Function App.
 Open Azure project repository and update the _IoTHubName_, _IoTDeviceName_, and _IoTSharedAccessKey_ values and then Publish the function in your Azure account.
 To test this step just copy the Function App **URL** and use postman to send a post message with the following body.
