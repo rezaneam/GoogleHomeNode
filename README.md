@@ -60,21 +60,45 @@ PCB layout
 
 <img src="assets/KiCad-Design-Back.jpg?raw=true" width="500px">
 
-- Azure Function
-
 - Azure IoT Hub
+
+After creating the `Azure` account the first step is to make a new `IoT Hub` service in your Azure account. To do so just type in IoT Hub and create a new account (you pick F1 which is entirely free). Then Navigate to the IoT Hub service you created and make an IoT Device.
+Click on the IoT Device that you have just created and copy the connection string. You need to set this connection string in your Google Home node.
+To test if this part is working properly just send a direct method with the following payload and check the logs in your serial port.
+
+{
+  "Action": "Google Home",
+  "UserID": "`YourUserID`",
+  "Language": "en",
+  "Key": "temperature"
+}
+
+So, now you are done with this part.
+
+- Azure Function
+- 
+In the same way make an `Azure Function App` service in your Azure account. Pick .Net 3.1 version and Free version in the Function App.
+Open Azure project repository and update the _IoTHubName_, _IoTDeviceName_, and _IoTSharedAccessKey_ values and then Publish the function in your Azure account.
+To test this step just copy the Function App **URL** and use postman to send a post message with the following body.
+
+{
+  "Action": "Google Home",
+  "UserID": "`YourUserID`",
+  "Language": "en",
+  "Key": "temperature"
+}
 
 - IFTTT
 
 You need to make an IFTTT account (it's free) and make a scenario called.
 Try to create an applet in IFTTT, add `Google Assistant` as a trigger source. Remember to pick _say a phrase with a text ingredient_
 Type in your preferred keywords followed by $ sign and provide a response for that.
-Then pick `Webhooks` (web request) as the service. So copy and paste the Azure Function URL in URL field. You pick either Get or Post request and for the content type choose JSON. paste the following structure there.
+Then pick `Webhooks` (web request) as the service. So copy and paste the `Azure Function App` URL from the previous step in URL field. You pick either Get or Post request and for the content type choose JSON. paste the following structure there.
 
 {
   "Action": "Google Home",
-  "Language": "en"
-  "UserID": "YourUserID",
+  "Language": "en",
+  "UserID": "`YourUserID`",
   "Key": "TextField"
 }
 
@@ -82,7 +106,7 @@ Then pick `Webhooks` (web request) as the service. So copy and paste the Azure F
 
 The following figure shows the overal concept of the project.
 <p align="center">
-  <img width="460" width="500px" src="assets/Diagram.png">
+  <img width="800px" src="assets/Diagram.png">
 </p>
 
 The Google Home Node (main ESP32 module) starts to connect to Azure IoT service (as set in the configuration) and tries to find the local `Google Home speaker` (namely Google Home, Google Home Mini, or any Google Home enable speaker). It also drives the OLED and the sensor.

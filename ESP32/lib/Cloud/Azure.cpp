@@ -8,7 +8,7 @@ static char *azure_language;
 
 const char *USERID = "\"UserID\"";
 const char *KEY = "\"Key\"";
-const char *LANGUAGE = "\"NodeName\"";
+const char *LANGUAGE = "\"Language\"";
 
 char *resolveValue(char *text, char const *key)
 {
