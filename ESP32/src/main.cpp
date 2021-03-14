@@ -200,7 +200,7 @@ void loop()
         if (VERBOSE)
         {
           char buffer[100] = "";
-          if (true)
+          if (isWiFiconnected)
             getTimeString(&buffer[0]);
           printf(
               ">> General Info. Free Heap %d%% %s >> [%d] Temperature: %2.1fc(%2.1f-%2.1f)[%2.1f] Humidity: %2.1f%%(%2.1f-%2.1f)[%2.1f] Pressure: %2.2fatm(%2.2f-%2.2f)[%2.2f] AirQuality: %2.0f(%2.0f-%2.0f)[%2.0f]\r\n",
