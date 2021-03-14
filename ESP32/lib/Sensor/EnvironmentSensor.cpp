@@ -141,28 +141,63 @@ bool EnvironmentSensor::UpdateMeasurments()
         return false;
 
     Measurments.cur_temperature = readTemperature();
-    if (Measurments.min_temperature > Measurments.cur_temperature)
+    Measurments.cur_humidity = readHumidity();
+    Measurments.cur_pressure = readPressure();
+    Measurments.cur_airQuality = readAirQuality();
+    if (Measurments.total_readgings > 0)
+    {
+        if (Measurments.min_temperature > Measurments.cur_temperature)
+            Measurments.min_temperature = Measurments.cur_temperature;
+        if (Measurments.max_temperature < Measurments.cur_temperature)
+            Measurments.max_temperature = Measurments.cur_temperature;
+
+        if (Measurments.min_humidity > Measurments.cur_humidity)
+            Measurments.min_humidity = Measurments.cur_humidity;
+        if (Measurments.max_humidity < Measurments.cur_humidity)
+            Measurments.max_humidity = Measurments.cur_humidity;
+
+        if (Measurments.min_pressure > Measurments.cur_pressure)
+            Measurments.min_pressure = Measurments.cur_pressure;
+        if (Measurments.max_pressure < Measurments.cur_pressure)
+            Measurments.max_pressure = Measurments.cur_pressure;
+
+        if (Measurments.min_air_quality > Measurments.cur_airQuality)
+            Measurments.min_air_quality = Measurments.cur_airQuality;
+        if (Measurments.max_air_quality < Measurments.cur_airQuality)
+            Measurments.max_air_quality = Measurments.cur_airQuality;
+    }
+    else
+    {
         Measurments.min_temperature = Measurments.cur_temperature;
-    if (Measurments.max_temperature < Measurments.cur_temperature)
         Measurments.max_temperature = Measurments.cur_temperature;
 
-    Measurments.cur_humidity = readHumidity();
-    if (Measurments.min_humidity > Measurments.cur_humidity)
         Measurments.min_humidity = Measurments.cur_humidity;
-    if (Measurments.max_humidity < Measurments.cur_humidity)
         Measurments.max_humidity = Measurments.cur_humidity;
 
-    Measurments.cur_pressure = readPressure();
-    if (Measurments.min_pressure > Measurments.cur_pressure)
         Measurments.min_pressure = Measurments.cur_pressure;
-    if (Measurments.max_pressure < Measurments.cur_pressure)
         Measurments.max_pressure = Measurments.cur_pressure;
 
-    Measurments.cur_airQuality = readAirQuality();
-    if (Measurments.min_air_quality > Measurments.cur_airQuality)
         Measurments.min_air_quality = Measurments.cur_airQuality;
-    if (Measurments.max_air_quality < Measurments.cur_airQuality)
         Measurments.max_air_quality = Measurments.cur_airQuality;
+    }
+
+    Measurments.ave_temperature =
+        (Measurments.ave_temperature * Measurments.total_readgings + Measurments.cur_temperature) /
+        (Measurments.total_readgings + 1);
+
+    Measurments.ave_humidity =
+        (Measurments.ave_humidity * Measurments.total_readgings + Measurments.cur_humidity) /
+        (Measurments.total_readgings + 1);
+
+    Measurments.ave_pressure =
+        (Measurments.ave_pressure * Measurments.total_readgings + Measurments.cur_pressure) /
+        (Measurments.total_readgings + 1);
+
+    Measurments.ave_airQuality =
+        (Measurments.ave_airQuality * Measurments.total_readgings + Measurments.cur_airQuality) /
+        (Measurments.total_readgings + 1);
+
+    Measurments.total_readgings++;
 
     return true;
 }
