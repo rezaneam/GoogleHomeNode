@@ -157,7 +157,7 @@ public:
     void Initialize(bool flip = false);
 
     void RefressSensorArea(float temperature, float humidity, float pressure, float air_quality = -1);
-    void ShowMixMax(float current, float min, float max, DisplayStatus status);
+    void ShowMSummary(float average, float min, float max, DisplayStatus status);
 
     void ReferessStatusArea(bool isBLEadvertising, bool isBLEconnected, bool isHomeConencted, bool isWiFiconnected, std::string ssid, bool isCloudConencted);
 

@@ -136,36 +136,36 @@ const char *OLEDDisplayExtended::resolveWeekDay(int day)
     }
 }
 
-void OLEDDisplayExtended::ShowMixMax(float current, float min, float max, DisplayStatus sensor)
+void OLEDDisplayExtended::ShowMSummary(float average, float min, float max, DisplayStatus sensor)
 {
     setTextAlignment(TEXT_ALIGN_LEFT);
     setFont(Roboto_Condensed_16);
     this->clearArea(Sensor_Area[0], Sensor_Area[1], Sensor_Area[2], Sensor_Area[3]);
-
+    this->drawLine(4, 48, 24, 48);
     switch (sensor)
     {
     case DisplayStatus::TemperatureSensor:
         this->drawXbm(sensor_icon_pos[0], sensor_icon_pos[1], sensor_icon_pos[2], sensor_icon_pos[3], Temperature_Sensor_icon_img);
-        this->drawString(Sensor_Text_Area[0], Sensor_Text_Area[1], String(current, 1));
+        this->drawString(Sensor_Text_Area[0], Sensor_Text_Area[1], String(average, 1));
         this->drawString(Sensor_Text_Area[0] + 42, Sensor_Text_Area[1], String(min, 1));
         this->drawString(Sensor_Text_Area[0] + 84, Sensor_Text_Area[1], String(max, 1));
         break;
     case DisplayStatus::HumiditySensor:
         this->drawXbm(sensor_icon_pos[0], sensor_icon_pos[1], sensor_icon_pos[2], sensor_icon_pos[3], Humidity_Sensor_icon_img);
-        this->drawString(Sensor_Text_Area[0], Sensor_Text_Area[1], String(current, 1));
+        this->drawString(Sensor_Text_Area[0], Sensor_Text_Area[1], String(average, 1));
         this->drawString(Sensor_Text_Area[0] + 42, Sensor_Text_Area[1], String(min, 1));
         this->drawString(Sensor_Text_Area[0] + 84, Sensor_Text_Area[1], String(max, 1));
         break;
     case DisplayStatus::PressureSensor:
         this->drawXbm(sensor_icon_pos[0], sensor_icon_pos[1], sensor_icon_pos[2], sensor_icon_pos[3], Barometer_Sensor_icon_img);
-        this->drawString(Sensor_Text_Area[0], Sensor_Text_Area[1], String(current / 101325, 3));
+        this->drawString(Sensor_Text_Area[0], Sensor_Text_Area[1], String(average / 101325, 3));
         this->drawString(Sensor_Text_Area[0] + 42, Sensor_Text_Area[1], String(min / 101325, 3));
         this->drawString(Sensor_Text_Area[0] + 84, Sensor_Text_Area[1], String(max / 101325, 3));
 
         break;
     case DisplayStatus::AirQualitySensor:
         this->drawXbm(sensor_icon_pos[0], sensor_icon_pos[1], sensor_icon_pos[2], sensor_icon_pos[3], Air_Quality_Sensor_icon_img);
-        this->drawString(Sensor_Text_Area[0], Sensor_Text_Area[1], String(current, 0));
+        this->drawString(Sensor_Text_Area[0], Sensor_Text_Area[1], String(average, 0));
         this->drawString(Sensor_Text_Area[0] + 42, Sensor_Text_Area[1], String(min, 0));
         this->drawString(Sensor_Text_Area[0] + 84, Sensor_Text_Area[1], String(max, 0));
         break;
