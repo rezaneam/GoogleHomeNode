@@ -7,10 +7,10 @@ typedef struct
     float cur_pressure;
     float cur_humidity;
     float cur_airQuality;
-    float ave_temperature;
-    float ave_pressure;
-    float ave_humidity;
-    float ave_airQuality;
+    double ave_temperature;
+    double ave_pressure;
+    double ave_humidity;
+    double ave_airQuality;
     float min_temperature;
     float min_humidity;
     float min_pressure;
