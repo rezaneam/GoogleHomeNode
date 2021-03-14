@@ -17,7 +17,7 @@
 
 #define BLE_ADVERTISE_TIMEOUT_S 60                              // BLE advertising timeout
 #define BLE_ADVERTISE_TIMEOUT_MS 1000 * BLE_ADVERTISE_TIMEOUT_S // BLE advertising timeout
-#define BLE_ADVERTISE_ENABLE_PIN 02
+#define BLE_ADVERTISE_ENABLE_PIN 15                             //02
 #define BLE_ADVERTISE_LED_PIN 12
 #define SENSOR_READ_INTERVAL 60
 
@@ -49,6 +49,7 @@ CustomEvents DequeueEvent();
 void ConfigureTime();
 void UpdateStatus(bool BLE, bool OLED);
 void RefreshOLED();
+void getTimeString(char *buffer);
 
 AzureIoTHub azureIoT;
 Wireless wireless;
