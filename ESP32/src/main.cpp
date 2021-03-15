@@ -151,6 +151,7 @@ void loop()
   case CustomEvents::EVENT_GOOGLE_REPORT_TEMPERATURE_SUMMARY:
     if (isHomeConnected)
       googleHome.NotifyTemperatureSummary(
+          (int)Sensor.Measurments.ave_temperature,
           (int)Sensor.Measurments.min_temperature,
           (int)Sensor.Measurments.max_temperature,
           azureIoT.GetLanguage());
@@ -158,6 +159,15 @@ void loop()
   case CustomEvents::EVENT_GOOGLE_REPORT_HUMIDITY:
     if (isHomeConnected)
       googleHome.NotifyHumidity((int)Sensor.Measurments.cur_humidity, azureIoT.GetLanguage());
+    break;
+  case CustomEvents::EVENT_GOOGLE_REPORT_HUMIDITY_SUMMARY:
+    if (isHomeConnected)
+      googleHome.NotifyHumiditySummary(
+          (int)Sensor.Measurments.ave_humidity,
+          (int)Sensor.Measurments.min_humidity,
+          (int)Sensor.Measurments.max_humidity,
+          azureIoT.GetLanguage());
+    break;
     break;
   case CustomEvents::EVENT_AZURE_IOT_HUB_TRY_CONNECT:
     if (!HasValidAzure() | !isWiFiconnected)

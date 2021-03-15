@@ -92,18 +92,18 @@ bool GoogleHome::NotifyTemperature(int temperature, Languages language)
     return notify(this->deviceName, buffer, language);
 }
 
-bool GoogleHome::NotifyTemperatureSummary(int min, int max, Languages language)
+bool GoogleHome::NotifyTemperatureSummary(int average, int min, int max, Languages language)
 {
     char buffer[200];
-    byte index = rand() % 3;
+    byte index = 0;
 
     switch (language)
     {
     case Languages::English:
-        sprintf(buffer, Temperature_Summary_EN[index], min, max);
+        sprintf(buffer, Temperature_Summary_EN[index], average, min, max);
         break;
     case Languages::Deutsch:
-        sprintf(buffer, Temperature_Summary_DE[index], min, max);
+        sprintf(buffer, Temperature_Summary_DE[index], average, min, max);
         break;
     default:
         break;
@@ -127,6 +127,25 @@ bool GoogleHome::NotifyHumidity(int humidity, Languages language)
         break;
     }
 
+    return notify(this->deviceName, buffer, language);
+}
+
+bool GoogleHome::NotifyHumiditySummary(int average, int min, int max, Languages language)
+{
+    char buffer[200];
+    byte index = 0;
+
+    switch (language)
+    {
+    case Languages::English:
+        sprintf(buffer, Humidity_Summary_EN[index], average, min, max);
+        break;
+    case Languages::Deutsch:
+        sprintf(buffer, Humidity_Summary_DE[index], average, min, max);
+        break;
+    default:
+        break;
+    }
     return notify(this->deviceName, buffer, language);
 }
 
