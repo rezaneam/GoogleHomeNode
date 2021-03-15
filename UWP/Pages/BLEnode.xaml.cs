@@ -63,23 +63,33 @@ namespace Config_Tool___Google_Home_Node.Pages
             {
                 node = new Node();
                 if (!await node.InitializeDevice(deviceId, onConnectionStatusChanged))
-                    Debug.WriteLine("Failed to connect to device.");
+                {
+                    Frame.Navigate(typeof(HomePage), "Failed to connect to device.");
+                    return;
+                }
                 else
                     if (!await node.InitializeService())
-                    Debug.WriteLine("Device unreachable");
+                {
+                    Frame.Navigate(typeof(HomePage), "Device unreachable.");
+                    return;
+                }
                 else
                     Debug.WriteLine("Successfully connected to the node");
 
             }
             catch (Exception ex) when (ex.HResult == E_DEVICE_NOT_AVAILABLE)
             {
-                Debug.WriteLine("Bluetooth radio is not on.");
+                Frame.Navigate(typeof(HomePage), "Bluetooth radio is not on.");
+                return;
             }
 
             BLEconnectingStackPanel.Visibility = Visibility.Collapsed;
             DisconnectSensorButton.IsEnabled = true;
             ResetSensorButton.IsEnabled = true;
             ReadSensorButton.IsEnabled = true;
+            if(node.Config.ConnectionStatus == "")
+                Frame.Navigate(typeof(HomePage), "The selected Bluetooth LE node is not available/compatible.");
+            else
             mainFrame.Navigate(typeof(ConfigurationPage), node);
         }
 

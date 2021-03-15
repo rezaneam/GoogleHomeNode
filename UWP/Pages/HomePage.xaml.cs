@@ -11,6 +11,7 @@ using Windows.Devices.Enumeration;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Core;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -33,6 +34,16 @@ namespace Config_Tool___Google_Home_Node.Pages
         public HomePage()
         {
             this.InitializeComponent();
+        }
+
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        {
+            if (e.Parameter == null) return;
+            if ((string)e.Parameter == null || string.IsNullOrEmpty((string)e.Parameter)) return;
+            var messageDialog = new MessageDialog((string)e.Parameter, "Error!");
+            messageDialog.Commands.Add(new UICommand("Got it.") { Id = 0 });
+            messageDialog.CancelCommandIndex = 0;
+            await messageDialog.ShowAsync();
         }
 
         #region UI 
