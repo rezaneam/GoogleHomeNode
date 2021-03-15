@@ -21,7 +21,15 @@ void setup()
 
   Oled.Initialize(true);
 
-  Sensor.Initialize();
+  if (OLED_SCL_PIN != SENSOR_SCL_PIN || OLED_SDA_PIN != SENSOR_SCL_PIN)
+  {
+    Wire1.begin(SENSOR_SDA_PIN, SENSOR_SCL_PIN, SDA_Frequency);
+    Sensor.Initialize(Wire1);
+  }
+  else
+  {
+    Sensor.Initialize(Wire);
+  }
 
   initializeTimer();
 
@@ -41,11 +49,17 @@ void setup()
   if (Sensor.CheckStatus())
   {
     if (Sensor.UpdateMeasurments())
+    {
       Oled.RefressSensorArea(
           Sensor.Measurments.cur_temperature,
           Sensor.Measurments.cur_humidity,
           Sensor.Measurments.cur_pressure,
           Sensor.Measurments.cur_airQuality);
+      BluetoothLE.UpdateSensorValues(
+          Sensor.Measurments.cur_temperature,
+          Sensor.Measurments.cur_humidity,
+          Sensor.Measurments.cur_pressure);
+    }
   }
 }
 
@@ -187,8 +201,6 @@ void loop()
   }
   if (readSenor)
   {
-    time_t now;
-    time(&now);
     if (Sensor.CheckStatus())
     {
       if (Sensor.UpdateMeasurments())
@@ -215,8 +227,14 @@ void loop()
     }
     else
     {
-      printf(">> General Info %s Free Heap %d%%\r\n",
-             String(ctime(&now)).c_str(), 100 * ESP.getFreeHeap() / ESP.getHeapSize());
+      if (VERBOSE)
+      {
+        char buffer[100] = "";
+        if (isWiFiconnected)
+          getTimeString(&buffer[0]);
+        printf(">> General Info. Free Heap %d%% %s\r\n",
+               buffer, 100 * ESP.getFreeHeap() / ESP.getHeapSize());
+      }
     }
     readSenor = false;
   }
@@ -230,6 +248,7 @@ void loop()
 void getTimeString(char *buffer)
 {
   time_t now;
+  time(&now);
   tm *ltm = localtime(&now);
 
   sprintf(buffer, "%d/%d/%d %d:%d:%d",
