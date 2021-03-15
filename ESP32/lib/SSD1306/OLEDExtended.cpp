@@ -68,11 +68,11 @@ void OLEDDisplayExtended::drawIcon(OLEDDISPLAY_ICONS icon)
 void OLEDDisplayExtended::ShowDateTime(tm *time)
 {
     setTextAlignment(TEXT_ALIGN_LEFT);
-    setFont(Roboto_Condensed_20);
+    setFont(Roboto_Condensed_18);
     char buffer[200];
 
     this->clearArea(Sensor_Area[0], Sensor_Area[1], Sensor_Area[2], Sensor_Area[3]);
-    sprintf(buffer, "%s %s %d %d\r\n", resolveWeekDay(time->tm_wday), resolveMonth(time->tm_mon), time->tm_mday, 1900 + time->tm_year);
+    sprintf(buffer, "%s %d %s %d\r\n", resolveWeekDay(time->tm_wday), time->tm_mday, resolveMonth(time->tm_mon), 1900 + time->tm_year);
     this->drawString(0, 16, buffer);
     sprintf(buffer, "%d:%d\r\n", time->tm_hour, time->tm_min);
     setFont(Roboto_Condensed_24);
