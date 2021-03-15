@@ -646,32 +646,8 @@ Wire Wire Line
 	6050 4750 5800 4750
 Wire Wire Line
 	5800 4850 6050 4850
-$Comp
-L Device:R R15
-U 1 1 60443C56
-P 6650 5400
-F 0 "R15" V 6550 5400 50  0000 C CNN
-F 1 "10K" V 6700 5600 50  0000 C CNN
-F 2 "Resistor_SMD:R_0805_2012Metric" V 6580 5400 50  0001 C CNN
-F 3 "~" H 6650 5400 50  0001 C CNN
-	1    6650 5400
-	1    0    0    -1  
-$EndComp
-$Comp
-L Device:R R14
-U 1 1 60464BDE
-P 6100 5400
-F 0 "R14" V 6000 5400 50  0000 C CNN
-F 1 "10K" V 6150 5600 50  0000 C CNN
-F 2 "Resistor_SMD:R_0805_2012Metric" V 6030 5400 50  0001 C CNN
-F 3 "~" H 6100 5400 50  0001 C CNN
-	1    6100 5400
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	5800 5050 6100 5050
-Wire Wire Line
-	6100 5050 6100 5250
 Wire Wire Line
 	5800 4450 6650 4450
 Wire Wire Line
@@ -690,8 +666,6 @@ Wire Wire Line
 Wire Wire Line
 	6350 5000 6650 5000
 Connection ~ 6650 5000
-Wire Wire Line
-	6650 5000 6650 5250
 Text GLabel 5800 6000 0    50   BiDi Italic 0
 MCU_FLASH
 Text GLabel 6800 6300 0    50   BiDi Italic 0
@@ -726,54 +700,6 @@ F 3 "" H 4100 3800 50  0001 C CNN
 	1    4100 3800
 	0    1    1    0   
 $EndComp
-$Comp
-L PMBT3904:PMBT3904,215 U6
-U 1 1 604A948E
-P 6650 5700
-F 0 "U6" V 6800 5800 50  0000 C CNN
-F 1 "PMBT3904" V 7000 5700 50  0000 C CNN
-F 2 "PMBT3904:NXP-PMBT3904,215-0" H 6650 6200 50  0001 L CNN
-F 3 "https://assets.nexperia.com/documents/data-sheet/PMBT3904.pdf" H 6650 6300 50  0001 L CNN
-F 4 "IC" H 6650 6400 50  0001 L CNN "category"
-F 5 "1727-2959-1-ND" H 6650 6500 50  0001 L CNN "digikey description"
-F 6 "TRANS NPN 40V 0.2A SOT23" H 6650 6600 50  0001 L CNN "digikey part number"
-F 7 "yes" H 6650 6700 50  0001 L CNN "lead free"
-F 8 "8914a4d47db56a77" H 6650 6800 50  0001 L CNN "library id"
-F 9 "NXP" H 6650 6900 50  0001 L CNN "manufacturer"
-F 10 "771-PMBT3904-T/R" H 6650 7000 50  0001 L CNN "mouser part number"
-F 11 "SOT-23-3" H 6650 7100 50  0001 L CNN "package"
-F 12 "yes" H 6650 7200 50  0001 L CNN "rohs"
-F 13 "+150°C" H 6650 7300 50  0001 L CNN "temperature range high"
-F 14 "-65°C" H 6650 7400 50  0001 L CNN "temperature range low"
-	1    6650 5700
-	0    1    1    0   
-$EndComp
-$Comp
-L PMBT3904:PMBT3904,215 U5
-U 1 1 604AA823
-P 6100 5700
-F 0 "U5" V 6250 5600 50  0000 C CNN
-F 1 "PMBT3904" V 6450 5700 50  0000 C CNN
-F 2 "PMBT3904:NXP-PMBT3904,215-0" H 6100 6200 50  0001 L CNN
-F 3 "https://assets.nexperia.com/documents/data-sheet/PMBT3904.pdf" H 6100 6300 50  0001 L CNN
-F 4 "IC" H 6100 6400 50  0001 L CNN "category"
-F 5 "1727-2959-1-ND" H 6100 6500 50  0001 L CNN "digikey description"
-F 6 "TRANS NPN 40V 0.2A SOT23" H 6100 6600 50  0001 L CNN "digikey part number"
-F 7 "yes" H 6100 6700 50  0001 L CNN "lead free"
-F 8 "8914a4d47db56a77" H 6100 6800 50  0001 L CNN "library id"
-F 9 "NXP" H 6100 6900 50  0001 L CNN "manufacturer"
-F 10 "771-PMBT3904-T/R" H 6100 7000 50  0001 L CNN "mouser part number"
-F 11 "SOT-23-3" H 6100 7100 50  0001 L CNN "package"
-F 12 "yes" H 6100 7200 50  0001 L CNN "rohs"
-F 13 "+150°C" H 6100 7300 50  0001 L CNN "temperature range high"
-F 14 "-65°C" H 6100 7400 50  0001 L CNN "temperature range low"
-	1    6100 5700
-	0    -1   1    0   
-$EndComp
-Wire Wire Line
-	6650 5550 6650 5800
-Wire Wire Line
-	6100 5550 6100 5800
 Wire Wire Line
 	4900 3800 4650 3800
 Wire Wire Line
@@ -2331,4 +2257,30 @@ Wire Wire Line
 	6650 2950 6450 2950
 Wire Wire Line
 	6050 3250 6050 3350
+$Comp
+L Transistor_BJT:UMH3N Q4
+U 1 1 60511EC7
+P 6100 5800
+F 0 "Q4" V 6435 5800 50  0000 C CNN
+F 1 "UMH3N" V 6526 5800 50  0000 C CNN
+F 2 "Package_TO_SOT_SMD:SOT-363_SC-70-6" H 6105 5360 50  0001 C CNN
+F 3 "http://rohmfs.rohm.com/en/products/databook/datasheet/discrete/transistor/digital/emh3t2r-e.pdf" H 6250 5800 50  0001 C CNN
+	1    6100 5800
+	0    -1   1    0   
+$EndComp
+$Comp
+L Transistor_BJT:UMH3N Q4
+U 2 1 6050FCBB
+P 6650 5800
+F 0 "Q4" V 6985 5800 50  0000 C CNN
+F 1 "UMH3N" V 7076 5800 50  0000 C CNN
+F 2 "Package_TO_SOT_SMD:SOT-363_SC-70-6" H 6655 5360 50  0001 C CNN
+F 3 "http://rohmfs.rohm.com/en/products/databook/datasheet/discrete/transistor/digital/emh3t2r-e.pdf" H 6800 5800 50  0001 C CNN
+	2    6650 5800
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	6650 5000 6650 5600
+Wire Wire Line
+	6100 5050 6100 5600
 $EndSCHEMATC
