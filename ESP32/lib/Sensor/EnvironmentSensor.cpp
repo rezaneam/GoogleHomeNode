@@ -1,9 +1,9 @@
 #include <EnvironmentSensor.h>
 
-bool EnvironmentSensor::Initialize()
+bool EnvironmentSensor::Initialize(TwoWire &i2c)
 {
     printf("Initializing sensors.\r\n");
-    bme680.begin(BME680_I2C_ADDR_PRIMARY, Wire);
+    bme680.begin(BME680_I2C_ADDR_PRIMARY, i2c);
     isBME680 = bme680.bme680Status != -3;
     if (isBME680)
     {
@@ -15,7 +15,7 @@ bool EnvironmentSensor::Initialize()
     }
 
     //free(bme680);
-    if (bmx280.begin())
+    if (bmx280.begin(BME280_ADDRESS, &i2c))
     {
         initializeBMx280();
         isBME280 = bmx280.isBME280;
@@ -140,7 +140,7 @@ bool EnvironmentSensor::UpdateMeasurments()
     if (!TakeSample())
         return false;
 
-    Measurments.cur_temperature = readTemperature();
+    Measurments.cur_temperature = readTemperature() - 8;
     Measurments.cur_humidity = readHumidity();
     Measurments.cur_pressure = readPressure();
     Measurments.cur_airQuality = readAirQuality();

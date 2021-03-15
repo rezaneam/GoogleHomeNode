@@ -25,7 +25,7 @@ typedef struct
 class EnvironmentSensor
 {
 public:
-    bool Initialize();
+    bool Initialize(TwoWire &i2c);
     bool UpdateMeasurments();
     bool CheckStatus();
     EnvironmentMeasurement Measurments;
