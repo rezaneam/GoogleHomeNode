@@ -2286,4 +2286,49 @@ Wire Wire Line
 Connection ~ 5800 650 
 Wire Wire Line
 	5800 650  5900 650 
+$Comp
+L Sensor_Humidity:HDC1080 U10
+U 1 1 60508683
+P 6150 2950
+F 0 "U10" H 5807 2996 50  0000 R CNN
+F 1 "HDC1080" H 5807 2905 50  0000 R CNN
+F 2 "Package_SON:Texas_PWSON-N6" H 6100 2700 50  0001 L CNN
+F 3 "http://www.ti.com/lit/ds/symlink/hdc1080.pdf" H 5750 3200 50  0001 C CNN
+	1    6150 2950
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+3.3V #PWR052
+U 1 1 60509223
+P 6050 2500
+F 0 "#PWR052" H 6050 2350 50  0001 C CNN
+F 1 "+3.3V" V 6065 2628 50  0000 L CNN
+F 2 "" H 6050 2500 50  0001 C CNN
+F 3 "" H 6050 2500 50  0001 C CNN
+	1    6050 2500
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR053
+U 1 1 605099FA
+P 6050 3350
+F 0 "#PWR053" H 6050 3100 50  0001 C CNN
+F 1 "GND" H 6055 3177 50  0000 C CNN
+F 2 "" H 6050 3350 50  0001 C CNN
+F 3 "" H 6050 3350 50  0001 C CNN
+	1    6050 3350
+	1    0    0    -1  
+$EndComp
+Text GLabel 6650 2850 2    50   BiDi Italic 0
+MCU_SCL
+Text GLabel 6650 2950 2    50   BiDi Italic 0
+MCU_SDA
+Wire Wire Line
+	6050 2500 6050 2650
+Wire Wire Line
+	6450 2850 6650 2850
+Wire Wire Line
+	6650 2950 6450 2950
+Wire Wire Line
+	6050 3250 6050 3350
 $EndSCHEMATC
