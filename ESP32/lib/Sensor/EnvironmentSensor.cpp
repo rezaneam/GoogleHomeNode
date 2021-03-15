@@ -140,7 +140,7 @@ bool EnvironmentSensor::UpdateMeasurments()
     if (!TakeSample())
         return false;
 
-    Measurments.cur_temperature = readTemperature() - 8;
+    Measurments.cur_temperature = readTemperature();
     Measurments.cur_humidity = readHumidity();
     Measurments.cur_pressure = readPressure();
     Measurments.cur_airQuality = readAirQuality();
