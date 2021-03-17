@@ -3,6 +3,10 @@
 This project introduces proof of concept for a Smart Home Device/Sensor/Monitoring with a different approach.
 In this project, Bosch environment sensors (BMP280, BME280, BME680) were utilized to monitor the temperature, humidity, pressure, and air quality.
 
+<p align="center">
+  <img width="430px" src="assets/Demo.gif">
+</p>
+
 ## What is innovative in this project
 
 - The main IoT node configuration is straightforward and you can update it anything.
@@ -44,7 +48,7 @@ I would recommend you first test it with a very basic ESP32 evaluation board and
 Wire the sensor as is shown in the following figure and flash the board via Platform IO in `Visual Studio Code`.
 
 <p align="center">
-  <img width="600px" src="assets/Connections.png">
+  <img width="600px" src="assets/Connections.jpg">
 </p>
 
 You can always reconfigure the connection by changing the pin numbers in [config.h](ESP32/src/config.h).
