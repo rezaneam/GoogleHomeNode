@@ -41,15 +41,13 @@ This is an Azure Function app if you want to use your own `Azure service`. conta
 
 First thing first, You need to build the Google Home Node device and program it.
 I would recommend you first test it with a very basic ESP32 evaluation board and a BMP280/BME280 breakout board. This setup would cost you less than 5 USD. Of course, having a `SSD1306` is a plus.
-Wire the sensor as follows and flash the board via Platform IO in `Visual Studio Code`.
+Wire the sensor as is shown in the following figure and flash the board via Platform IO in `Visual Studio Code`.
 
-SDA <-> ESP32 Pin5
+<p align="center">
+  <img width="600px" src="assets/Connections.png">
+</p>
 
-SCL <-> ESP32 Pin4
-
-VCC <-> ESP32 3.3v
-
-GND <-> ESP32 GND
+You can always reconfigure the connection by changing the pin numbers in [config.h](ESP32/src/config.h).
 
 You can also use the PCB design to make your custom compact module with more functionality and battery support.
 Find the attached 3.5x3.5 cm [PCB design](/KiCad-Design/KiCad-Design.kicad_pcb).
