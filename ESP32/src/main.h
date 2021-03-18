@@ -34,7 +34,7 @@ std::string ssid;
 void EnqueueEvent(CustomEvents newEvent);
 CustomEvents DequeueEvent();
 void ConfigureTime();
-void UpdateStatus(bool BLE, bool OLED);
+void UpdateStatus(bool BLE, bool OLED, bool isNofiying = false);
 void RefreshOLED();
 void getTimeString(char *buffer);
 

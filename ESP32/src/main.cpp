@@ -145,28 +145,36 @@ void loop()
     UpdateStatus(true, true);
     break;
   case CustomEvents::EVENT_GOOGLE_REPORT_TEMPERATURE:
+    UpdateStatus(false, true, true);
     if (isHomeConnected)
       googleHome.NotifyTemperature((int)Sensor.Measurments.cur_temperature, azureIoT.GetLanguage());
+    UpdateStatus(false, true);
     break;
   case CustomEvents::EVENT_GOOGLE_REPORT_TEMPERATURE_SUMMARY:
+    UpdateStatus(false, true, true);
     if (isHomeConnected)
       googleHome.NotifyTemperatureSummary(
           (int)Sensor.Measurments.ave_temperature,
           (int)Sensor.Measurments.min_temperature,
           (int)Sensor.Measurments.max_temperature,
           azureIoT.GetLanguage());
+    UpdateStatus(false, true);
     break;
   case CustomEvents::EVENT_GOOGLE_REPORT_HUMIDITY:
+    UpdateStatus(false, true, true);
     if (isHomeConnected)
       googleHome.NotifyHumidity((int)Sensor.Measurments.cur_humidity, azureIoT.GetLanguage());
+    UpdateStatus(false, true);
     break;
   case CustomEvents::EVENT_GOOGLE_REPORT_HUMIDITY_SUMMARY:
+    UpdateStatus(false, true, true);
     if (isHomeConnected)
       googleHome.NotifyHumiditySummary(
           (int)Sensor.Measurments.ave_humidity,
           (int)Sensor.Measurments.min_humidity,
           (int)Sensor.Measurments.max_humidity,
           azureIoT.GetLanguage());
+    UpdateStatus(false, true);
     break;
     break;
   case CustomEvents::EVENT_AZURE_IOT_HUB_TRY_CONNECT:
@@ -286,10 +294,10 @@ void ConfigureTime()
   configTime(0, 0, ntpServer);
 }
 
-void UpdateStatus(bool BLE, bool OLED)
+void UpdateStatus(bool BLE, bool OLED, bool isNotifying)
 {
   if (OLED)
-    Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid, isCloudconnected);
+    Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid, isCloudconnected, isNotifying);
   if (BLE)
     BluetoothLE.UpdateConnectionStatus(isWiFiconnected, isHomeConnected, isCloudconnected);
 }

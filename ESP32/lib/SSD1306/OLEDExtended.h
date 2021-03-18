@@ -10,6 +10,12 @@ const unsigned char Arrow_Up_icon_img[] PROGMEM = {
     0x00, 0x00, 0x00, 0x00, 0x18, 0x3C, 0x7E, 0xFF,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
+const unsigned char Notify_icon_img[] PROGMEM = {
+    0x00, 0x0C, 0x00, 0x06, 0x00, 0x07, 0x80, 0x03,
+    0xc0, 0x01, 0xC0, 0x01, 0xE0, 0x00, 0xF0, 0x1F,
+    0xF8, 0x0F, 0x00, 0x07, 0x80, 0x03, 0x80, 0x01,
+    0xC0, 0x01, 0xC0, 0x00, 0x60, 0x00, 0x30, 0x00};
+
 const unsigned char BLE_advertising_icon_img[] PROGMEM = {
     0x80, 0x01, 0x80, 0x03, 0x80, 0x07, 0x98, 0x0F,
     0xB8, 0x0D, 0xF0, 0x0D, 0xE0, 0x07, 0xC0, 0x03,
@@ -129,7 +135,8 @@ enum OLEDDISPLAY_ICONS
     WIFI_ICON = 2,
     GOOGLE_HOME = 3,
     CLOUD = 4,
-    SSID_PLACEHOLDER = 5
+    SSID_PLACEHOLDER = 5,
+    NOTIFYING = 6
 };
 
 class OLEDDisplayExtended : public OLEDDisplay
@@ -159,7 +166,14 @@ public:
     void RefressSensorArea(float temperature, float humidity, float pressure, float air_quality = -1);
     void ShowMSummary(float average, float min, float max, DisplayStatus status);
 
-    void ReferessStatusArea(bool isBLEadvertising, bool isBLEconnected, bool isHomeConencted, bool isWiFiconnected, std::string ssid, bool isCloudConencted);
+    void ReferessStatusArea(
+        bool isBLEadvertising,
+        bool isBLEconnected,
+        bool isHomeConencted,
+        bool isWiFiconnected,
+        std::string ssid,
+        bool isCloudConencted,
+        bool isNotifying = false);
 
     void ShowRestMessage(String message);
 
