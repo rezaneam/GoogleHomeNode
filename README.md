@@ -1,13 +1,17 @@
 # Smart IoT Sensor (Google Home Speaker)
 
 This project introduces proof of concept for a Smart Home Device/Sensor/Monitoring with a different approach.
-In this project, Bosch environment sensors (BMP280, BME280, BME680) were utilized to monitor the temperature, humidity, pressure, and air quality.
+In this project, Bosch & TI environment sensors (BMP280, BME280, BME680, HDC1080) were utilized to monitor the temperature, humidity, pressure, and air quality.
+
+<p align="center">
+  <img width="430px" src="assets/Demo.gif">
+</p>
 
 ## What is innovative in this project
 
-- The main IoT node configuration is straightforward and you can update it anything.
-- The main IoT node pushes real-time updates via BluetoothLE to multiple connected devices.
-- Against many available solutions, you don't need to open a port in your router/modem/firewall. That's really cumbersome and may be risky.
+- The configuration process of the Smart IoT Sensor is straightforward and you can update it at anytime.
+- The Sensor pushes real-time readings via BluetoothLE to multiple connected devices.
+- Against many available solutions, you don't need to open a port in your router/modem/firewall. That's really cumbersome and may be secuirty issues.
 - You don't need to deal with DNS and static IP address. that's a real pain.
 - You don't need to register on expensive and complicated services (Azure IoT Hub service has a free plan).
 - You can customize the whole project with a little effort.
@@ -16,7 +20,7 @@ In this project, Bosch environment sensors (BMP280, BME280, BME680) were utilize
 
 This project includes the following components
 
-- ESP32:
+- ESP32 (Smart IoT Sensor):
 
 It's the main IoT device which basically is an ESP32 module connected to an environment sensor. The module needs to connect to the Internet via WiFi and connect to Azure services. This project is written in `Platform IO` so it should take care of everything (external libraries) if you use `Platform IO`.
 You should be able to connect to the device and configure it via BluetoothLE and at any time, you can update the sensor configuration without any need to reset it.
@@ -44,7 +48,7 @@ I would recommend you first test it with a very basic ESP32 evaluation board and
 Wire the sensor as is shown in the following figure and flash the board via Platform IO in `Visual Studio Code`.
 
 <p align="center">
-  <img width="600px" src="assets/Connections.png">
+  <img width="600px" src="assets/Connections.jpg">
 </p>
 
 You can always reconfigure the connection by changing the pin numbers in [config.h](ESP32/src/config.h).
@@ -54,9 +58,13 @@ Find the attached 3.5x3.5 cm [PCB design](/KiCad-Design/KiCad-Design.kicad_pcb).
 
 PCB layout
 
-<img src="assets/KiCad-Design-Front.jpg?raw=true" width="500px">
+<span align="center">
+  <img src="assets/KiCad-Design-Front.jpg" width="450px">
+  <img src="assets/KiCad-Design-Back.jpg" width="450px">
+</span>
 
-<img src="assets/KiCad-Design-Back.jpg?raw=true" width="500px">
+
+
 
 - Azure IoT Hub
 
@@ -128,6 +136,8 @@ I used [esp8266 Google TTS](https://github.com/horihiro/esp8266-google-tts) to g
 
 - [Bosch BMP280](https://www.bosch-sensortec.com/products/environmental-sensors/pressure-sensors/bmp280/)
 - [Bosch BME280](https://www.bosch-sensortec.com/products/environmental-sensors/humidity-sensors-bme280/)
+- TO DO: [Bosch BME680](https://www.bosch-sensortec.com/products/environmental-sensors/gas-sensors/bme680/)
+- TO DO: [Texas Instrument HDC1080](https://www.ti.com/lit/ds/symlink/hdc1080.pdf)
 
 ## Dependent Libraries
 
@@ -136,18 +146,19 @@ I used [esp8266 Google TTS](https://github.com/horihiro/esp8266-google-tts) to g
 - [Azure IoT Protocol MQTT](https://github.com/Azure/azure-iot-arduino-protocol-mqtt)
 - [Azure IoT Utility](https://github.com/Azure/azure-iot-arduino-utility)
 - [NimBLE Arduino](https://github.com/h2zero/NimBLE-Arduino) - Lite version of the BluetoothLE to save some RAM
-- [esp8266 Google Home Notifier](https://github.com/horihiro/esp8266-google-home-notifier)
+- [esp8266 Google Home Notifier](https://github.com/horihiro/esp8266-google-home-notifier) - Customized version to support different languages.
 - [esp8266 Google TTS](https://github.com/horihiro/esp8266-google-tts)
 - [Adafruit BME280 Library](https://github.com/adafruit/Adafruit_BME280_Library) - Locally/Modified in the project
 - [Adafruit SSD1306](https://github.com/adafruit/Adafruit_SSD1306) - Extensively modified and locally imported.
 
 ## Future Improvment
 
-- Bosch BME680
-- Improve the UWP Application layout and code
-- Deploy App in the Windows Store
-- Support for Android & iOS platforms
-- Support for User/location
-- Multi-language support
+- Suporting Bosch BME680
+- Supporting TI HDC1080
+- Improving the UWP Application layout and code logic
+- Deploy UWP App in the Windows Store
+- Support for Android & iOS platforms (Xamarin Forms)
+- Support for handling User & sensor location
+- Multi-language support (EN, DE, FR)
 - Find a way to integrate with Google Assistant
 - Connect to [HASS](https://www.home-assistant.io/)
