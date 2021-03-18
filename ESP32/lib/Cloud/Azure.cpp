@@ -45,6 +45,8 @@ const char *resolveAzureKey(AzureKeys key, Languages lang)
             return "air quality";
         case AzureKeys::Summary:
             return "summary";
+        case AzureKeys::Report:
+            return "report";
         }
         break;
     case Languages::Deutsch:
@@ -60,6 +62,25 @@ const char *resolveAzureKey(AzureKeys key, Languages lang)
             return "Luftqualität";
         case AzureKeys::Summary:
             return "Zusammenfassung";
+        case AzureKeys::Report:
+            return "Bericht";
+        }
+        break;
+    case Languages::Francais:
+        switch (key)
+        {
+        case AzureKeys::Temperature:
+            return "température";
+        case AzureKeys::Humidity:
+            return "humidité";
+        case AzureKeys::Pressure:
+            return "pression";
+        case AzureKeys::AirQuality:
+            return "qualité de l'air";
+        case AzureKeys::Summary:
+            return "résumé";
+        case AzureKeys::Report:
+            return "rapport";
         }
         break;
     }
@@ -72,6 +93,8 @@ Languages getLanguage()
         return Languages::English;
     if (strstr(azure_language, "de"))
         return Languages::Deutsch;
+    if (strstr(azure_language, "fr"))
+        return Languages::Francais;
     return Languages::NotSupported;
 }
 
@@ -134,6 +157,8 @@ int static device_method_callback(
             }
 
             bool isSummary = strstr(message, resolveAzureKey(AzureKeys::Summary, getLanguage()));
+            if (!isSummary)
+                isSummary = strstr(message, resolveAzureKey(AzureKeys::Report, getLanguage()));
 
             if (strstr(message, resolveAzureKey(AzureKeys::Temperature, getLanguage())))
                 queueEvent(isSummary ? CustomEvents::EVENT_GOOGLE_REPORT_TEMPERATURE_SUMMARY : CustomEvents::EVENT_GOOGLE_REPORT_TEMPERATURE);

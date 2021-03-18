@@ -48,6 +48,7 @@ enum Languages
 {
     English,
     Deutsch,
+    Francais,
     NotSupported
 };
 
@@ -57,5 +58,6 @@ enum AzureKeys
     Humidity,
     Pressure,
     AirQuality,
-    Summary
+    Summary,
+    Report
 };

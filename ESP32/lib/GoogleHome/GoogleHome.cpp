@@ -55,6 +55,8 @@ const char *GoogleHome::resolveLanguage(Languages lang)
     case Languages::Deutsch:
         return (const char *)"de";
 
+    case Languages::Francais:
+        return (const char *)"fr";
     default:
         return (const char *)"en";
     }
@@ -86,6 +88,9 @@ bool GoogleHome::NotifyTemperature(int temperature, Languages language)
     case Languages::Deutsch:
         sprintf(buffer, Temperature_DE[index], temperature);
         break;
+    case Languages::Francais:
+        sprintf(buffer, Temperature_FR[index], temperature);
+        break;
     default:
         break;
     }
@@ -105,6 +110,9 @@ bool GoogleHome::NotifyTemperatureSummary(int average, int min, int max, Languag
     case Languages::Deutsch:
         sprintf(buffer, Temperature_Summary_DE[index], average, min, max);
         break;
+    case Languages::Francais:
+        sprintf(buffer, Temperature_Summary_FR[index], average, min, max);
+        break;
     default:
         break;
     }
@@ -122,6 +130,9 @@ bool GoogleHome::NotifyHumidity(int humidity, Languages language)
         break;
     case Languages::Deutsch:
         sprintf(buffer, HUMIDITY_DE[index], humidity);
+        break;
+    case Languages::Francais:
+        sprintf(buffer, HUMIDITY_FR[index], humidity);
         break;
     default:
         break;
@@ -142,6 +153,9 @@ bool GoogleHome::NotifyHumiditySummary(int average, int min, int max, Languages 
         break;
     case Languages::Deutsch:
         sprintf(buffer, Humidity_Summary_DE[index], average, min, max);
+        break;
+    case Languages::Francais:
+        sprintf(buffer, Humidity_Summary_FR[index], average, min, max);
         break;
     default:
         break;
