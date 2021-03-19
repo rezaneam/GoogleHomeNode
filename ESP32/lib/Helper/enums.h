@@ -61,3 +61,11 @@ enum AzureKeys
     Summary,
     Report
 };
+
+enum SensorType
+{
+    No_Sensor,
+    BMP280_Sensor,
+    BME280_Sensor,
+    BME680_Sensor
+};

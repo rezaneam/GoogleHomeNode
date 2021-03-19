@@ -1,5 +1,6 @@
 #include <bsec.h>
 #include <BME280.h>
+#include <enums.h>
 
 typedef struct
 {
@@ -28,13 +29,10 @@ public:
     bool Initialize(TwoWire &i2c);
     bool UpdateMeasurments();
     bool CheckStatus();
+    SensorType sensorType;
     EnvironmentMeasurement Measurments;
 
 private:
-    bool isBME680;
-    bool isBME280;
-    bool isBMP280;
-
     BME280 bmx280;
     Bsec bme680;
 

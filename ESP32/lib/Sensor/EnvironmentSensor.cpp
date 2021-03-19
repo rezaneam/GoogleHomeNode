@@ -2,39 +2,35 @@
 
 bool EnvironmentSensor::Initialize(TwoWire &i2c)
 {
-    printf("Initializing sensors.\r\n");
     bme680.begin(BME680_I2C_ADDR_PRIMARY, i2c);
-    isBME680 = bme680.bme680Status != -3;
-    if (isBME680)
+    ;
+    if (bme680.bme680Status == 0)
     {
         printf("BME680 sensor found.\r\n");
-        printf("BSEC library version %d.%d.%d.%d\r\n", bme680.version.major, bme680.version.minor, bme680.version.major_bugfix, bme680.version.minor_bugfix);
+        printf("BSEC library version %d.%d.%d.%d\r\n",
+               bme680.version.major, bme680.version.minor, bme680.version.major_bugfix, bme680.version.minor_bugfix);
         initializeBME680();
-        //free(bmx280);
+        sensorType = SensorType::BME680_Sensor;
         return true;
     }
 
-    //free(bme680);
     if (bmx280.begin(BME280_ADDRESS, &i2c))
     {
         initializeBMx280();
-        isBME280 = bmx280.isBME280;
-        isBMP280 = !bmx280.isBME280;
+        sensorType = bmx280.isBME280 ? SensorType::BME680_Sensor : SensorType::BMP280_Sensor;
         return true;
     }
-    isBME280 = false;
-    isBMP280 = false;
+    sensorType = SensorType::No_Sensor;
     printf("No sensor found.\r\n");
-    //free(bmx280);
     return false;
 }
 
 bool EnvironmentSensor::CheckStatus()
 {
-    if (!(isBME280 || isBME680 || isBMP280))
+    if (sensorType == SensorType::No_Sensor)
         return false;
 
-    if (isBME680)
+    if (sensorType == SensorType::BME680_Sensor)
         return checkIaqSensorStatus();
 
     return true;
@@ -42,10 +38,10 @@ bool EnvironmentSensor::CheckStatus()
 
 bool EnvironmentSensor::TakeSample()
 {
-    if (!(isBME280 || isBME680 || isBMP280))
+    if (sensorType == SensorType::No_Sensor)
         return false;
 
-    if (isBME680)
+    if (sensorType == SensorType::BME680_Sensor)
         return bme680.run();
 
     bmx280.takeForcedMeasurement();
@@ -54,41 +50,51 @@ bool EnvironmentSensor::TakeSample()
 
 float EnvironmentSensor::readTemperature()
 {
-    if (!(isBME280 || isBME680 || isBMP280))
+    if (sensorType == SensorType::No_Sensor)
         return -1;
 
-    if (isBME680)
+    if (sensorType == SensorType::BME680_Sensor)
         return bme680.temperature;
     return bmx280.readTemperature();
 }
 
 float EnvironmentSensor::readHumidity()
 {
-    if (!(isBME280 || isBME680 || isBMP280))
+    if (sensorType == SensorType::No_Sensor)
         return -1;
 
-    if (isBME680)
+    if (sensorType == SensorType::BME680_Sensor)
         return bme680.humidity;
     return bmx280.readHumidity();
 }
 
 float EnvironmentSensor::readPressure()
 {
-    if (!(isBME280 || isBME680 || isBMP280))
+    if (sensorType == SensorType::No_Sensor)
         return -1;
 
-    if (isBME680)
+    if (sensorType == SensorType::BME680_Sensor)
         return bme680.pressure;
     return bmx280.readPressure();
 }
 
 float EnvironmentSensor::readAirQuality()
 {
-    if (!(isBME280 || isBME680 || isBMP280))
+    if (sensorType == SensorType::No_Sensor)
         return -1;
 
-    if (isBME680)
-        return bme680.iaq;
+    if (sensorType == SensorType::BME680_Sensor)
+    {
+        printf("Gas(R) %2.1f Gas(n) %2.1f[%d] Gas(%%) %2.1f[%d] IAQ %2.1f[%d] IAQ Static %2.1f[%d] CO %2.1f[%d]\r\n",
+               bme680.gasResistance,
+               bme680.compGasValue, bme680.compGasAccuracy,
+               bme680.gasPercentage, bme680.gasPercentageAcccuracy,
+               bme680.iaq, bme680.iaqAccuracy,
+               bme680.staticIaq, bme680.iaqAccuracy,
+               bme680.co2Equivalent, bme680.co2Accuracy);
+        return bme680.iaqAccuracy == 3 ? bme680.iaq : -1;
+    }
+
     return -1;
 }
 

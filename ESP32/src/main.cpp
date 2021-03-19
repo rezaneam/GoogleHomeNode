@@ -21,15 +21,13 @@ void setup()
 
   Oled.Initialize(true);
 
-  if (OLED_SCL_PIN != SENSOR_SCL_PIN || OLED_SDA_PIN != SENSOR_SCL_PIN)
+  if (OLED_SCL_PIN != SENSOR_SCL_PIN || OLED_SDA_PIN != SENSOR_SDA_PIN)
   {
     Wire1.begin(SENSOR_SDA_PIN, SENSOR_SCL_PIN, SDA_Frequency);
     Sensor.Initialize(Wire1);
   }
   else
-  {
     Sensor.Initialize(Wire);
-  }
 
   initializeTimer();
 
@@ -235,10 +233,10 @@ void loop()
           printf(
               ">> General Info. Free Heap %d%% %s >> [%d] Temperature: %2.1fc(%2.1f-%2.1f)[%2.1f] Humidity: %2.1f%%(%2.1f-%2.1f)[%2.1f] Pressure: %2.2fatm(%2.2f-%2.2f)[%2.2f] AirQuality: %2.0f(%2.0f-%2.0f)[%2.0f]\r\n",
               100 * ESP.getFreeHeap() / ESP.getHeapSize(), buffer, Sensor.Measurments.total_readgings,
-              temperature, Sensor.Measurments.ave_temperature, Sensor.Measurments.min_temperature, Sensor.Measurments.max_temperature,
-              humidity, Sensor.Measurments.ave_humidity, Sensor.Measurments.min_humidity, Sensor.Measurments.max_humidity,
-              pressure / 101325, Sensor.Measurments.ave_pressure / 101325, Sensor.Measurments.min_pressure / 101325, Sensor.Measurments.max_pressure / 101325,
-              airQuality, Sensor.Measurments.ave_airQuality, Sensor.Measurments.min_air_quality, Sensor.Measurments.max_air_quality);
+              temperature, Sensor.Measurments.min_temperature, Sensor.Measurments.max_temperature, Sensor.Measurments.ave_temperature,
+              humidity, Sensor.Measurments.min_humidity, Sensor.Measurments.max_humidity, Sensor.Measurments.ave_humidity,
+              pressure / 101325, Sensor.Measurments.min_pressure / 101325, Sensor.Measurments.max_pressure / 101325, Sensor.Measurments.ave_pressure / 101325,
+              airQuality, Sensor.Measurments.min_air_quality, Sensor.Measurments.max_air_quality, Sensor.Measurments.ave_airQuality);
         }
         BluetoothLE.UpdateSensorValues(temperature, humidity, pressure);
       }
@@ -308,8 +306,10 @@ void RefreshOLED()
   changeDisplayTimeout--;
   if (changeDisplayTimeout > 0)
     return;
-  bool isBME680 = Sensor.Measurments.cur_airQuality >= 0;
-  bool isBME280 = !isBME680 && Sensor.Measurments.cur_humidity >= 0;
+  if (Sensor.sensorType == SensorType::No_Sensor)
+    return;
+  bool isBME680 = Sensor.sensorType == SensorType::BME680_Sensor;
+  bool isBME280 = Sensor.sensorType == SensorType::BME280_Sensor;
   switch (Oled.CurrentShow)
   {
   case DisplayStatus::AllSensors:
@@ -329,7 +329,7 @@ void RefreshOLED()
     }
     break;
   case DisplayStatus::HumiditySensor:
-    if (isBME680)
+    if (isBME680 && Sensor.Measurments.cur_airQuality >= 0)
     {
       Oled.ShowMSummary(Sensor.Measurments.ave_airQuality, Sensor.Measurments.min_air_quality, Sensor.Measurments.max_air_quality, DisplayStatus::AirQualitySensor);
       changeDisplayTimeout = 2;
