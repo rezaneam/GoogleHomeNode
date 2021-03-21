@@ -168,7 +168,7 @@ void OLEDDisplayExtended::ShowMSummary(float average, float min, float max, Disp
         break;
     case DisplayStatus::AirQualitySensor:
         this->drawXbm(sensor_icon_pos[0], sensor_icon_pos[1], sensor_icon_pos[2], sensor_icon_pos[3], Air_Quality_Sensor_icon_img);
-        this->drawString(Sensor_Text_Area[0], Sensor_Text_Area[1], String(average, 0));
+        this->drawString(Sensor_Text_Area[0], Sensor_Text_Area[1], String(average, 1));
         this->drawString(Sensor_Text_Area[0] + 42, Sensor_Text_Area[1], String(min, 0));
         this->drawString(Sensor_Text_Area[0] + 84, Sensor_Text_Area[1], String(max, 0));
         break;

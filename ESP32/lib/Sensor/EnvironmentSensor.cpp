@@ -17,7 +17,7 @@ bool EnvironmentSensor::Initialize(TwoWire &i2c)
     if (bmx280.begin(BME280_ADDRESS, &i2c))
     {
         initializeBMx280();
-        sensorType = bmx280.isBME280 ? SensorType::BME680_Sensor : SensorType::BMP280_Sensor;
+        sensorType = bmx280.isBME280 ? SensorType::BME280_Sensor : SensorType::BMP280_Sensor;
         return true;
     }
     sensorType = SensorType::No_Sensor;
