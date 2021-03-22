@@ -178,11 +178,6 @@ bool EnvironmentSensor::UpdateMeasurments()
             Measurments.min_pressure = Measurments.cur_pressure;
         if (Measurments.max_pressure < Measurments.cur_pressure)
             Measurments.max_pressure = Measurments.cur_pressure;
-
-        if (Measurments.min_air_quality > Measurments.cur_airQuality)
-            Measurments.min_air_quality = Measurments.cur_airQuality;
-        if (Measurments.max_air_quality < Measurments.cur_airQuality)
-            Measurments.max_air_quality = Measurments.cur_airQuality;
     }
     else
     {
@@ -194,9 +189,6 @@ bool EnvironmentSensor::UpdateMeasurments()
 
         Measurments.min_pressure = Measurments.cur_pressure;
         Measurments.max_pressure = Measurments.cur_pressure;
-
-        Measurments.min_air_quality = Measurments.cur_airQuality;
-        Measurments.max_air_quality = Measurments.cur_airQuality;
     }
 
     Measurments.ave_temperature =
@@ -211,11 +203,27 @@ bool EnvironmentSensor::UpdateMeasurments()
         (Measurments.ave_pressure * Measurments.total_readgings + Measurments.cur_pressure) /
         (Measurments.total_readgings + 1);
 
-    Measurments.ave_airQuality =
-        (Measurments.ave_airQuality * Measurments.total_readgings + Measurments.cur_airQuality) /
-        (Measurments.total_readgings + 1);
-
     Measurments.total_readgings++;
+
+    if (Measurments.cur_airQuality > -1)
+    {
+        if (Measurments.total_airQuality_readings > 0)
+        {
+            if (Measurments.min_air_quality > Measurments.cur_airQuality)
+                Measurments.min_air_quality = Measurments.cur_airQuality;
+            if (Measurments.max_air_quality < Measurments.cur_airQuality)
+                Measurments.max_air_quality = Measurments.cur_airQuality;
+        }
+        else
+        {
+            Measurments.min_air_quality = Measurments.cur_airQuality;
+            Measurments.max_air_quality = Measurments.cur_airQuality;
+        }
+
+        Measurments.ave_airQuality =
+            (Measurments.ave_airQuality * Measurments.total_airQuality_readings + Measurments.cur_airQuality) /
+            (Measurments.total_airQuality_readings + 1);
+    }
 
     return true;
 }
