@@ -59,6 +59,9 @@ void setup()
           Sensor.Measurments.cur_pressure);
     }
   }
+
+  if (Sensor.sensorType == SensorType::No_Sensor)
+    Oled.ShowMessage("Error", "No Sensor found", "Check the connections");
 }
 
 void loop()
@@ -196,19 +199,19 @@ void loop()
     UpdateStatus(true, true);
     break;
   case CustomEvents::EVENT_FACTORY_RESET:
-    Oled.ShowRestMessage("Factory Reset");
+    Oled.ShowMessage("Factory Reset", "Ereasing...");
     EraseFlash();
     delay(5000);
     ESP.restart();
     break;
   case CustomEvents::EVENT_FACTORY_RESET_SAFE:
-    Oled.ShowRestMessage("Factory Reset [safe]");
+    Oled.ShowMessage("Factory Reset", "Safe earsing...");
     EraseFlash(true);
     delay(5000);
     ESP.restart();
     break;
   case CustomEvents::EVENT_RESTART:
-    Oled.ShowRestMessage("Restarting...");
+    Oled.ShowMessage("Restarting...", "");
     delay(5000);
     ESP.restart();
     break;

@@ -15,15 +15,18 @@ void OLEDDisplayExtended::Initialize(bool flip)
     this->display();
 }
 
-void OLEDDisplayExtended::ShowRestMessage(String message)
+void OLEDDisplayExtended::ShowMessage(String title, String subtitle, String detail)
 {
     clear();
     setTextAlignment(TEXT_ALIGN_LEFT);
     setFont(Roboto_Condensed_20);
-    this->drawString(sensor_icon_pos[0], sensor_icon_pos[1], message);
+    this->drawString(0, 16, title);
 
     setFont(Roboto_Condensed_16);
-    this->drawString(Sensor_Text_Area[0], Sensor_Text_Area[1], "Please wait.");
+    this->drawString(0, 36, subtitle);
+
+    setFont(Roboto_Condensed_12);
+    this->drawString(0, 52, detail);
     this->display();
 }
 

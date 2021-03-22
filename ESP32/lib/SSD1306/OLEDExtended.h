@@ -175,7 +175,7 @@ public:
         bool isCloudConencted,
         bool isNotifying = false);
 
-    void ShowRestMessage(String message);
+    void ShowMessage(String title, String subtitle, String detail = "Please wait.");
 
     void ShowDateTime(tm *ltm);
 };
