@@ -227,6 +227,8 @@ bool EnvironmentSensor::UpdateMeasurments()
         Measurments.ave_airQuality =
             (Measurments.ave_airQuality * Measurments.total_airQuality_readings + Measurments.cur_airQuality) /
             (Measurments.total_airQuality_readings + 1);
+
+        Measurments.total_airQuality_readings++;
     }
 
     return true;
