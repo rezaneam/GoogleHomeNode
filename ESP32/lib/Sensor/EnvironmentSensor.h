@@ -20,6 +20,7 @@ typedef struct
     float max_humidity;
     float max_pressure;
     float max_air_quality;
+    SensorCalibrationStatus calibrationStatus;
     uint16_t total_readgings;
     uint16_t total_airQuality_readings;
 } EnvironmentMeasurement;
@@ -58,5 +59,5 @@ private:
     float readTemperature();
     float readPressure();
     float readHumidity();
-    float readAirQuality();
+    float readAirQuality(SensorCalibrationStatus *status);
 };

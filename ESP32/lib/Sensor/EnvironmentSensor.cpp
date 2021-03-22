@@ -88,7 +88,7 @@ float EnvironmentSensor::readPressure()
     return bmx280.readPressure();
 }
 
-float EnvironmentSensor::readAirQuality()
+float EnvironmentSensor::readAirQuality(SensorCalibrationStatus *status)
 {
     if (sensorType == SensorType::No_Sensor)
         return -1;
@@ -104,7 +104,8 @@ float EnvironmentSensor::readAirQuality()
                bme680.staticIaq, bme680.iaqAccuracy,
                bme680.co2Equivalent, bme680.co2Accuracy,
                bme680.breathVocEquivalent, bme680.breathVocAccuracy);
-        return bme680.iaqAccuracy == 3 ? bme680.iaq : -1;
+        *status = (SensorCalibrationStatus)bme680.iaqAccuracy;
+        return bme680.iaq;
     }
 
     return -1;
@@ -158,10 +159,11 @@ bool EnvironmentSensor::UpdateMeasurments()
     if (!TakeSample())
         return false;
 
+    SensorCalibrationStatus status;
     Measurments.cur_temperature = readTemperature();
     Measurments.cur_humidity = readHumidity();
     Measurments.cur_pressure = readPressure();
-    Measurments.cur_airQuality = readAirQuality();
+    Measurments.cur_airQuality = readAirQuality(&status);
     if (Measurments.total_readgings > 0)
     {
         if (Measurments.min_temperature > Measurments.cur_temperature)
@@ -205,7 +207,8 @@ bool EnvironmentSensor::UpdateMeasurments()
 
     Measurments.total_readgings++;
 
-    if (Measurments.cur_airQuality > -1)
+    Measurments.calibrationStatus = status;
+    if (status == SensorCalibrationStatus::HIGH_ACCURACY)
     {
         if (Measurments.total_airQuality_readings > 0)
         {
