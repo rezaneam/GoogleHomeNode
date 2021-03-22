@@ -257,6 +257,7 @@ void loop()
   if (secondFlag)
   {
     RefreshOLED();
+    Sensor.Run();
     secondFlag = false;
   }
 }

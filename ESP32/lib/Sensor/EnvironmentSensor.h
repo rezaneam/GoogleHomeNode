@@ -29,6 +29,7 @@ public:
     bool Initialize(TwoWire &i2c);
     bool UpdateMeasurments();
     bool CheckStatus();
+    bool Run();
     SensorType sensorType;
     EnvironmentMeasurement Measurments;
 

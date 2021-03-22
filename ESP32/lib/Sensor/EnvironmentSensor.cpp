@@ -36,13 +36,23 @@ bool EnvironmentSensor::CheckStatus()
     return true;
 }
 
+bool EnvironmentSensor::Run()
+{
+    if (sensorType == SensorType::BME680_Sensor)
+        return bme680.run();
+    return true;
+}
+
 bool EnvironmentSensor::TakeSample()
 {
     if (sensorType == SensorType::No_Sensor)
         return false;
 
     if (sensorType == SensorType::BME680_Sensor)
-        return bme680.run();
+    {
+        bme680.run();
+        return true;
+    }
 
     bmx280.takeForcedMeasurement();
     return true;
@@ -85,13 +95,15 @@ float EnvironmentSensor::readAirQuality()
 
     if (sensorType == SensorType::BME680_Sensor)
     {
-        printf("Gas(R) %2.1f Gas(n) %2.1f[%d] Gas(%%) %2.1f[%d] IAQ %2.1f[%d] IAQ Static %2.1f[%d] CO %2.1f[%d]\r\n",
+        printf("TMP %2.1f Hum %2.1f Gas(R) %2.1f Gas(n) %2.1f[%d] Gas(%%) %2.1f[%d] IAQ %2.1f[%d] IAQ Static %2.1f[%d] CO %2.1f[%d] Breath %2.1f[%d]\r\n",
+               bme680.rawTemperature, bme680.rawHumidity,
                bme680.gasResistance,
                bme680.compGasValue, bme680.compGasAccuracy,
                bme680.gasPercentage, bme680.gasPercentageAcccuracy,
                bme680.iaq, bme680.iaqAccuracy,
                bme680.staticIaq, bme680.iaqAccuracy,
-               bme680.co2Equivalent, bme680.co2Accuracy);
+               bme680.co2Equivalent, bme680.co2Accuracy,
+               bme680.breathVocEquivalent, bme680.breathVocAccuracy);
         return bme680.iaqAccuracy == 3 ? bme680.iaq : -1;
     }
 
