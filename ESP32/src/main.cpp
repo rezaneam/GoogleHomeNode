@@ -234,7 +234,7 @@ void loop()
           if (isWiFiconnected)
             getTimeString(&buffer[0]);
           printf(
-              ">> General Info. Free Heap %d%% %s >> [%d] Temperature: %2.1fc(%2.1f-%2.1f)[%2.1f] Humidity: %2.1f%%(%2.1f-%2.1f)[%2.1f] Pressure: %2.2fatm(%2.2f-%2.2f)[%2.2f] AirQuality: %2.0f(%2.0f-%2.0f)[%2.0f]\r\n",
+              ">> Free Heap %d%% %s [%d] Temperature: %2.1fc(%2.1f-%2.1f)[%2.1f] Humidity: %2.1f%%(%2.1f-%2.1f)[%2.1f] Pressure: %2.2fatm(%2.2f-%2.2f)[%2.2f] AirQuality: %2.1f(%2.1f-%2.1f)[%2.1f]\r\n",
               100 * ESP.getFreeHeap() / ESP.getHeapSize(), buffer, Sensor.Measurments.total_readgings,
               temperature, Sensor.Measurments.min_temperature, Sensor.Measurments.max_temperature, Sensor.Measurments.ave_temperature,
               humidity, Sensor.Measurments.min_humidity, Sensor.Measurments.max_humidity, Sensor.Measurments.ave_humidity,
@@ -251,7 +251,7 @@ void loop()
         char buffer[100] = "";
         if (isWiFiconnected)
           getTimeString(&buffer[0]);
-        printf(">> General Info. Free Heap %d%% %s\r\n",
+        printf(">> Free Heap %d%% %s\r\n",
                buffer, 100 * ESP.getFreeHeap() / ESP.getHeapSize());
       }
     }
@@ -317,33 +317,44 @@ void RefreshOLED()
   switch (Oled.CurrentShow)
   {
   case DisplayStatus::AllSensors:
-    Oled.ShowMSummary(Sensor.Measurments.ave_temperature, Sensor.Measurments.min_temperature, Sensor.Measurments.max_temperature, DisplayStatus::TemperatureSensor);
+    Oled.ShowMSummary(
+        Sensor.Measurments.ave_temperature,
+        Sensor.Measurments.min_temperature,
+        Sensor.Measurments.max_temperature,
+        DisplayStatus::TemperatureSensor);
     changeDisplayTimeout = 2;
     return;
   case DisplayStatus::TemperatureSensor:
-    Oled.ShowMSummary(Sensor.Measurments.ave_pressure, Sensor.Measurments.min_pressure, Sensor.Measurments.max_pressure, DisplayStatus::PressureSensor);
+    Oled.ShowMSummary(
+        Sensor.Measurments.ave_pressure,
+        Sensor.Measurments.min_pressure,
+        Sensor.Measurments.max_pressure,
+        DisplayStatus::PressureSensor);
     changeDisplayTimeout = 2;
     return;
   case DisplayStatus::PressureSensor:
     if (isBME280 | isBME680)
     {
-      Oled.ShowMSummary(Sensor.Measurments.ave_humidity, Sensor.Measurments.min_humidity, Sensor.Measurments.max_humidity, DisplayStatus::HumiditySensor);
+      Oled.ShowMSummary(
+          Sensor.Measurments.ave_humidity,
+          Sensor.Measurments.min_humidity,
+          Sensor.Measurments.max_humidity,
+          DisplayStatus::HumiditySensor);
       changeDisplayTimeout = 2;
       return;
     }
     break;
   case DisplayStatus::HumiditySensor:
-    if (isBME680 && Sensor.Measurments.cur_airQuality >= 0)
-    {
-      Oled.ShowMSummary(Sensor.Measurments.ave_airQuality, Sensor.Measurments.min_air_quality, Sensor.Measurments.max_air_quality, DisplayStatus::AirQualitySensor);
-      changeDisplayTimeout = 2;
-      return;
-    }
-    break;
-  case DisplayStatus::AirQualitySensor:
-
-    break;
-  default:
+    if (!isBME680)
+      break;
+    Oled.ShowMSummary(
+        Sensor.Measurments.ave_airQuality,
+        Sensor.Measurments.min_air_quality,
+        Sensor.Measurments.max_air_quality,
+        DisplayStatus::AirQualitySensor,
+        Sensor.Measurments.calibrationStatus);
+    changeDisplayTimeout = 2;
+    return;
     break;
   }
 
@@ -356,6 +367,11 @@ void RefreshOLED()
     changeDisplayTimeout = 2;
     return;
   }
-  Oled.RefressSensorArea(Sensor.Measurments.cur_temperature, Sensor.Measurments.cur_humidity, Sensor.Measurments.cur_pressure, Sensor.Measurments.cur_airQuality);
+  Oled.RefressSensorArea(
+      Sensor.Measurments.cur_temperature,
+      Sensor.Measurments.cur_humidity,
+      Sensor.Measurments.cur_pressure,
+      Sensor.Measurments.cur_airQuality,
+      Sensor.Measurments.calibrationStatus);
   changeDisplayTimeout = 4;
 }
