@@ -136,7 +136,7 @@ I used [esp8266 Google TTS](https://github.com/horihiro/esp8266-google-tts) to g
 
 - [Bosch BMP280](https://www.bosch-sensortec.com/products/environmental-sensors/pressure-sensors/bmp280/)
 - [Bosch BME280](https://www.bosch-sensortec.com/products/environmental-sensors/humidity-sensors-bme280/)
-- TO DO: [Bosch BME680](https://www.bosch-sensortec.com/products/environmental-sensors/gas-sensors/bme680/)
+- [Bosch BME680](https://www.bosch-sensortec.com/products/environmental-sensors/gas-sensors/bme680/). You need a [permission](https://www.bosch-sensortec.com/media/boschsensortec/downloads/bsec/2017-07-17_clickthrough_license_terms_environmentalib_sw_clean.pdf) to use [Bosch Sensortec Environmental Cluster(BSEC) Library](https://github.com/BoschSensortec/BSEC-Arduino-library). Please visit this [page](https://www.bosch-sensortec.com/software-tools/software/bsec/)
 - TO DO: [Texas Instrument HDC1080](https://www.ti.com/lit/ds/symlink/hdc1080.pdf)
 
 ## Dependent Libraries
@@ -149,11 +149,11 @@ I used [esp8266 Google TTS](https://github.com/horihiro/esp8266-google-tts) to g
 - [esp8266 Google Home Notifier](https://github.com/horihiro/esp8266-google-home-notifier) - Customized version to support different languages.
 - [esp8266 Google TTS](https://github.com/horihiro/esp8266-google-tts)
 - [Adafruit BME280 Library](https://github.com/adafruit/Adafruit_BME280_Library) - Locally/Modified in the project
-- [Adafruit SSD1306](https://github.com/adafruit/Adafruit_SSD1306) - Extensively modified and locally imported.
+- [ThingPulse SSD1306](https://github.com/ThingPulse/esp8266-oled-ssd1306) - Extensively modified and locally imported.
+- [BSEC Arduino Library](https://github.com/BoschSensortec/BSEC-Arduino-library)
 
 ## Future Improvment
 
-- Suporting Bosch BME680
 - Supporting TI HDC1080
 - Improving the UWP Application layout and code logic
 - Deploy UWP App in the Windows Store
