@@ -174,14 +174,14 @@ void OLEDDisplayExtended::ShowMSummary(float average, float min, float max, Disp
         switch (calib)
         {
         case SensorCalibrationStatus::UNRELIABLE:
-            this->drawString(Sensor_Text_Area[0] + 16, Sensor_Text_Area[1], "Not Calibrated!");
+            this->drawString(Sensor_Text_Area[0], Sensor_Text_Area[1], "No.Cal. [" + String(average, 0) + "]");
             break;
         case SensorCalibrationStatus::LOW_ACCURACY:
-            this->drawString(Sensor_Text_Area[0] + 16, Sensor_Text_Area[1], "Low Accuracy!");
+            this->drawString(Sensor_Text_Area[0], Sensor_Text_Area[1], "Lo.Acc. [" + String(average, 0) + "]");
             break;
 
         case SensorCalibrationStatus::MEDIUM_ACCURACY:
-            this->drawString(Sensor_Text_Area[0] + 16, Sensor_Text_Area[1], "Calibrating...");
+            this->drawString(Sensor_Text_Area[0], Sensor_Text_Area[1], "Med.Acc. [" + String(average, 0) + "]");
             break;
 
         case SensorCalibrationStatus::HIGH_ACCURACY:

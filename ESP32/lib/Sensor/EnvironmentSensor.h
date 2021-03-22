@@ -21,6 +21,7 @@ typedef struct
     float max_pressure;
     float max_air_quality;
     SensorCalibrationStatus calibrationStatus;
+    float gas_resistance;
     uint16_t total_readgings;
     uint16_t total_airQuality_readings;
 } EnvironmentMeasurement;

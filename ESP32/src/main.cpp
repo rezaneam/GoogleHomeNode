@@ -348,7 +348,7 @@ void RefreshOLED()
     if (!isBME680)
       break;
     Oled.ShowMSummary(
-        Sensor.Measurments.ave_airQuality,
+        Sensor.Measurments.calibrationStatus == SensorCalibrationStatus::HIGH_ACCURACY ? Sensor.Measurments.ave_airQuality : Sensor.Measurments.gas_resistance,
         Sensor.Measurments.min_air_quality,
         Sensor.Measurments.max_air_quality,
         DisplayStatus::AirQualitySensor,
