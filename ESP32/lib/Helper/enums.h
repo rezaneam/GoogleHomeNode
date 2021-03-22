@@ -69,3 +69,12 @@ enum SensorType
     BME280_Sensor,
     BME680_Sensor
 };
+
+enum SensorCalibrationStatus
+{
+    UNRELIABLE = 0,
+    LOW_ACCURACY = 1,
+    MEDIUM_ACCURACY = 2,
+    HIGH_ACCURACY = 3
+
+};
