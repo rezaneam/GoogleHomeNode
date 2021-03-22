@@ -1,6 +1,6 @@
 #include <main.h>
 
-// TODO: Adding Support for BME680
+// TODO: Adding Support for storing state of BME680 on Flash
 // TODO: Adding Support for Device location
 // TODO: Adding Support for handling wider Azure commands
 // TODO: Improving the memory consumption & remove memory leaks
@@ -220,6 +220,7 @@ void loop()
   }
   if (readSenor)
   {
+    uint8_t freeHeap = 100 * ESP.getFreeHeap() / ESP.getHeapSize();
     if (Sensor.CheckStatus())
     {
       if (Sensor.UpdateMeasurments())
@@ -235,7 +236,7 @@ void loop()
             getTimeString(&buffer[0]);
           printf(
               ">> Free Heap %d%% %s [%d] Temperature: %2.1fc(%2.1f-%2.1f)[%2.1f] Humidity: %2.1f%%(%2.1f-%2.1f)[%2.1f] Pressure: %2.2fatm(%2.2f-%2.2f)[%2.2f] AirQuality: %2.1f(%2.1f-%2.1f)[%2.1f]\r\n",
-              100 * ESP.getFreeHeap() / ESP.getHeapSize(), buffer, Sensor.Measurments.total_readgings,
+              freeHeap, buffer, Sensor.Measurments.total_readgings,
               temperature, Sensor.Measurments.min_temperature, Sensor.Measurments.max_temperature, Sensor.Measurments.ave_temperature,
               humidity, Sensor.Measurments.min_humidity, Sensor.Measurments.max_humidity, Sensor.Measurments.ave_humidity,
               pressure / 101325, Sensor.Measurments.min_pressure / 101325, Sensor.Measurments.max_pressure / 101325, Sensor.Measurments.ave_pressure / 101325,
@@ -251,11 +252,13 @@ void loop()
         char buffer[100] = "";
         if (isWiFiconnected)
           getTimeString(&buffer[0]);
-        printf(">> Free Heap %d%% %s\r\n",
-               buffer, 100 * ESP.getFreeHeap() / ESP.getHeapSize());
+        printf(">> Free Heap %d%% %s\r\n", buffer, freeHeap);
       }
     }
     readSenor = false;
+
+    if (freeHeap <= MinimumAllowHeapSize)
+      EnqueueEvent(CustomEvents::EVENT_RESTART);
   }
   if (secondFlag)
   {

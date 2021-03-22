@@ -12,7 +12,7 @@
 #include <config.h>
 
 #define BLE_ADVERTISE_TIMEOUT_MS 1000 * BLE_ADVERTISE_TIMEOUT_S // BLE advertising timeout
-
+#define MinimumAllowHeapSize 20 // Mininum Allow Heap size that triggers MPU restart
 EnvironmentSensor Sensor;
 SSD1306Wire Oled(OLED_Address, OLED_SDA_PIN, OLED_SCL_PIN);
 
