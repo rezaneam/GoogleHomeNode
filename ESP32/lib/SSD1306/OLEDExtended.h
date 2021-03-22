@@ -163,8 +163,8 @@ public:
 
     void Initialize(bool flip = false);
 
-    void RefressSensorArea(float temperature, float humidity, float pressure, float air_quality = -1);
-    void ShowMSummary(float average, float min, float max, DisplayStatus status);
+    void RefressSensorArea(float temperature, float humidity, float pressure, float air_quality = -1, SensorCalibrationStatus calib = SensorCalibrationStatus::UNRELIABLE);
+    void ShowMSummary(float average, float min, float max, DisplayStatus status, SensorCalibrationStatus calib = SensorCalibrationStatus::UNRELIABLE);
 
     void ReferessStatusArea(
         bool isBLEadvertising,

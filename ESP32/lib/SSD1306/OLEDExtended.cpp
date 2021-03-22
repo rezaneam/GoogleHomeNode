@@ -142,7 +142,7 @@ const char *OLEDDisplayExtended::resolveWeekDay(int day)
     }
 }
 
-void OLEDDisplayExtended::ShowMSummary(float average, float min, float max, DisplayStatus sensor)
+void OLEDDisplayExtended::ShowMSummary(float average, float min, float max, DisplayStatus sensor, SensorCalibrationStatus calib)
 {
     setTextAlignment(TEXT_ALIGN_LEFT);
     setFont(Roboto_Condensed_16);
@@ -171,9 +171,26 @@ void OLEDDisplayExtended::ShowMSummary(float average, float min, float max, Disp
         break;
     case DisplayStatus::AirQualitySensor:
         this->drawXbm(sensor_icon_pos[0], sensor_icon_pos[1], sensor_icon_pos[2], sensor_icon_pos[3], Air_Quality_Sensor_icon_img);
-        this->drawString(Sensor_Text_Area[0], Sensor_Text_Area[1], String(average, 1));
-        this->drawString(Sensor_Text_Area[0] + 42, Sensor_Text_Area[1], String(min, 0));
-        this->drawString(Sensor_Text_Area[0] + 84, Sensor_Text_Area[1], String(max, 0));
+        switch (calib)
+        {
+        case SensorCalibrationStatus::UNRELIABLE:
+            this->drawString(Sensor_Text_Area[0] + 16, Sensor_Text_Area[1], "Not Calibrated!");
+            break;
+        case SensorCalibrationStatus::LOW_ACCURACY:
+            this->drawString(Sensor_Text_Area[0] + 16, Sensor_Text_Area[1], "Low Accuracy!");
+            break;
+
+        case SensorCalibrationStatus::MEDIUM_ACCURACY:
+            this->drawString(Sensor_Text_Area[0] + 16, Sensor_Text_Area[1], "Calibrating...");
+            break;
+
+        case SensorCalibrationStatus::HIGH_ACCURACY:
+            this->drawString(Sensor_Text_Area[0], Sensor_Text_Area[1], String(average, 1));
+            this->drawString(Sensor_Text_Area[0] + 42, Sensor_Text_Area[1], String(min, 1));
+            this->drawString(Sensor_Text_Area[0] + 84, Sensor_Text_Area[1], String(max, 1));
+            break;
+        }
+
         break;
     default:
         break;
@@ -184,7 +201,7 @@ void OLEDDisplayExtended::ShowMSummary(float average, float min, float max, Disp
     this->drawString(84, 24, "Max");
     this->display();
 }
-void OLEDDisplayExtended::RefressSensorArea(float temperature, float humidity, float pressure, float air_quality)
+void OLEDDisplayExtended::RefressSensorArea(float temperature, float humidity, float pressure, float air_quality, SensorCalibrationStatus calib)
 {
     bool isBME680 = air_quality != -1;
     bool isBME280 = !isBME680 && humidity != -1;
@@ -205,7 +222,11 @@ void OLEDDisplayExtended::RefressSensorArea(float temperature, float humidity, f
         this->drawString(Sensor_Text_Area[0] + 4, Sensor_Text_Area[1], String(temperature, 0));
         this->drawString(Sensor_Text_Area[0] + 36, Sensor_Text_Area[1], String(humidity, 0));
         this->drawString(Sensor_Text_Area[0] + 64, Sensor_Text_Area[1], String(pressure / 101325));
-        this->drawString(Sensor_Text_Area[0] + 100, Sensor_Text_Area[1], String(air_quality, 0));
+
+        if (calib != SensorCalibrationStatus::HIGH_ACCURACY)
+            this->drawString(Sensor_Text_Area[0] + 100, Sensor_Text_Area[1], "!" + String(air_quality, 0));
+        else
+            this->drawString(Sensor_Text_Area[0] + 100, Sensor_Text_Area[1], String(air_quality, 0));
     }
     else
     { // BMP280
