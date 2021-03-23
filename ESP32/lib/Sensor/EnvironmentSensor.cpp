@@ -95,15 +95,6 @@ float EnvironmentSensor::readAirQuality(SensorCalibrationStatus *status)
 
     if (sensorType == SensorType::BME680_Sensor)
     {
-        // printf("TMP %2.1f Hum %2.1f Gas(R) %2.1f Gas(n) %2.1f[%d] Gas(%%) %2.1f[%d] IAQ %2.1f[%d] IAQ Static %2.1f[%d] CO %2.1f[%d] Breath %2.1f[%d]\r\n",
-        //        bme680.rawTemperature, bme680.rawHumidity,
-        //        bme680.gasResistance,
-        //        bme680.compGasValue, bme680.compGasAccuracy,
-        //        bme680.gasPercentage, bme680.gasPercentageAcccuracy,
-        //        bme680.iaq, bme680.iaqAccuracy,
-        //        bme680.staticIaq, bme680.iaqAccuracy,
-        //        bme680.co2Equivalent, bme680.co2Accuracy,
-        //        bme680.breathVocEquivalent, bme680.breathVocAccuracy);
         Measurments.gas_resistance = bme680.gasResistance;
         *status = (SensorCalibrationStatus)bme680.iaqAccuracy;
         return bme680.iaq;

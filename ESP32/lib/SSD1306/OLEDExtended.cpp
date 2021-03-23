@@ -183,8 +183,8 @@ void OLEDDisplayExtended::ShowMSummary(float average, float min, float max, Disp
         case SensorCalibrationStatus::MEDIUM_ACCURACY:
         case SensorCalibrationStatus::HIGH_ACCURACY:
             this->drawString(Sensor_Text_Area[0], Sensor_Text_Area[1], String(average, 1));
-            this->drawString(Sensor_Text_Area[0] + 42, Sensor_Text_Area[1], String(min, 1));
-            this->drawString(Sensor_Text_Area[0] + 84, Sensor_Text_Area[1], String(max, 1));
+            this->drawString(Sensor_Text_Area[0] + 42, Sensor_Text_Area[1], String(min, 0));
+            this->drawString(Sensor_Text_Area[0] + 84, Sensor_Text_Area[1], String(max, 0));
             break;
         }
 
@@ -220,10 +220,21 @@ void OLEDDisplayExtended::RefressSensorArea(float temperature, float humidity, f
         this->drawString(Sensor_Text_Area[0] + 36, Sensor_Text_Area[1], String(humidity, 0));
         this->drawString(Sensor_Text_Area[0] + 64, Sensor_Text_Area[1], String(pressure / 101325));
 
-        if (calib <= SensorCalibrationStatus::LOW_ACCURACY)
+        switch (calib)
+        {
+        case SensorCalibrationStatus::UNRELIABLE:
             this->drawString(Sensor_Text_Area[0] + 100, Sensor_Text_Area[1], "!" + String(air_quality, 0));
-        else
+            break;
+        case SensorCalibrationStatus::LOW_ACCURACY:
+            this->drawString(Sensor_Text_Area[0] + 100, Sensor_Text_Area[1], "L" + String(air_quality, 0));
+            break;
+        case SensorCalibrationStatus::MEDIUM_ACCURACY:
+            this->drawString(Sensor_Text_Area[0] + 100, Sensor_Text_Area[1], "M" + String(air_quality, 0));
+            break;
+        case SensorCalibrationStatus::HIGH_ACCURACY:
             this->drawString(Sensor_Text_Area[0] + 100, Sensor_Text_Area[1], String(air_quality, 0));
+            break;
+        }
     }
     else
     { // BMP280
