@@ -2,7 +2,7 @@
 
 bool EnvironmentSensor::Initialize(TwoWire &i2c)
 {
-    bme680.begin(BME680_I2C_ADDR_PRIMARY, i2c);
+    bme680.begin(BME680_I2C_ADDR_SECONDARY, i2c);
     ;
     if (bme680.bme680Status == 0)
     {
@@ -209,7 +209,7 @@ bool EnvironmentSensor::UpdateMeasurments()
     Measurments.total_readgings++;
 
     Measurments.calibrationStatus = status;
-    if (status == SensorCalibrationStatus::HIGH_ACCURACY)
+    if (status >= SensorCalibrationStatus::MEDIUM_ACCURACY)
     {
         if (Measurments.total_airQuality_readings > 0)
         {

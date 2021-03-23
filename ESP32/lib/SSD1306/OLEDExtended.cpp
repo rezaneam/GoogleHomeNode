@@ -181,9 +181,6 @@ void OLEDDisplayExtended::ShowMSummary(float average, float min, float max, Disp
             break;
 
         case SensorCalibrationStatus::MEDIUM_ACCURACY:
-            this->drawString(Sensor_Text_Area[0], Sensor_Text_Area[1], "Med.Acc. [" + String(average, 0) + "]");
-            break;
-
         case SensorCalibrationStatus::HIGH_ACCURACY:
             this->drawString(Sensor_Text_Area[0], Sensor_Text_Area[1], String(average, 1));
             this->drawString(Sensor_Text_Area[0] + 42, Sensor_Text_Area[1], String(min, 1));
@@ -223,7 +220,7 @@ void OLEDDisplayExtended::RefressSensorArea(float temperature, float humidity, f
         this->drawString(Sensor_Text_Area[0] + 36, Sensor_Text_Area[1], String(humidity, 0));
         this->drawString(Sensor_Text_Area[0] + 64, Sensor_Text_Area[1], String(pressure / 101325));
 
-        if (calib != SensorCalibrationStatus::HIGH_ACCURACY)
+        if (calib <= SensorCalibrationStatus::LOW_ACCURACY)
             this->drawString(Sensor_Text_Area[0] + 100, Sensor_Text_Area[1], "!" + String(air_quality, 0));
         else
             this->drawString(Sensor_Text_Area[0] + 100, Sensor_Text_Area[1], String(air_quality, 0));
