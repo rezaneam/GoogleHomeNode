@@ -135,7 +135,9 @@ float EnvironmentSensor::readAirQuality(SensorCalibrationStatus *status)
 
 bool EnvironmentSensor::initializeBME680()
 {
+    const uint8_t bsec_config[] = {"config/generic_33v_3s_4d/bsec_iaq.txt"};
     bme680.updateSubscription(sensorList, 10, BSEC_SAMPLE_RATE_LP);
+    bme680.setConfig(bsec_config);
     return checkIaqSensorStatus();
 }
 
