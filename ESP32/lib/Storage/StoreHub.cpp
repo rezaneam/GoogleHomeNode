@@ -17,6 +17,7 @@ void EraseFlash(bool safe)
         erase_len += EEPROM.read(EEPROM_GOOGLE_HOME_NAME_LEN_ADDR);
         erase_len += EEPROM.read(EEPROM_DEVICE_LOCATION_LEN_ADDR);
         erase_len += EEPROM.read(EEPROM_USER_NAME_LEN_ADDR);
+        erase_len += EEPROM.read(EEPROM_BSEC_STAT_LEN_ADDR);
         for (size_t i = 0; i < erase_len; i++)
             EEPROM.writeChar(EEPROM_STORAGE_START_ADDR + i, 0);
     }
@@ -27,6 +28,7 @@ void EraseFlash(bool safe)
     EEPROM.write(EEPROM_AZURE_IOT_HUB_LEN_ADDR, 0);
     EEPROM.write(EEPROM_DEVICE_LOCATION_LEN_ADDR, 0);
     EEPROM.write(EEPROM_USER_NAME_LEN_ADDR, 0);
+    EEPROM.write(EEPROM_BSEC_STAT_LEN_ADDR, 0);
 
     EEPROM.commit();
 }
@@ -84,6 +86,59 @@ void ReadFlash()
     pos += len;
 }
 
+uint16_t getBSECstorePosition()
+{
+    uint16_t pos = EEPROM_STORAGE_START_ADDR;
+
+    pos += EEPROM.read(EEPROM_WIFI_SSID_NAME_LEN_ADDR);
+    pos += EEPROM.read(EEPROM_WIFI_PASSWORD_LEN_ADDR);
+    pos += EEPROM.read(EEPROM_GOOGLE_HOME_NAME_LEN_ADDR);
+    pos += EEPROM.read(EEPROM_AZURE_IOT_HUB_LEN_ADDR);
+    pos += EEPROM.read(EEPROM_DEVICE_LOCATION_LEN_ADDR);
+    pos += EEPROM.read(EEPROM_USER_NAME_LEN_ADDR);
+
+    return pos;
+}
+
+bool GetBSECstate(uint8_t *state, uint8_t expected_len)
+{
+    uint16_t pos = getBSECstorePosition();
+    uint8_t len = EEPROM.read(EEPROM_BSEC_STAT_LEN_ADDR);
+    if (len != expected_len)
+    {
+        printf(">> Critical Error! BSEC state load. Length doesn't match. Actual %d but expected %d\r\n", len, expected_len);
+        return false;
+    }
+    for (uint8_t i = 0; i < len; i++)
+    {
+        uint8_t val = EEPROM.read(i + pos);
+        *(state + i) = val;
+        printf("%X ", val);
+    }
+    printf("\r\n");
+    return true;
+}
+
+bool HasBSECstate()
+{
+    uint8_t len = EEPROM.read(EEPROM_BSEC_STAT_LEN_ADDR);
+    return ((len != 0) & (len != EEPROM_UNINITIALIZED_VALUE));
+}
+
+void WriteFlashBSECstate(uint8_t *state, uint8_t len)
+{
+    uint16_t pos = getBSECstorePosition();
+    EEPROM.write(EEPROM_BSEC_STAT_LEN_ADDR, len);
+    for (uint8_t i = 0; i < len; i++)
+    {
+        uint8_t val = *(state + i);
+        EEPROM.write(i + pos, val);
+        printf("%X ", val);
+    }
+    printf("\r\n");
+    EEPROM.commit();
+}
+
 void WriteFlash(std::string wifi_ssid, std::string wifi_pass, std::string home_name, std::string iot_hub_connection_string, std::string device_location, std::string username)
 {
     Storage_WiFi_SSID = wifi_ssid;
@@ -95,6 +150,15 @@ void WriteFlash(std::string wifi_ssid, std::string wifi_pass, std::string home_n
 
     uint8_t len = 0;
     uint8_t pos = 0;
+
+    // Reading possible BSEC stat from FLASH
+    uint8_t stat_len = EEPROM.read(EEPROM_BSEC_STAT_LEN_ADDR);
+    if (stat_len == EEPROM_UNINITIALIZED_VALUE)
+        stat_len = 0;
+    uint16_t stat_pos = getBSECstorePosition();
+    uint8_t bsecState[stat_len] = {0};
+    for (uint8_t i = 0; i < stat_len; i++)
+        bsecState[i] = EEPROM.read(i + stat_pos);
 
     len = !wifi_ssid.empty() ? wifi_ssid.length() : 0;
     EEPROM.write(EEPROM_WIFI_SSID_NAME_LEN_ADDR, len);
@@ -132,6 +196,10 @@ void WriteFlash(std::string wifi_ssid, std::string wifi_pass, std::string home_n
         EEPROM.writeChar(EEPROM_STORAGE_START_ADDR + pos + i, username.at(i));
     pos += len;
 
+    // Re-writing the read BSEC stat
+    for (uint8_t i = 0; i < stat_len; i++)
+        EEPROM.write(EEPROM_STORAGE_START_ADDR + pos + i, bsecState[i]);
+
     EEPROM.commit();
 }
 
@@ -154,6 +222,7 @@ void WriteFlashUsername(std::string username)
 {
     WriteFlash(Storage_WiFi_SSID, Storage_WiFi_Pass, Storage_Home_Name, Storage_Azure_IoT, Storage_Dev_Locat, username);
 }
+
 void WriteFlashDeviceLocation(std::string device_location)
 {
     WriteFlash(Storage_WiFi_SSID, Storage_WiFi_Pass, Storage_Home_Name, Storage_Azure_IoT, device_location, Storage_User_Name);

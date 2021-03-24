@@ -6,8 +6,8 @@ bool EnvironmentSensor::Initialize(TwoWire &i2c)
     ;
     if (bme680.bme680Status == 0)
     {
-        printf("BME680 sensor found.\r\n");
-        printf("BSEC library version %d.%d.%d.%d\r\n",
+        printf(">> Sensor : BME680 sensor found.\r\n");
+        printf(">> Sensor : BSEC library version %d.%d.%d.%d\r\n",
                bme680.version.major, bme680.version.minor, bme680.version.major_bugfix, bme680.version.minor_bugfix);
         initializeBME680();
         sensorType = SensorType::BME680_Sensor;
@@ -21,7 +21,7 @@ bool EnvironmentSensor::Initialize(TwoWire &i2c)
         return true;
     }
     sensorType = SensorType::No_Sensor;
-    printf("No sensor found.\r\n");
+    printf(">> Sensor : No sensor found.\r\n");
     return false;
 }
 
@@ -40,6 +40,36 @@ bool EnvironmentSensor::Run()
 {
     if (sensorType == SensorType::BME680_Sensor)
         return bme680.run();
+    return true;
+}
+
+bool EnvironmentSensor::LoadState()
+{
+    if (sensorType != SensorType::BME680_Sensor)
+        return true;
+    if (!HasBSECstate())
+        return false;
+    uint8_t bsecState[BSEC_MAX_STATE_BLOB_SIZE] = {0};
+    if (!GetBSECstate(bsecState, BSEC_MAX_STATE_BLOB_SIZE))
+        return false;
+    bme680.setState(bsecState);
+    return checkIaqSensorStatus();
+}
+
+bool EnvironmentSensor::StoreState()
+{
+    if (sensorType != SensorType::BME680_Sensor)
+        return true;
+    if (bme680.iaqAccuracy < 3)
+    {
+        printf(">> Sensor : Updating BSEC state is ignore due to low accuracy. [%d].\r\n", bme680.iaqAccuracy);
+        return false; // Do not store if high accuracy is not acheived.
+    }
+
+    uint8_t bsecState[BSEC_MAX_STATE_BLOB_SIZE] = {0};
+    bme680.getState(bsecState);
+    printf(">> Sensor : Updating the BSEC state.\r\n");
+    WriteFlashBSECstate(bsecState, BSEC_MAX_STATE_BLOB_SIZE);
     return true;
 }
 
@@ -126,9 +156,9 @@ bool EnvironmentSensor::checkIaqSensorStatus(void)
     if (bme680.status != BSEC_OK)
     {
         if (bme680.status < BSEC_OK)
-            printf("BSEC error code : %d\r\n", bme680.status);
+            printf(">> Sensor : BSEC error code : %d\r\n", bme680.status);
         else
-            printf("BSEC warning code : %d\r\n", bme680.status);
+            printf(">> Sensor : BSEC warning code : %d\r\n", bme680.status);
 
         return false;
     }
@@ -136,9 +166,9 @@ bool EnvironmentSensor::checkIaqSensorStatus(void)
     if (bme680.bme680Status != BME680_OK)
     {
         if (bme680.bme680Status < BME680_OK)
-            printf("BME680 error code : %d\r\n", bme680.bme680Status);
+            printf(">> Sensor : BME680 error code : %d\r\n", bme680.bme680Status);
         else
-            printf("BME680 warning code : %d\r\n", bme680.bme680Status);
+            printf(">> Sensor : BME680 warning code : %d\r\n", bme680.bme680Status);
 
         return false;
     }

@@ -1,6 +1,7 @@
 #include <bsec.h>
 #include <BME280.h>
 #include <enums.h>
+#include <StoreHub.h>
 
 typedef struct
 {
@@ -33,6 +34,8 @@ public:
     bool UpdateMeasurments();
     bool CheckStatus();
     bool Run();
+    bool LoadState();
+    bool StoreState();
     SensorType sensorType;
     EnvironmentMeasurement Measurments;
 
