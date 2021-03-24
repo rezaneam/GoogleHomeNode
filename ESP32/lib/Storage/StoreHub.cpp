@@ -110,8 +110,7 @@ bool GetBSECstate(uint8_t *state, uint8_t expected_len)
         return false;
     }
     for (uint8_t i = 0; i < len; i++)
-        s
-            *(state + i) = EEPROM.read(i + pos);
+        *(state + i) = EEPROM.read(i + pos);
 
     return true;
 }
