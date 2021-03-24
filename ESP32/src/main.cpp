@@ -1,6 +1,6 @@
 #include <main.h>
 
-// TODO: Fixing the daily report interval 6am start of the day if time avaiable otherwise every 1440 minutes
+// TODO: Fixing time to local time using ipstack
 // TODO: BluetoothLE characteristics for AirQuality
 // TODO: Adding Support for handling wider Azure commands
 // TODO: Improving the memory consumption & remove memory leaks
@@ -44,23 +44,10 @@ void setup()
 
   if (HasValidWiFi())
     EnqueueEvent(CustomEvents::EVENT_WIFI_TRY_CONNECT);
+
   if (Sensor.CheckStatus())
-  {
-    if (Sensor.UpdateMeasurments())
-    {
-      Oled.RefressSensorArea(
-          Sensor.Measurments.cur_temperature,
-          Sensor.Measurments.cur_humidity,
-          Sensor.Measurments.cur_pressure,
-          Sensor.Measurments.cur_airQuality);
-      BluetoothLE.UpdateSensorValues(
-          Sensor.Measurments.cur_temperature,
-          Sensor.Measurments.cur_humidity,
-          Sensor.Measurments.cur_pressure);
-      if (!Sensor.LoadState() & VERBOSE)
-        printf("Failed to load the BSEC state\r\n");
-    }
-  }
+    if (!Sensor.LoadState() & VERBOSE)
+      printf("Failed to load the BSEC state\r\n");
 
   if (Sensor.sensorType == SensorType::No_Sensor)
     Oled.ShowMessage("Error", "No Sensor found", "Check the connections");
@@ -223,8 +210,12 @@ void loop()
   if (readSenor)
   {
     uint8_t freeHeap = 100 * ESP.getFreeHeap() / ESP.getHeapSize();
+    char buffer[100] = "";
+    if (isWiFiconnected)
+      getTimeString(&buffer[0]);
     if (Sensor.CheckStatus())
     {
+
       if (Sensor.UpdateMeasurments())
       {
         float temperature = Sensor.Measurments.cur_temperature;
@@ -233,9 +224,7 @@ void loop()
         float airQuality = Sensor.Measurments.cur_airQuality;
         if (VERBOSE)
         {
-          char buffer[100] = "";
-          if (isWiFiconnected)
-            getTimeString(&buffer[0]);
+
           printf(
               ">> Free Heap %d%% %s [%d] Temperature: %2.1fc(%2.1f-%2.1f)[%2.1f] Humidity: %2.1f%%(%2.1f-%2.1f)[%2.1f] Pressure: %2.2fatm(%2.2f-%2.2f)[%2.2f] AirQuality: %2.1f(%2.1f-%2.1f)[%2.1f]\r\n",
               freeHeap, buffer, Sensor.Measurments.total_readgings,
@@ -250,12 +239,7 @@ void loop()
     else
     {
       if (VERBOSE)
-      {
-        char buffer[100] = "";
-        if (isWiFiconnected)
-          getTimeString(&buffer[0]);
         printf(">> Free Heap %d%% %s\r\n", buffer, freeHeap);
-      }
     }
     readSenor = false;
 
@@ -282,6 +266,9 @@ void getTimeString(char *buffer)
 
   sprintf(buffer, "%d/%d/%d %d:%d:%d",
           ltm->tm_mday, ltm->tm_mon + 1, ltm->tm_year + 1900, ltm->tm_hour, ltm->tm_min, ltm->tm_sec);
+
+  if (ltm->tm_min == START_OF_DAY_MIN & ltm->tm_hour == START_OF_DAY_HOUR)
+    Sensor.ResetReport();
 }
 
 void EnqueueEvent(CustomEvents newEvent)

@@ -20,7 +20,7 @@ EnvironmentSensor Sensor;
 SSD1306Wire Oled(OLED_Address, OLED_SDA_PIN, OLED_SCL_PIN);
 
 bool tryStartBLE = false;
-bool readSenor = false;
+bool readSenor = true;
 bool secondFlag = false;
 bool fireIoT = false;
 

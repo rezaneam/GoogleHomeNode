@@ -15,6 +15,9 @@
 #define UPDATE_BSEC_STATE_INTERVAL 6         // interval of Update/Store status of BME680 into Flash in hours
 #define RETRY_UPDATE_BSEC_STATE_INTERVAL 0.5 // interval of retrying Update/Store status of BME680 into Flash in hours
 
+#define START_OF_DAY_HOUR 06 // Start of each day for daliy report (Hour number)
+#define START_OF_DAY_MIN 00  // Start of each day for daliy report (Minute number)
+
 #define EEPROM_SIZE 512
 #define SERIAL_BAUDRATE 115200
 

@@ -3,6 +3,8 @@
 #include <enums.h>
 #include <StoreHub.h>
 
+#define SENSRO_MAX_AVERAGE_SAMPLES 60 * 24 // Maximum samples included in the calculating the average
+
 typedef struct
 {
     float cur_temperature;
@@ -36,6 +38,7 @@ public:
     bool Run();
     bool LoadState();
     bool StoreState();
+    void ResetReport();
     SensorType sensorType;
     EnvironmentMeasurement Measurments;
 

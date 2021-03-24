@@ -176,6 +176,13 @@ bool EnvironmentSensor::checkIaqSensorStatus(void)
     return true;
 }
 
+void EnvironmentSensor::ResetReport()
+{
+    printf(">> Sensor : Reseting the daily report.\r\n");
+    Measurments.total_readgings = 0;
+    Measurments.total_airQuality_readings = 0;
+}
+
 bool EnvironmentSensor::UpdateMeasurments()
 {
     if (!TakeSample())
@@ -186,6 +193,11 @@ bool EnvironmentSensor::UpdateMeasurments()
     Measurments.cur_humidity = readHumidity();
     Measurments.cur_pressure = readPressure();
     Measurments.cur_airQuality = readAirQuality(&status);
+
+    // Reseting the averaging/Min/Max if more contains more than 1 day sample
+    if (Measurments.total_readgings > SENSRO_MAX_AVERAGE_SAMPLES)
+        ResetReport();
+
     if (Measurments.total_readgings > 0)
     {
         if (Measurments.min_temperature > Measurments.cur_temperature)
