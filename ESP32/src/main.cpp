@@ -1,7 +1,7 @@
 #include <main.h>
 
-// TODO: Adding Support for storing state of BME680 on Flash
-// TODO: Adding Support for Device location
+// TODO: Fixing the daily report interval 6am start of the day if time avaiable otherwise every 1440 minutes
+// TODO: BluetoothLE characteristics for AirQuality
 // TODO: Adding Support for handling wider Azure commands
 // TODO: Improving the memory consumption & remove memory leaks
 // TODO: Support for internet conenction
@@ -57,6 +57,8 @@ void setup()
           Sensor.Measurments.cur_temperature,
           Sensor.Measurments.cur_humidity,
           Sensor.Measurments.cur_pressure);
+      if (!Sensor.LoadState() & VERBOSE)
+        printf("Failed to load the BSEC state\r\n");
     }
   }
 
@@ -264,6 +266,10 @@ void loop()
   {
     RefreshOLED();
     Sensor.Run();
+    storeBSECstateCountdown--;
+    if (storeBSECstateCountdown == 0)
+      storeBSECstateCountdown = Sensor.StoreState() ? UPDATE_BSEC_STATE_INTERVAL_SEC : RETRY_UPDATE_BSEC_STATE_INTERVAL_SEC;
+
     secondFlag = false;
   }
 }

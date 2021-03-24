@@ -110,12 +110,9 @@ bool GetBSECstate(uint8_t *state, uint8_t expected_len)
         return false;
     }
     for (uint8_t i = 0; i < len; i++)
-    {
-        uint8_t val = EEPROM.read(i + pos);
-        *(state + i) = val;
-        printf("%X ", val);
-    }
-    printf("\r\n");
+        s
+            *(state + i) = EEPROM.read(i + pos);
+
     return true;
 }
 
@@ -130,12 +127,8 @@ void WriteFlashBSECstate(uint8_t *state, uint8_t len)
     uint16_t pos = getBSECstorePosition();
     EEPROM.write(EEPROM_BSEC_STAT_LEN_ADDR, len);
     for (uint8_t i = 0; i < len; i++)
-    {
-        uint8_t val = *(state + i);
-        EEPROM.write(i + pos, val);
-        printf("%X ", val);
-    }
-    printf("\r\n");
+        EEPROM.write(i + pos, *(state + i));
+
     EEPROM.commit();
 }
 

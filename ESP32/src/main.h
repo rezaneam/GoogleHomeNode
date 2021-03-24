@@ -11,8 +11,11 @@
 #include <BLElite.h>
 #include <config.h>
 
-#define BLE_ADVERTISE_TIMEOUT_MS 1000 * BLE_ADVERTISE_TIMEOUT_S // BLE advertising timeout
-#define MinimumAllowHeapSize 20 // Mininum Allow Heap size that triggers MPU restart
+#define BLE_ADVERTISE_TIMEOUT_MS 1000 * BLE_ADVERTISE_TIMEOUT_S                         // BLE advertising timeout
+#define MinimumAllowHeapSize 20                                                         // Mininum Allow Heap size that triggers MPU restart
+#define UPDATE_BSEC_STATE_INTERVAL_SEC 60 * 60 * UPDATE_BSEC_STATE_INTERVAL             // interval of Update/Store status of BME680 into Flash in seconds
+#define RETRY_UPDATE_BSEC_STATE_INTERVAL_SEC 60 * 60 * RETRY_UPDATE_BSEC_STATE_INTERVAL // interval of retrying Update/Store status of BME680 into Flash in seconds
+
 EnvironmentSensor Sensor;
 SSD1306Wire Oled(OLED_Address, OLED_SDA_PIN, OLED_SCL_PIN);
 
@@ -47,6 +50,7 @@ hw_timer_t *sensorReadTimer = NULL;
 portMUX_TYPE sensorReadtimerMux = portMUX_INITIALIZER_UNLOCKED;
 portMUX_TYPE externalPinmux = portMUX_INITIALIZER_UNLOCKED;
 
+uint16_t storeBSECstateCountdown = UPDATE_BSEC_STATE_INTERVAL_SEC;
 uint16_t ble_advertize_timeOut = BLE_ADVERTISE_TIMEOUT_MS;
 uint16_t timerCalls = 0;
 uint8_t changeDisplayTimeout = 4;

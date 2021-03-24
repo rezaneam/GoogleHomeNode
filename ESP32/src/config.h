@@ -2,8 +2,8 @@
 
 #define SENSOR_SDA_PIN 5
 #define SENSOR_SCL_PIN 4
-#define OLED_SDA_PIN 21 // 5 // 21
-#define OLED_SCL_PIN 22 // 4 // 22
+#define OLED_SDA_PIN 5 // 5 // 21
+#define OLED_SCL_PIN 4 // 4 // 22
 #define SDA_Frequency 400000
 #define OLED_Address 0x3c
 
@@ -12,7 +12,10 @@
 #define BLE_ADVERTISE_LED_PIN 12
 #define SENSOR_READ_INTERVAL 60
 
-#define EEPROM_SIZE 256
+#define UPDATE_BSEC_STATE_INTERVAL 6         // interval of Update/Store status of BME680 into Flash in hours
+#define RETRY_UPDATE_BSEC_STATE_INTERVAL 0.5 // interval of retrying Update/Store status of BME680 into Flash in hours
+
+#define EEPROM_SIZE 512
 #define SERIAL_BAUDRATE 115200
 
-#define VERBOSE false
+#define VERBOSE true
