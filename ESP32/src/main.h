@@ -10,6 +10,7 @@
 #include <GoogleHome.h>
 #include <BLElite.h>
 #include <config.h>
+#include <HTTPClient.h>
 
 #define BLE_ADVERTISE_TIMEOUT_MS 1000 * BLE_ADVERTISE_TIMEOUT_S                         // BLE advertising timeout
 #define MinimumAllowHeapSize 20                                                         // Mininum Allow Heap size that triggers MPU restart

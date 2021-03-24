@@ -1,6 +1,5 @@
 #include <main.h>
 
-// TODO: Fixing time to local time using ipstack
 // TODO: BluetoothLE characteristics for AirQuality
 // TODO: Adding Support for handling wider Azure commands
 // TODO: Improving the memory consumption & remove memory leaks
@@ -288,8 +287,24 @@ CustomEvents DequeueEvent()
 
 void ConfigureTime()
 {
+  HTTPClient http;
   const char *ntpServer = "pool.ntp.org";
-  configTime(0, 0, ntpServer);
+  const char *timeApiUrl = "http://worldtimeapi.org/api/ip";
+
+  http.begin(timeApiUrl);
+  int httpCode = http.GET();
+
+  if (httpCode != 200)
+  {
+    printf("Unable to fetch the time info\r\n");
+    configTime(0, 0, ntpServer);
+    return;
+  }
+  String response = http.getString();
+  long offset = response.substring(response.indexOf("\"raw_offset\":") + 13, response.indexOf(",\"timezone\":")).toFloat();
+  http.end();
+
+  configTime(offset, 0, ntpServer);
 }
 
 void UpdateStatus(bool BLE, bool OLED, bool isNotifying)
