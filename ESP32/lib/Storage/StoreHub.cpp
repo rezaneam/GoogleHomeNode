@@ -89,13 +89,30 @@ void ReadFlash()
 uint16_t getBSECstorePosition()
 {
     uint16_t pos = EEPROM_STORAGE_START_ADDR;
+    uint8_t len;
+    len = EEPROM.read(EEPROM_WIFI_SSID_NAME_LEN_ADDR);
+    if (len != EEPROM_UNINITIALIZED_VALUE)
+        pos += len;
 
-    pos += EEPROM.read(EEPROM_WIFI_SSID_NAME_LEN_ADDR);
-    pos += EEPROM.read(EEPROM_WIFI_PASSWORD_LEN_ADDR);
-    pos += EEPROM.read(EEPROM_GOOGLE_HOME_NAME_LEN_ADDR);
-    pos += EEPROM.read(EEPROM_AZURE_IOT_HUB_LEN_ADDR);
-    pos += EEPROM.read(EEPROM_DEVICE_LOCATION_LEN_ADDR);
-    pos += EEPROM.read(EEPROM_USER_NAME_LEN_ADDR);
+    len = EEPROM.read(EEPROM_WIFI_PASSWORD_LEN_ADDR);
+    if (len != EEPROM_UNINITIALIZED_VALUE)
+        pos += len;
+
+    len = EEPROM.read(EEPROM_GOOGLE_HOME_NAME_LEN_ADDR);
+    if (len != EEPROM_UNINITIALIZED_VALUE)
+        pos += len;
+
+    len = EEPROM.read(EEPROM_AZURE_IOT_HUB_LEN_ADDR);
+    if (len != EEPROM_UNINITIALIZED_VALUE)
+        pos += len;
+
+    len = EEPROM.read(EEPROM_DEVICE_LOCATION_LEN_ADDR);
+    if (len != EEPROM_UNINITIALIZED_VALUE)
+        pos += len;
+
+    len = EEPROM.read(EEPROM_USER_NAME_LEN_ADDR);
+    if (len != EEPROM_UNINITIALIZED_VALUE)
+        pos += len;
 
     return pos;
 }
@@ -148,7 +165,7 @@ void WriteFlash(std::string wifi_ssid, std::string wifi_pass, std::string home_n
     if (stat_len == EEPROM_UNINITIALIZED_VALUE)
         stat_len = 0;
     uint16_t stat_pos = getBSECstorePosition();
-    uint8_t bsecState[stat_len] = {0};
+    uint8_t bsecState[stat_len != 0 ? stat_len : 1] = {0};
     for (uint8_t i = 0; i < stat_len; i++)
         bsecState[i] = EEPROM.read(i + stat_pos);
 
