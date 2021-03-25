@@ -209,8 +209,11 @@ void loop()
   {
     uint8_t freeHeap = 100 * ESP.getFreeHeap() / ESP.getHeapSize();
     char buffer[100] = "";
-    if (isWiFiconnected)
-      getTimeString(&buffer[0]);
+    if (wireless.IsConnected())
+    {
+        if (wireless.IsOnline())
+          getTimeString(&buffer[0]);
+    }
     if (Sensor.CheckStatus())
     {
 

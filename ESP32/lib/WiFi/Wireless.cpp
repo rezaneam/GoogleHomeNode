@@ -44,7 +44,6 @@ bool Wireless::ScanNodes()
 }
 bool Wireless::TryConnect(std::string ssid, std::string password)
 {
-
     if (isVerbose)
         printf("Trying to connect to %s\r\n", ssid.c_str());
     WiFi.begin(ssid.c_str(), password.c_str());
@@ -54,6 +53,9 @@ bool Wireless::TryConnect(std::string ssid, std::string password)
         queueEventWiFi(CustomEvents::EVENT_WIFI_CONNECTED);
         if (isVerbose)
             printf("IP: %s   Hostname: %s   Gateway IP: %s\r\n", WiFi.localIP().toString().c_str(), WiFi.getHostname(), WiFi.gatewayIP().toString().c_str());
+        gatewayIP = WiFi.gatewayIP();
+        localIP = WiFi.localIP();
+        isConnected = true;
         return true;
     }
     if (isVerbose)
@@ -65,7 +67,22 @@ bool Wireless::TryConnect(std::string ssid, std::string password)
     }
     queueEventWiFi(CustomEvents::EVENT_WIFI_DISCONNECTED);
     WiFi.disconnect();
+    isConnected = false;
     return false;
+}
+
+bool Wireless::IsOnline()
+{
+    if (!isConnected)
+        return false;
+    return Ping.ping("www.google.com", 4);
+}
+
+bool Wireless::IsConnected()
+{
+    if (!isConnected)
+        return false;
+    return Ping.ping(gatewayIP, 4);
 }
 
 String Wireless::translateEncryptionType(wifi_auth_mode_t encryptionType)
