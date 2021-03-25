@@ -1,6 +1,5 @@
 #include <main.h>
 
-// TODO: BluetoothLE characteristics for AirQuality
 // TODO: Adding Support for handling wider Azure commands
 // TODO: Improving the memory consumption & remove memory leaks
 // TODO: Support for internet conenction
@@ -232,7 +231,7 @@ void loop()
               pressure / 101325, Sensor.Measurments.min_pressure / 101325, Sensor.Measurments.max_pressure / 101325, Sensor.Measurments.ave_pressure / 101325,
               airQuality, Sensor.Measurments.min_air_quality, Sensor.Measurments.max_air_quality, Sensor.Measurments.ave_airQuality);
         }
-        BluetoothLE.UpdateSensorValues(temperature, humidity, pressure);
+        BluetoothLE.UpdateSensorValues(temperature, humidity, pressure, airQuality);
       }
     }
     else
