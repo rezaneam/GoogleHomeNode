@@ -43,10 +43,34 @@ namespace Config_Tool___Google_Home_Node.Pages
             float value;
             if (float.TryParse(node.Sensors.Temperature, out value))
                 TempGauge.Value = value;
+
             if (float.TryParse(node.Sensors.Humidity, out value))
+            {
+                HumidityStackPanel.Visibility = Visibility.Visible;
                 HumidityGauge.Value = value;
+            }
+            else
+                HumidityStackPanel.Visibility = Visibility.Collapsed;
+                
+
             if (float.TryParse(node.Sensors.Pressure, out value))
+            {
+                PressureStackPanel.Visibility = Visibility.Visible;
                 PressureGauge.Value = value / 100;
+            }
+            else
+                PressureStackPanel.Visibility = Visibility.Collapsed;
+            
+            if (float.TryParse(node.Sensors.AirQualityIndex, out value))
+            {
+                AirQualityStackPanel.Visibility = Visibility.Visible;
+                AirQualityGauge.Value = value;
+            }
+            else
+                AirQualityStackPanel.Visibility = Visibility.Collapsed;
+               
+          
+
         }
 
         private string FormatToString(Windows.Storage.Streams.IBuffer value)

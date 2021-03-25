@@ -14,6 +14,7 @@ namespace ConfigTool.BLE
                 OnPropertyChanged(nameof(Temperature));
                 OnPropertyChanged(nameof(Pressure));
                 OnPropertyChanged(nameof(Humidity));
+                OnPropertyChanged(nameof(AirQualityIndex));
                 valueChanged?.Invoke(sender, args);
             });
         }
@@ -21,5 +22,6 @@ namespace ConfigTool.BLE
         public string Temperature => values.TryGetValue(new Guid(SupportedUuids.UUID_SEN_TMP), out string response) ? response : string.Empty;
         public string Humidity => values.TryGetValue(new Guid(SupportedUuids.UUID_SEN_HUM), out string response) ? response : string.Empty;
         public string Pressure => values.TryGetValue(new Guid(SupportedUuids.UUID_SEN_BAR), out string response) ? response : string.Empty;
+        public string AirQualityIndex => values.TryGetValue(new Guid(SupportedUuids.UUID_SEN_AQI), out string response) ? response : string.Empty;
     }
 }

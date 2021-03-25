@@ -26,6 +26,7 @@ namespace ConfigTool.BLE
         public const string UUID_SEN_TMP = "00002a6e-0000-1000-8000-00805f9b34fb";
         public const string UUID_SEN_HUM = "00002a6f-0000-1000-8000-00805f9b34fb";
         public const string UUID_SEN_BAR = "00002a6d-0000-1000-8000-00805f9b34fb";
+        public const string UUID_SEN_AQI = "00002a75-0000-1000-8000-00805f9b34fb";
 
         public const string UUID_CON_SERV = "0000181c-0000-1000-8000-00805f9b34fb";
         public const string UUID_CON_REST_FACT = "00004900-0000-1000-8000-00805f9b34fb";
@@ -63,6 +64,7 @@ namespace ConfigTool.BLE
             { new Guid(UUID_SEN_TMP), "Temperature" },
             { new Guid(UUID_SEN_BAR), "Barometer" },
             { new Guid(UUID_SEN_HUM), "Humidity" },
+            { new Guid(UUID_SEN_AQI), "Air Quality Index" },
             { new Guid(UUID_BAT_SERV), "Battery Service"},
             { new Guid(UUID_SEN_SERV), "Sensor Service" },
             { new Guid(UUID_CON_SERV), "Configuration Service" },

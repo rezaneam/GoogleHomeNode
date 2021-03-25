@@ -11,7 +11,7 @@
 
     <Grid>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-            <StackPanel Margin="4">
+            <StackPanel x:Name="TemperatureStackPanel">
                 <TextBlock Text="Temperautre" HorizontalAlignment="Center"/>
                 <controls:RadialGauge
                 Margin="8"
@@ -21,25 +21,25 @@
                 Minimum="-20"
                 Maximum="80"
                 StepSize="1"
-                IsInteractive="True"
-                TickSpacing="20"
-                ScaleWidth="5"
-                MinAngle="200"
-                MaxAngle="0"
+                IsInteractive="False"
+                TickSpacing="10"
+                ScaleWidth="25"
+                MinAngle="270"
+                MaxAngle="90"
                 Unit="C"
                 ValueStringFormat="N0"
-                NeedleWidth="3"
+                NeedleWidth="1"
                 NeedleLength="100" 
-                NeedleBrush="DarkRed"
+                NeedleBrush="Orange"
                 TickLength="15"
-                TickWidth="3"
+                TickWidth="1"
                 ScalePadding="26"
-                ScaleTickWidth="3" 
+                ScaleTickWidth="1" 
                 TrailBrush="OrangeRed"
-                ScaleBrush="IndianRed"/>
+                ScaleBrush="Wheat"/>
             </StackPanel>
 
-            <StackPanel>
+            <StackPanel x:Name="HumidityStackPanel">
                 <TextBlock Text="Humidity" HorizontalAlignment="Center"/>
                 <controls:RadialGauge
                 Margin="8"
@@ -49,49 +49,78 @@
                 Minimum="0"
                 Maximum="100"
                 StepSize="1"
-                IsInteractive="True"
+                IsInteractive="False"
                 TickSpacing="10"
-                ScaleWidth="5"
-                MinAngle="200"
-                MaxAngle="160"
+                ScaleWidth="25"
+                MinAngle="270"
+                MaxAngle="90"
                 Unit="%"
                 ValueStringFormat="N0"
-                NeedleWidth="3"
+                NeedleWidth="1"
                 NeedleLength="100" 
                 NeedleBrush="DarkBlue"
                 TickLength="15"
-                TickWidth="3"
+                TickWidth="1"
                 ScalePadding="26"
-                ScaleTickWidth="3" 
+                ScaleTickWidth="1" 
                 TrailBrush="MediumBlue"
                 ScaleBrush="LightSkyBlue"/>
 
             </StackPanel>
 
-            <StackPanel>
+            <StackPanel x:Name="AirQualityStackPanel">
+                <TextBlock Text="Air Quality Index" HorizontalAlignment="Center"/>
+                <controls:RadialGauge
+                Margin="8"
+                x:Name="AirQualityGauge"
+                Height="128"
+                Value="100"
+                Minimum="0"
+                Maximum="400"
+                StepSize="1"
+                IsInteractive="False"
+                TickSpacing="25"
+                ScaleWidth="25"
+                MinAngle="270"
+                MaxAngle="90"
+                Unit="Index"
+                ValueStringFormat="N0"
+                NeedleWidth="1"
+                NeedleLength="100" 
+                NeedleBrush="IndianRed"
+                TickLength="15"
+                TickWidth="1"
+                ScalePadding="26"
+                ScaleTickWidth="1" 
+                TrailBrush="DarkRed"
+                ScaleBrush="LightPink"/>
+
+            </StackPanel>
+
+            <StackPanel x:Name="PressureStackPanel">
                 <TextBlock Text="Barometer" HorizontalAlignment="Center"/>
                 <controls:RadialGauge
                 Margin="8"
                 x:Name="PressureGauge"
                 Height="128"
                 Value="1000"
-                Minimum="800"
-                Maximum="1200"
+                Minimum="950"
+                Maximum="1050"
                 StepSize="1"
-                IsInteractive="True"
-                TickSpacing="100"
-                ScaleWidth="5"
-                MinAngle="0"
-                MaxAngle="1600"
+                IsInteractive="False"
+                TickSpacing="10"
+                ScaleWidth="25"
+                MinAngle="270"
+                MaxAngle="90"
                 Unit="mBar"
                 ValueStringFormat="N0"
-                NeedleWidth="3"
+                NeedleWidth="1"
                 NeedleLength="100" 
                 NeedleBrush="DarkGreen"
                 TickLength="15"
-                TickWidth="3"
+                TickWidth="1"
                 ScalePadding="26"
-                ScaleTickWidth="3" 
+                ScaleTickWidth="1" 
                 TrailBrush="ForestGreen"
                 ScaleBrush="LightGreen"/>
 
