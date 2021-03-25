@@ -198,6 +198,32 @@ void OLEDDisplayExtended::ShowMSummary(float average, float min, float max, Disp
     this->drawString(84, 24, "Max");
     this->display();
 }
+
+void OLEDDisplayExtended::ShowAirQualitySummary(float airQualityIndex)
+{
+
+    this->clearArea(Sensor_Area[0], Sensor_Area[1], Sensor_Area[2], Sensor_Area[3]);
+    setFont(Roboto_Condensed_20);
+    this->drawXbm(sensor_icon_pos[0], sensor_icon_pos[1], sensor_icon_pos[2], sensor_icon_pos[3], Air_Quality_Sensor_icon_img);
+    this->drawProgressBar(4, 52, 120, 8, airQualityIndex / 500 * 100);
+    if (airQualityIndex <= 50)
+        this->drawString(38, 20, "Excellent");
+    else if (airQualityIndex <= 100)
+        this->drawString(38, 20, "Good");
+    else if (airQualityIndex <= 150)
+        this->drawString(38, 20, "Low Pollution");
+    else if (airQualityIndex <= 200)
+        this->drawString(38, 20, "Mid Pollution");
+    else if (airQualityIndex <= 250)
+        this->drawString(38, 20, "Hi Pollution");
+    else if (airQualityIndex <= 350)
+        this->drawString(38, 20, "Hazardous");
+    else
+        this->drawString(38, 20, "X Hazardous");
+    CurrentShow = DisplayStatus::AirQualitySummary;
+    this->display();
+}
+
 void OLEDDisplayExtended::RefressSensorArea(float temperature, float humidity, float pressure, float air_quality, SensorCalibrationStatus calib)
 {
     bool isBME680 = air_quality != -1;

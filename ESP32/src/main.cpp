@@ -366,6 +366,15 @@ void RefreshOLED()
     changeDisplayTimeout = 2;
     return;
     break;
+
+  case DisplayStatus::AirQualitySensor:
+    if (Sensor.Measurments.calibrationStatus >= SensorCalibrationStatus::MEDIUM_ACCURACY)
+    {
+      Oled.ShowAirQualitySummary(Sensor.Measurments.cur_airQuality);
+      changeDisplayTimeout = 2;
+      return;
+    }
+    break;
   }
 
   if (Oled.CurrentShow != DisplayStatus::Time && isWiFiconnected)

@@ -40,6 +40,7 @@ enum DisplayStatus
     HumiditySensor,
     PressureSensor,
     AirQualitySensor,
+    AirQualitySummary,
     AllSensors,
     Time
 };
