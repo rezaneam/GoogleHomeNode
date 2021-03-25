@@ -17,6 +17,8 @@ bool BLElite::hasNotifier(BLEUUID uuid)
         return true;
     if (uuid.equals(BLEUUID((uint16_t)CHARACTERISTIC_UUID_HUMIDITY)))
         return true;
+    if (uuid.equals(BLEUUID((uint16_t)CHARACTERISTIC_UUID_AIR_QUALITY)))
+        return true;
     if (uuid.equals(BLEUUID((uint16_t)CHARACTERISTIC_UUID_WIFI_SCANNING)))
         return true;
     if (uuid.equals(BLEUUID((uint16_t)CHARACTERISTIC_UUID_CONNECTION_STAT)))
@@ -50,11 +52,12 @@ void BLElite::Initialize(std::string deviceName, void (*event_queue_method)(Cust
     NimBLEService *pBatteryService = pServer->createService(BLEUUID((uint16_t)SERVICE_UUID_BATTERY));
     addCharacteristic(pBatteryService, CHARACTERISTIC_UUID_BATTERY_LEVEL, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY, "100%", DESCRIPTOR_UUID_BATTERY, DESCRIPTOR_VAL_BATTERY);
 
-    // BME280 - Read & Notify
+    // Environment Sensor - Read & Notify
     NimBLEService *pSensorService = pServer->createService(BLEUUID((uint16_t)SERVICE_UUID_ENVIROMENTAL_SENSING));
     addCharacteristic(pSensorService, CHARACTERISTIC_UUID_PRESSURE, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY, "N.A.", DESCRIPTOR_UUID_PRESSURE, DESCRIPTOR_VAL_PRESSURE);
     addCharacteristic(pSensorService, CHARACTERISTIC_UUID_TEMPERATURE, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY, "N.A.", DESCRIPTOR_UUID_TEMPERATURE, DESCRIPTOR_VAL_TEMPEATURE);
     addCharacteristic(pSensorService, CHARACTERISTIC_UUID_HUMIDITY, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY, "N.A.", DESCRIPTOR_UUID_HUMIDITY, DESCRIPTOR_VAL_HUMIDITY);
+    addCharacteristic(pSensorService, CHARACTERISTIC_UUID_AIR_QUALITY, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY, "N.A.", DESCRIPTOR_UUID_AIR_QUALITY, DESCRIPTOR_VAL_AIR_QUALITY);
 
     // WiFi Configuration - Read, Notify, Write
     NimBLEService *pAutomationService = pServer->createService(BLEUUID((uint16_t)SERVICE_UUID_USER_DATA));
@@ -172,13 +175,12 @@ std::string BLElite::getAzureAuthentication()
     return getCharacteristicValue(BLEUUID((uint16_t)SERVICE_UUID_USER_DATA), BLEUUID((uint16_t)CHARACTERISTIC_UUID_AZURE_IOT_HUB_CONN));
 }
 
-void BLElite::UpdateSensorValues(float temperature, float humidity, float pressure)
+void BLElite::UpdateSensorValues(float temperature, float humidity, float pressure, float airQuality)
 {
-    if (!IsConnected)
-        return;
     setCharacteristicValue(BLEUUID((uint16_t)SERVICE_UUID_ENVIROMENTAL_SENSING), BLEUUID((uint16_t)CHARACTERISTIC_UUID_TEMPERATURE), convertToString(temperature));
-    setCharacteristicValue(BLEUUID((uint16_t)SERVICE_UUID_ENVIROMENTAL_SENSING), BLEUUID((uint16_t)CHARACTERISTIC_UUID_HUMIDITY), convertToString(humidity));
+    setCharacteristicValue(BLEUUID((uint16_t)SERVICE_UUID_ENVIROMENTAL_SENSING), BLEUUID((uint16_t)CHARACTERISTIC_UUID_HUMIDITY), humidity >= 0 ? convertToString(humidity) : "N.A.");
     setCharacteristicValue(BLEUUID((uint16_t)SERVICE_UUID_ENVIROMENTAL_SENSING), BLEUUID((uint16_t)CHARACTERISTIC_UUID_PRESSURE), convertToString(pressure));
+    setCharacteristicValue(BLEUUID((uint16_t)SERVICE_UUID_ENVIROMENTAL_SENSING), BLEUUID((uint16_t)CHARACTERISTIC_UUID_AIR_QUALITY), airQuality >= 0 ? convertToString(airQuality) : "N.A.");
 }
 
 void BLElite::UpdateConnectionStatus(bool isWiFiConnected, bool isGoogleHomeConnected, bool isAzureConnected)

@@ -17,6 +17,7 @@
 #define CHARACTERISTIC_UUID_PRESSURE 0x2A6D           // Pressure Measurements
 #define CHARACTERISTIC_UUID_TEMPERATURE 0x2A6E        // Temperature Measurements
 #define CHARACTERISTIC_UUID_HUMIDITY 0x2A6F           // Humidity Measurements
+#define CHARACTERISTIC_UUID_AIR_QUALITY 0x2A75        // Air Quality Measurements
 #define CHARACTERISTIC_UUID_RESET_CONFIG 0x4900       // factory reseting the configurations - set 1 to reset ESP and 2 to erase EEPROM and then reset 3  to safe erase EEPROM and then reset.
 #define CHARACTERISTIC_UUID_WIFI_SSID_NAMES 0x4901    // Found WiFi names
 #define CHARACTERISTIC_UUID_WIFI_SCANNING 0x4902      // Scan Refresh - used for is WiFi scanning: 0 - Not scanning, 1 - scanning
@@ -32,14 +33,16 @@
 #define DESCRIPTOR_UUID_PRESSURE 0x3901    // Discriptor for Pressure Sensor
 #define DESCRIPTOR_UUID_TEMPERATURE 0x3902 // Discriptor for Temperature Sensor
 #define DESCRIPTOR_UUID_HUMIDITY 0x3903    // Discriptor for Humidity Sensor
-#define DESCRIPTOR_UUID_WIFI_SCAN 0x3904   // Discriptor for WiFi scan status
-#define DESCRIPTOR_UUID_WIFI_SSIDs 0x3905  // Discriptor for for found SSIDs
-#define DESCRIPTOR_UUID_WIFI_CONN 0x3906   // Discriptor for WiFi connection status
-#define DESCRIPTOR_UUID_GLHM_NAME 0x3907   // Discriptor for Google Home name
+#define DESCRIPTOR_UUID_AIR_QUALITY 0x3904 // Discriptor for Air Quality Sensor
+#define DESCRIPTOR_UUID_WIFI_SCAN 0x3905   // Discriptor for WiFi scan status
+#define DESCRIPTOR_UUID_WIFI_SSIDs 0x3906  // Discriptor for for found SSIDs
+#define DESCRIPTOR_UUID_WIFI_CONN 0x3907   // Discriptor for WiFi connection status
+#define DESCRIPTOR_UUID_GLHM_NAME 0x3908   // Discriptor for Google Home name
 
 #define DESCRIPTOR_VAL_BATTERY "Battery Level"
 #define DESCRIPTOR_VAL_TEMPEATURE "Temperature in centigrade scale"
 #define DESCRIPTOR_VAL_HUMIDITY "Humidity in percentage(%) scale"
+#define DESCRIPTOR_VAL_AIR_QUALITY "Air Quality Index [0-500]"
 #define DESCRIPTOR_VAL_PRESSURE "Pressure in Pascal scale"
 #define DESCRIPTOR_VAL_WIFI_SCAN "WiFi scanning: 0 - Not scanning, 1 - scanning"
 #define DESCRIPTOR_VAL_WIFI_SSIDs "List of the SSIDs found after scan"
@@ -55,7 +58,7 @@
 #define BLE_DEVICE_NAME "Google Home Node - RSv1"
 #define BLE_SYSTEM_ID "Samira"
 #define BLE_MANUFACTURER "Espressif Systems"
-#define BLE_MODEL_NUMBER "Home Sensor"
+#define BLE_MODEL_NUMBER "Smart IoT Sensor"
 #define BLE_FIRMWARE_REVISION __DATE__
 #define BLE_HARDWARE_REVISION "v1"
 #define BLE_SOFTWARE_REVISION "v1"

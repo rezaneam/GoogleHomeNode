@@ -18,7 +18,7 @@ public:
     void StopAdvertise();
     void SetGoogleHomeName(std::string value);
     void UpdateConnectionStatus(bool isWiFiConnected, bool isGoogleHomeConnected, bool isAzureConnected);
-    void UpdateSensorValues(float temperature, float humidity, float pressure);
+    void UpdateSensorValues(float temperature, float humidity, float pressure, float airQuality);
     void SetSSID(std::string value);
     void SetSSIDs(std::string SSIDs);
     void StoreWiFiAuthentication();
