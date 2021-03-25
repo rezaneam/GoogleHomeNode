@@ -4,6 +4,9 @@
 #include <StoreHub.h>
 
 #define SENSRO_MAX_AVERAGE_SAMPLES 60 * 24 // Maximum samples included in the calculating the average
+const uint8_t bsec_config[] = {
+#include "config/generic_33v_3s_4d/bsec_iaq.txt"
+};
 
 typedef struct
 {
