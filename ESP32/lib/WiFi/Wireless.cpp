@@ -71,18 +71,18 @@ bool Wireless::TryConnect(std::string ssid, std::string password)
     return false;
 }
 
-bool Wireless::IsOnline()
+bool Wireless::IsOnline(uint8_t iterations)
 {
     if (!isConnected)
         return false;
-    return Ping.ping("www.google.com", 4);
+    return Ping.ping("www.google.com", iterations);
 }
 
-bool Wireless::IsConnected()
+bool Wireless::IsConnected(uint8_t iterations)
 {
     if (!isConnected)
         return false;
-    return Ping.ping(gatewayIP, 4);
+    return Ping.ping(gatewayIP, iterations);
 }
 
 String Wireless::translateEncryptionType(wifi_auth_mode_t encryptionType)

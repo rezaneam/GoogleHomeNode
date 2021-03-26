@@ -209,10 +209,14 @@ void loop()
   {
     uint8_t freeHeap = 100 * ESP.getFreeHeap() / ESP.getHeapSize();
     char buffer[100] = "";
+    unsigned long t1, t2, t3, t4;
+    t1 = millis();
     if (wireless.IsConnected())
     {
-        if (wireless.IsOnline())
-          getTimeString(&buffer[0]);
+      if (wireless.IsOnline())
+      {
+        getTimeString(&buffer[0]);
+      }
     }
     if (Sensor.CheckStatus())
     {
@@ -226,13 +230,20 @@ void loop()
         if (VERBOSE)
         {
 
-          printf(
-              ">> Free Heap %d%% %s [%d] Temperature: %2.1fc(%2.1f-%2.1f)[%2.1f] Humidity: %2.1f%%(%2.1f-%2.1f)[%2.1f] Pressure: %2.2fatm(%2.2f-%2.2f)[%2.2f] AirQuality: %2.1f(%2.1f-%2.1f)[%2.1f]\r\n",
-              freeHeap, buffer, Sensor.Measurments.total_readgings,
-              temperature, Sensor.Measurments.min_temperature, Sensor.Measurments.max_temperature, Sensor.Measurments.ave_temperature,
-              humidity, Sensor.Measurments.min_humidity, Sensor.Measurments.max_humidity, Sensor.Measurments.ave_humidity,
-              pressure / 101325, Sensor.Measurments.min_pressure / 101325, Sensor.Measurments.max_pressure / 101325, Sensor.Measurments.ave_pressure / 101325,
-              airQuality, Sensor.Measurments.min_air_quality, Sensor.Measurments.max_air_quality, Sensor.Measurments.ave_airQuality);
+          printf(">> Free Heap %d%% %s [%d]", freeHeap, buffer, Sensor.Measurments.total_readgings);
+          printf(" Temperature: %2.1fc(%2.1f-%2.1f)[%2.1f]",
+                 temperature, Sensor.Measurments.min_temperature, Sensor.Measurments.max_temperature, Sensor.Measurments.ave_temperature);
+          printf(" Pressure: %2.2fatm(%2.2f-%2.2f)[%2.2f]",
+                 pressure / 101325, Sensor.Measurments.min_pressure / 101325, Sensor.Measurments.max_pressure / 101325, Sensor.Measurments.ave_pressure / 101325);
+          if (humidity >= 0)
+            printf(" Humidity: %2.1f%%(%2.1f-%2.1f)[%2.1f] ",
+                   humidity, Sensor.Measurments.min_humidity, Sensor.Measurments.max_humidity, Sensor.Measurments.ave_humidity);
+          if (airQuality >= 0)
+            printf("AirQuality: %2.1f(%2.1f-%2.1f)[%2.1f]",
+                   airQuality, Sensor.Measurments.min_air_quality, Sensor.Measurments.max_air_quality, Sensor.Measurments.ave_airQuality);
+          printf("\r\n");
+
+          ;
         }
         BluetoothLE.UpdateSensorValues(temperature, humidity, pressure, airQuality);
       }
