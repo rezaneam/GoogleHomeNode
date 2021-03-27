@@ -384,7 +384,7 @@ void RefreshOLED()
   case DisplayStatus::AirQualitySensor:
     if (Sensor.Measurments.calibrationStatus >= SensorCalibrationStatus::MEDIUM_ACCURACY)
     {
-      Oled.ShowAirQualitySummary(Sensor.Measurments.cur_airQuality);
+      Oled.ShowAirQualitySummary(Sensor.Measurments.cur_airQuality, Sensor.Measurments.VOC);
       changeDisplayTimeout = 2;
       return;
     }

@@ -199,27 +199,29 @@ void OLEDDisplayExtended::ShowMSummary(float average, float min, float max, Disp
     this->display();
 }
 
-void OLEDDisplayExtended::ShowAirQualitySummary(float airQualityIndex)
+void OLEDDisplayExtended::ShowAirQualitySummary(float airQualityIndex, float voc)
 {
 
     this->clearArea(Sensor_Area[0], Sensor_Area[1], Sensor_Area[2], Sensor_Area[3]);
     setFont(Roboto_Condensed_20);
+    this->drawString(38, 16, "VOC " + String(voc, 1));
+    setFont(Roboto_Condensed_12);
     this->drawXbm(sensor_icon_pos[0], sensor_icon_pos[1], sensor_icon_pos[2], sensor_icon_pos[3], Air_Quality_Sensor_icon_img);
     this->drawProgressBar(4, 52, 120, 8, airQualityIndex / 500 * 100);
     if (airQualityIndex <= 50)
-        this->drawString(38, 20, "Excellent");
+        this->drawString(30, 36, "Excellent Quality");
     else if (airQualityIndex <= 100)
-        this->drawString(38, 20, "Good");
+        this->drawString(30, 36, "Good Quality");
     else if (airQualityIndex <= 150)
-        this->drawString(38, 20, "Low Pollution");
+        this->drawString(30, 36, "Light Pollution");
     else if (airQualityIndex <= 200)
-        this->drawString(38, 20, "Mid Pollution");
+        this->drawString(30, 36, "Moderate Pollution");
     else if (airQualityIndex <= 250)
-        this->drawString(38, 20, "Hi Pollution");
+        this->drawString(30, 36, "High Pollution");
     else if (airQualityIndex <= 350)
-        this->drawString(38, 20, "Hazardous");
+        this->drawString(30, 36, "Hazardous");
     else
-        this->drawString(38, 20, "X Hazardous");
+        this->drawString(30, 36, "Very Hazardous");
     CurrentShow = DisplayStatus::AirQualitySummary;
     this->display();
 }

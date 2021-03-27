@@ -165,7 +165,7 @@ public:
 
     void RefressSensorArea(float temperature, float humidity, float pressure, float air_quality = -1, SensorCalibrationStatus calib = SensorCalibrationStatus::UNRELIABLE);
     void ShowMSummary(float average, float min, float max, DisplayStatus status, SensorCalibrationStatus calib = SensorCalibrationStatus::UNRELIABLE);
-    void ShowAirQualitySummary(float airQualityIndex);
+    void ShowAirQualitySummary(float airQualityIndex, float voc);
     void ReferessStatusArea(
         bool isBLEadvertising,
         bool isBLEconnected,
