@@ -47,8 +47,24 @@ void setup()
     if (!Sensor.LoadState() & VERBOSE)
       printf("Failed to load the BSEC state\r\n");
 
-  if (Sensor.sensorType == SensorType::No_Sensor)
+  switch (Sensor.sensorType)
+  {
+  case SensorType::BMP280_Sensor:
+    Oled.ShowMessage("BMP280", "Sensor", "TEMP + BAR");
+    break;
+
+  case SensorType::BME280_Sensor:
+    Oled.ShowMessage("BME280", "Sensor", "TEMP + BAR + HUM");
+    break;
+
+  case SensorType::BME680_Sensor:
+    Oled.ShowMessage("BME680", "Sensor", "TEMP + BAR + HUM + AQI");
+    break;
+
+  case SensorType::No_Sensor:
     Oled.ShowMessage("Error", "No Sensor found", "Check the connections");
+    break;
+  }
 }
 
 void loop()
