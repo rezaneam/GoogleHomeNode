@@ -36,7 +36,7 @@ typedef struct
 class EnvironmentSensor
 {
 public:
-    bool Initialize(TwoWire &i2c);
+    bool Initialize(TwoWire &i2c, bool verbose = false);
     bool UpdateMeasurments();
     bool CheckStatus();
     bool Run();
@@ -47,6 +47,7 @@ public:
     EnvironmentMeasurement Measurments;
 
 private:
+    bool isVerbose;
     BME280 bmx280;
     Bsec bme680;
 

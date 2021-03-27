@@ -25,7 +25,7 @@ void setup()
     Sensor.Initialize(Wire1);
   }
   else
-    Sensor.Initialize(Wire);
+    Sensor.Initialize(Wire, VERBOSE);
 
   initializeTimer();
 
