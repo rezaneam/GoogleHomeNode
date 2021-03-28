@@ -22,7 +22,7 @@ void setup()
   if (OLED_SCL_PIN != SENSOR_SCL_PIN || OLED_SDA_PIN != SENSOR_SDA_PIN)
   {
     Wire1.begin(SENSOR_SDA_PIN, SENSOR_SCL_PIN, SDA_Frequency);
-    Sensor.Initialize(Wire1);
+    Sensor.Initialize(Wire1, VERBOSE);
   }
   else
     Sensor.Initialize(Wire, VERBOSE);
