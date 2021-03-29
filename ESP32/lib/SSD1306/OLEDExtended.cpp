@@ -208,13 +208,18 @@ void OLEDDisplayExtended::ShowAirQualitySummary(float airQualityIndex, float voc
     this->clearArea(Sensor_Area[0], Sensor_Area[1], Sensor_Area[2], Sensor_Area[3]);
     setFont(Roboto_Condensed_20);
     this->drawString(38, 16, "VOC " + String(voc, 1));
+    if (voc > 0.5)
+        this->drawXbm(108, 24, 16, 16, warning_icon_img);
     setFont(Roboto_Condensed_12);
     this->drawXbm(sensor_icon_pos[0], sensor_icon_pos[1], sensor_icon_pos[2], sensor_icon_pos[3], Air_Quality_Sensor_icon_img);
-    this->drawProgressBar(4, 52, 120, 8, airQualityIndex / 500 * 100);
+    setFont(Roboto_Condensed_16);
+    this->drawString(0, 48, "AQI");
+    this->drawProgressBar(24, 52, 100, 8, airQualityIndex / 500 * 100);
+    setFont(Roboto_Condensed_12);
     if (airQualityIndex <= 50)
-        this->drawString(30, 36, "Excellent Quality");
+        this->drawString(30, 36, voc > 0.5 ? "Warning!" : "Excellent Quality");
     else if (airQualityIndex <= 100)
-        this->drawString(30, 36, "Good Quality");
+        this->drawString(30, 36, voc > 0.5 ? "Warning!" : "Good Quality");
     else if (airQualityIndex <= 150)
         this->drawString(30, 36, "Light Pollution");
     else if (airQualityIndex <= 200)
