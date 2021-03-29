@@ -339,9 +339,10 @@ void ConfigureTime()
   }
   String response = http.getString();
   long offset = response.substring(response.indexOf("\"raw_offset\":") + 13, response.indexOf(",\"timezone\":")).toFloat();
+  long daylight_offset = response.substring(response.indexOf("\"dst_offset\":") + 13, response.indexOf(",\"dst_until\":")).toFloat();
   http.end();
 
-  configTime(offset, 0, ntpServer);
+  configTime(offset, daylight_offset, ntpServer);
 }
 
 void UpdateStatus(bool BLE, bool OLED, bool isNotifying)
