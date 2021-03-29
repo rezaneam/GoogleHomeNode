@@ -29,6 +29,7 @@ bool isHomeConnected = false;
 bool isBLEadvertising = false;
 bool isBLEconnected = false;
 bool isWiFiconnected = false;
+bool isInternetConnected = false;
 bool isCloudconnected = false;
 
 std::vector<CustomEvents> eventQueue;

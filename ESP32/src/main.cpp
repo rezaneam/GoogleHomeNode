@@ -227,13 +227,21 @@ void loop()
     char buffer[100] = "";
     unsigned long t1, t2, t3, t4;
     t1 = millis();
-    if (wireless.IsConnected())
+    isWiFiconnected = wireless.IsConnected();
+    if (isWiFiconnected)
     {
-      if (wireless.IsOnline())
+      isInternetConnected = wireless.IsOnline();
+      if (isInternetConnected)
       {
         getTimeString(&buffer[0]);
       }
     }
+    else
+    {
+      isInternetConnected = false;
+    }
+
+    UpdateStatus(true, true);
     if (Sensor.CheckStatus())
     {
 
@@ -339,7 +347,7 @@ void ConfigureTime()
 void UpdateStatus(bool BLE, bool OLED, bool isNotifying)
 {
   if (OLED)
-    Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid, isCloudconnected, isNotifying);
+    Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid, isInternetConnected, isCloudconnected, isNotifying);
   if (BLE)
     BluetoothLE.UpdateConnectionStatus(isWiFiconnected, isHomeConnected, isCloudconnected);
 }

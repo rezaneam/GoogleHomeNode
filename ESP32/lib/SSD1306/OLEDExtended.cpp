@@ -65,6 +65,9 @@ void OLEDDisplayExtended::drawIcon(OLEDDISPLAY_ICONS icon)
     case OLEDDISPLAY_ICONS::NOTIFYING:
         this->drawXbm(status_icon_pos[0] + offset, status_icon_pos[1], status_icon_pos[2], status_icon_pos[3], Notify_icon_img);
         break;
+    case OLEDDISPLAY_ICONS::INTERNET:
+        this->drawXbm(status_icon_pos[0] + offset, status_icon_pos[1], status_icon_pos[2], status_icon_pos[3], Internet_icon_img);
+        break;
     default:
         break;
     }
@@ -302,6 +305,7 @@ void OLEDDisplayExtended::ReferessStatusArea(
     bool isWiFiconnected,
     std::string ssid,
     bool isCloudConencted,
+    bool isInternetConnected,
     bool isNotifying)
 {
     this->clearArea(Status_Area[0], Status_Area[1], Status_Area[2], Status_Area[3]);
@@ -316,6 +320,8 @@ void OLEDDisplayExtended::ReferessStatusArea(
         this->drawIcon(OLEDDISPLAY_ICONS::CLOUD);
     if (isNotifying)
         this->drawIcon(OLEDDISPLAY_ICONS::NOTIFYING);
+    if (isInternetConnected)
+        this->drawIcon(OLEDDISPLAY_ICONS::INTERNET);
     if (isWiFiconnected)
     {
         this->drawIcon(OLEDDISPLAY_ICONS::WIFI_ICON);
