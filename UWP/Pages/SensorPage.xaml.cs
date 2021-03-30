@@ -105,6 +105,11 @@ namespace Config_Tool___Google_Home_Node.Pages
                         if (float.TryParse(FormatToString(args.CharacteristicValue), out value))
                             PressureGauge.Value = value / 100;
                         break;
+
+                    case SupportedUuids.UUID_SEN_AQI:
+                        if (float.TryParse(FormatToString(args.CharacteristicValue), out value))
+                            AirQualityGauge.Value = value;
+                        break;
                     default:
                         break;
                 }
