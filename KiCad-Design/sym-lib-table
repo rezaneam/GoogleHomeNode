@@ -1,2 +1,7 @@
 (sym_lib_table
+  (lib (name ttgo-32-micro)(type Legacy)(uri ${KIPRJMOD}/Libraries/TTGO-32/ttgo-32-micro.lib)(options "")(descr ""))
+  (lib (name SI2307)(type Legacy)(uri ${KIPRJMOD}/Libraries/Trans_Vishay_SI2307CDS-T1-GE3/eec.lib)(options "")(descr ""))
+  (lib (name SI2301)(type Legacy)(uri ${KIPRJMOD}/Libraries/Trans_Vishay_SI2301CDS-T1-GE3/eec.lib)(options "")(descr ""))
+  (lib (name PMBT3904)(type Legacy)(uri ${KIPRJMOD}/Libraries/IC_NXP_PMBT3904,215/eec.lib)(options "")(descr ""))
+  (lib (name 0603ESDA2)(type Legacy)(uri ${KIPRJMOD}/Libraries/Diode_Eaton_0603ESDA2-TR2/eec.lib)(options "")(descr ""))
 )

@@ -16,182 +16,182 @@ $EndDescr
 $Comp
 L Device:C C3
 U 1 1 603CF196
-P 2300 7000
-F 0 "C3" V 2350 6900 50  0000 C CNN
-F 1 "100nF" V 2350 7150 50  0000 C CNN
-F 2 "Capacitor_SMD:C_0805_2012Metric" H 2338 6850 50  0001 C CNN
-F 3 "~" H 2300 7000 50  0001 C CNN
-	1    2300 7000
+P 2200 7000
+F 0 "C3" V 2250 6900 50  0000 C CNN
+F 1 "100nF" V 2250 7150 50  0000 C CNN
+F 2 "Capacitor_SMD:C_0805_2012Metric" H 2238 6850 50  0001 C CNN
+F 3 "~" H 2200 7000 50  0001 C CNN
+	1    2200 7000
 	0    1    1    0   
 $EndComp
 $Comp
 L Device:CP C4
 U 1 1 603CF86B
-P 2300 7300
-F 0 "C4" V 2350 7200 50  0000 C CNN
-F 1 "10uF" V 2350 7450 50  0000 C CNN
-F 2 "Capacitor_SMD:C_1206_3216Metric" H 2338 7150 50  0001 C CNN
-F 3 "~" H 2300 7300 50  0001 C CNN
-	1    2300 7300
+P 2200 7300
+F 0 "C4" V 2250 7200 50  0000 C CNN
+F 1 "10uF" V 2250 7450 50  0000 C CNN
+F 2 "Capacitor_SMD:C_1206_3216Metric" H 2238 7150 50  0001 C CNN
+F 3 "~" H 2200 7300 50  0001 C CNN
+	1    2200 7300
 	0    -1   -1   0   
 $EndComp
 $Comp
 L Connector_Generic:Conn_01x02 J2
 U 1 1 603D2E95
-P 3400 6500
-F 0 "J2" H 3480 6492 50  0000 L CNN
-F 1 "Battery" H 3480 6401 50  0000 L CNN
-F 2 "Connector_JST:JST_SH_SM02B-SRSS-TB_1x02-1MP_P1.00mm_Horizontal" H 3400 6500 50  0001 C CNN
-F 3 "~" H 3400 6500 50  0001 C CNN
-	1    3400 6500
+P 3300 6500
+F 0 "J2" H 3380 6492 50  0000 L CNN
+F 1 "Battery" H 3380 6401 50  0000 L CNN
+F 2 "Connector_JST:JST_SH_SM02B-SRSS-TB_1x02-1MP_P1.00mm_Horizontal" H 3300 6500 50  0001 C CNN
+F 3 "~" H 3300 6500 50  0001 C CNN
+	1    3300 6500
 	1    0    0    -1  
 $EndComp
 $Comp
 L power:GND #PWR09
 U 1 1 603D8220
-P 2950 7400
-F 0 "#PWR09" H 2950 7150 50  0001 C CNN
-F 1 "GND" H 2955 7227 50  0000 C CNN
-F 2 "" H 2950 7400 50  0001 C CNN
-F 3 "" H 2950 7400 50  0001 C CNN
-	1    2950 7400
+P 2850 7400
+F 0 "#PWR09" H 2850 7150 50  0001 C CNN
+F 1 "GND" H 2855 7227 50  0000 C CNN
+F 2 "" H 2850 7400 50  0001 C CNN
+F 3 "" H 2850 7400 50  0001 C CNN
+	1    2850 7400
 	1    0    0    -1  
 $EndComp
 $Comp
 L power:+BATT #PWR06
 U 1 1 603D845E
-P 1900 6350
-F 0 "#PWR06" H 1900 6200 50  0001 C CNN
-F 1 "+BATT" H 1915 6477 50  0000 L CNN
-F 2 "" H 1900 6350 50  0001 C CNN
-F 3 "" H 1900 6350 50  0001 C CNN
-	1    1900 6350
+P 1800 6350
+F 0 "#PWR06" H 1800 6200 50  0001 C CNN
+F 1 "+BATT" H 1815 6477 50  0000 L CNN
+F 2 "" H 1800 6350 50  0001 C CNN
+F 3 "" H 1800 6350 50  0001 C CNN
+	1    1800 6350
 	1    0    0    -1  
 $EndComp
 $Comp
 L Device:R R7
 U 1 1 603DA865
-P 2550 6500
-F 0 "R7" V 2450 6500 50  0000 C CNN
-F 1 "0R" V 2500 6700 50  0000 C CNN
-F 2 "Resistor_SMD:R_0805_2012Metric" V 2480 6500 50  0001 C CNN
-F 3 "~" H 2550 6500 50  0001 C CNN
-	1    2550 6500
+P 2450 6500
+F 0 "R7" V 2350 6500 50  0000 C CNN
+F 1 "0R" V 2400 6700 50  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 2380 6500 50  0001 C CNN
+F 3 "~" H 2450 6500 50  0001 C CNN
+	1    2450 6500
 	0    1    1    0   
 $EndComp
 Wire Wire Line
-	3200 6500 2950 6500
+	3100 6500 2850 6500
 Wire Wire Line
-	2950 6650 2950 6500
-Connection ~ 2950 6500
+	2850 6650 2850 6500
+Connection ~ 2850 6500
 Wire Wire Line
-	2950 6500 2700 6500
+	2850 6500 2600 6500
 Wire Wire Line
-	2950 7250 2950 7300
+	2850 7250 2850 7300
 Wire Wire Line
-	3200 6600 3200 7300
+	3100 6600 3100 7300
 Wire Wire Line
-	3200 7300 2950 7300
-Connection ~ 2950 7300
+	3100 7300 2850 7300
+Connection ~ 2850 7300
 Wire Wire Line
-	2950 7300 2950 7400
+	2850 7300 2850 7400
 Wire Wire Line
-	2650 7000 2450 7000
+	2550 7000 2350 7000
 Wire Wire Line
-	2450 7300 2650 7300
-Connection ~ 2650 7300
+	2350 7300 2550 7300
+Connection ~ 2550 7300
 Wire Wire Line
-	2650 7300 2650 7000
+	2550 7300 2550 7000
 Wire Wire Line
-	2150 7000 1900 7000
+	2050 7000 1800 7000
 Wire Wire Line
-	1900 7000 1900 6500
+	1800 7000 1800 6500
 Wire Wire Line
-	1900 6500 2400 6500
-Connection ~ 1900 6500
+	1800 6500 2300 6500
+Connection ~ 1800 6500
 Wire Wire Line
-	1900 6500 1900 6350
+	1800 6500 1800 6350
 Wire Wire Line
-	1900 7000 1900 7300
+	1800 7000 1800 7300
 Wire Wire Line
-	1900 7300 2150 7300
-Connection ~ 1900 7000
+	1800 7300 2050 7300
+Connection ~ 1800 7000
 Wire Wire Line
-	2650 7300 2950 7300
+	2550 7300 2850 7300
 $Comp
 L Device:R R4
 U 1 1 603E242B
-P 1700 6800
-F 0 "R4" H 1700 6950 50  0000 R CNN
-F 1 "100K" V 1600 6900 50  0000 R CNN
-F 2 "Resistor_SMD:R_0805_2012Metric" V 1630 6800 50  0001 C CNN
-F 3 "~" H 1700 6800 50  0001 C CNN
-	1    1700 6800
+P 1600 6800
+F 0 "R4" H 1600 6950 50  0000 R CNN
+F 1 "100K" V 1500 6900 50  0000 R CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 1530 6800 50  0001 C CNN
+F 3 "~" H 1600 6800 50  0001 C CNN
+	1    1600 6800
 	-1   0    0    1   
 $EndComp
 $Comp
 L Device:R R2
 U 1 1 603E2B6B
-P 1400 6800
-F 0 "R2" H 1400 6950 50  0000 R CNN
-F 1 "100K" V 1300 6900 50  0000 R CNN
-F 2 "Resistor_SMD:R_0805_2012Metric" V 1330 6800 50  0001 C CNN
-F 3 "~" H 1400 6800 50  0001 C CNN
-	1    1400 6800
+P 1300 6800
+F 0 "R2" H 1300 6950 50  0000 R CNN
+F 1 "100K" V 1200 6900 50  0000 R CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 1230 6800 50  0001 C CNN
+F 3 "~" H 1300 6800 50  0001 C CNN
+	1    1300 6800
 	-1   0    0    1   
 $EndComp
 $Comp
 L Device:C C1
 U 1 1 603E2EDD
-P 1200 6800
-F 0 "C1" V 1250 6700 50  0000 C CNN
-F 1 "10pF" V 1250 6950 50  0000 C CNN
-F 2 "Capacitor_SMD:C_0805_2012Metric" H 1238 6650 50  0001 C CNN
-F 3 "~" H 1200 6800 50  0001 C CNN
-	1    1200 6800
+P 1100 6800
+F 0 "C1" V 1150 6700 50  0000 C CNN
+F 1 "10pF" V 1150 6950 50  0000 C CNN
+F 2 "Capacitor_SMD:C_0805_2012Metric" H 1138 6650 50  0001 C CNN
+F 3 "~" H 1100 6800 50  0001 C CNN
+	1    1100 6800
 	-1   0    0    1   
 $EndComp
 $Comp
 L power:GND #PWR05
 U 1 1 603E39C6
-P 1400 6350
-F 0 "#PWR05" H 1400 6100 50  0001 C CNN
-F 1 "GND" H 1405 6177 50  0000 C CNN
-F 2 "" H 1400 6350 50  0001 C CNN
-F 3 "" H 1400 6350 50  0001 C CNN
-	1    1400 6350
+P 1300 6350
+F 0 "#PWR05" H 1300 6100 50  0001 C CNN
+F 1 "GND" H 1305 6177 50  0000 C CNN
+F 2 "" H 1300 6350 50  0001 C CNN
+F 3 "" H 1300 6350 50  0001 C CNN
+	1    1300 6350
 	-1   0    0    1   
 $EndComp
 Wire Wire Line
-	1900 6500 1700 6500
+	1800 6500 1600 6500
 Wire Wire Line
-	1700 6500 1700 6650
+	1600 6500 1600 6650
 Wire Wire Line
-	1700 6950 1700 7250
+	1600 6950 1600 7250
 Wire Wire Line
-	1700 7250 1400 7250
+	1600 7250 1300 7250
 Wire Wire Line
-	1400 7250 1400 6950
+	1300 7250 1300 6950
 Wire Wire Line
-	1400 7250 1200 7250
+	1300 7250 1100 7250
 Wire Wire Line
-	1200 7250 1200 6950
-Connection ~ 1400 7250
+	1100 7250 1100 6950
+Connection ~ 1300 7250
 Wire Wire Line
-	1200 6650 1200 6500
+	1100 6650 1100 6500
 Wire Wire Line
-	1200 6500 1400 6500
+	1100 6500 1300 6500
 Wire Wire Line
-	1400 6500 1400 6350
+	1300 6500 1300 6350
 Wire Wire Line
-	1400 6650 1400 6500
-Connection ~ 1400 6500
-Text GLabel 1550 7500 2    50   BiDi Italic 0
+	1300 6650 1300 6500
+Connection ~ 1300 6500
+Text GLabel 1450 7500 2    50   BiDi Italic 0
 MCU_BAT_REF
 Wire Wire Line
-	1400 7250 1400 7500
+	1300 7250 1300 7500
 Wire Wire Line
-	1400 7500 1550 7500
+	1300 7500 1450 7500
 $Comp
 L Battery_Management:LTC4054ES5-4.2 U4
 U 1 1 603E7FE8
@@ -1809,137 +1809,6 @@ Wire Wire Line
 	9900 3450 9750 3450
 Wire Wire Line
 	9450 3450 9250 3450
-$Comp
-L 0603ESDA2-TR2:0603ESDA2-TR2 D3
-U 1 1 6040E4A8
-P 2950 6550
-F 0 "D3" V 3100 6600 50  0000 L CNN
-F 1 "0603ESDA2-TR2" H 3000 6350 50  0000 L CNN
-F 2 "0603ESDA2-TR2:Eaton-0603ESDA-0-0-0" H 2950 7050 50  0001 L CNN
-F 3 "http://www.cooperindustries.com/content/dam/public/bussmann/Electronics/Resources/product-datasheets/bus-elx-ds-4419-0603esda2-tr2.pdf" H 2950 7150 50  0001 L CNN
-F 4 "Diode" H 2950 7250 50  0001 L CNN "category"
-F 5 "35V" H 2950 7350 50  0001 L CNN "clamping voltage"
-F 6 "Circuit Protection" H 2950 7450 50  0001 L CNN "device class L1"
-F 7 "TVS Diodes" H 2950 7550 50  0001 L CNN "device class L2"
-F 8 "unset" H 2950 7650 50  0001 L CNN "device class L3"
-F 9 "SUPPRESSOR ESD 30VDC 0603 SMD" H 2950 7750 50  0001 L CNN "digikey description"
-F 10 "283-4156-1-ND" H 2950 7850 50  0001 L CNN "digikey part number"
-F 11 "Bidirectional" H 2950 7950 50  0001 L CNN "direction"
-F 12 "0.7mm" H 2950 8050 50  0001 L CNN "height"
-F 13 "yes" H 2950 8150 50  0001 L CNN "lead free"
-F 14 "b9b7301627e297c3" H 2950 8250 50  0001 L CNN "library id"
-F 15 "Eaton" H 2950 8350 50  0001 L CNN "manufacturer"
-F 16 "MLP Series 60 V 0.1 pF Bi-Directional 0603 Surface Mount ESD Suppressor" H 2950 8450 50  0001 L CNN "mouser description"
-F 17 "504-0603ESDA2-TR2" H 2950 8550 50  0001 L CNN "mouser part number"
-F 18 "0603 (1608 metric)" H 2950 8650 50  0001 L CNN "package"
-F 19 "30A" H 2950 8750 50  0001 L CNN "peak pulse current"
-F 20 "yes" H 2950 8850 50  0001 L CNN "rohs"
-F 21 "+105°C" H 2950 8950 50  0001 L CNN "temperature range high"
-F 22 "-55°C" H 2950 9050 50  0001 L CNN "temperature range low"
-	1    2950 6550
-	0    1    1    0   
-$EndComp
-$Comp
-L 0603ESDA2-TR2:0603ESDA2-TR2 D6
-U 1 1 60413229
-P 3350 5150
-F 0 "D6" V 3500 5200 50  0000 L CNN
-F 1 "0603ESDA2-TR2" H 3400 4950 50  0000 L CNN
-F 2 "0603ESDA2-TR2:Eaton-0603ESDA-0-0-0" H 3350 5650 50  0001 L CNN
-F 3 "http://www.cooperindustries.com/content/dam/public/bussmann/Electronics/Resources/product-datasheets/bus-elx-ds-4419-0603esda2-tr2.pdf" H 3350 5750 50  0001 L CNN
-F 4 "Diode" H 3350 5850 50  0001 L CNN "category"
-F 5 "35V" H 3350 5950 50  0001 L CNN "clamping voltage"
-F 6 "Circuit Protection" H 3350 6050 50  0001 L CNN "device class L1"
-F 7 "TVS Diodes" H 3350 6150 50  0001 L CNN "device class L2"
-F 8 "unset" H 3350 6250 50  0001 L CNN "device class L3"
-F 9 "SUPPRESSOR ESD 30VDC 0603 SMD" H 3350 6350 50  0001 L CNN "digikey description"
-F 10 "283-4156-1-ND" H 3350 6450 50  0001 L CNN "digikey part number"
-F 11 "Bidirectional" H 3350 6550 50  0001 L CNN "direction"
-F 12 "0.7mm" H 3350 6650 50  0001 L CNN "height"
-F 13 "yes" H 3350 6750 50  0001 L CNN "lead free"
-F 14 "b9b7301627e297c3" H 3350 6850 50  0001 L CNN "library id"
-F 15 "Eaton" H 3350 6950 50  0001 L CNN "manufacturer"
-F 16 "MLP Series 60 V 0.1 pF Bi-Directional 0603 Surface Mount ESD Suppressor" H 3350 7050 50  0001 L CNN "mouser description"
-F 17 "504-0603ESDA2-TR2" H 3350 7150 50  0001 L CNN "mouser part number"
-F 18 "0603 (1608 metric)" H 3350 7250 50  0001 L CNN "package"
-F 19 "30A" H 3350 7350 50  0001 L CNN "peak pulse current"
-F 20 "yes" H 3350 7450 50  0001 L CNN "rohs"
-F 21 "+105°C" H 3350 7550 50  0001 L CNN "temperature range high"
-F 22 "-55°C" H 3350 7650 50  0001 L CNN "temperature range low"
-	1    3350 5150
-	0    1    1    0   
-$EndComp
-$Comp
-L 0603ESDA2-TR2:0603ESDA2-TR2 D2
-U 1 1 60414222
-P 2700 5150
-F 0 "D2" V 2850 5200 50  0000 L CNN
-F 1 "0603ESDA2-TR2" H 2750 4950 50  0000 L CNN
-F 2 "0603ESDA2-TR2:Eaton-0603ESDA-0-0-0" H 2700 5650 50  0001 L CNN
-F 3 "http://www.cooperindustries.com/content/dam/public/bussmann/Electronics/Resources/product-datasheets/bus-elx-ds-4419-0603esda2-tr2.pdf" H 2700 5750 50  0001 L CNN
-F 4 "Diode" H 2700 5850 50  0001 L CNN "category"
-F 5 "35V" H 2700 5950 50  0001 L CNN "clamping voltage"
-F 6 "Circuit Protection" H 2700 6050 50  0001 L CNN "device class L1"
-F 7 "TVS Diodes" H 2700 6150 50  0001 L CNN "device class L2"
-F 8 "unset" H 2700 6250 50  0001 L CNN "device class L3"
-F 9 "SUPPRESSOR ESD 30VDC 0603 SMD" H 2700 6350 50  0001 L CNN "digikey description"
-F 10 "283-4156-1-ND" H 2700 6450 50  0001 L CNN "digikey part number"
-F 11 "Bidirectional" H 2700 6550 50  0001 L CNN "direction"
-F 12 "0.7mm" H 2700 6650 50  0001 L CNN "height"
-F 13 "yes" H 2700 6750 50  0001 L CNN "lead free"
-F 14 "b9b7301627e297c3" H 2700 6850 50  0001 L CNN "library id"
-F 15 "Eaton" H 2700 6950 50  0001 L CNN "manufacturer"
-F 16 "MLP Series 60 V 0.1 pF Bi-Directional 0603 Surface Mount ESD Suppressor" H 2700 7050 50  0001 L CNN "mouser description"
-F 17 "504-0603ESDA2-TR2" H 2700 7150 50  0001 L CNN "mouser part number"
-F 18 "0603 (1608 metric)" H 2700 7250 50  0001 L CNN "package"
-F 19 "30A" H 2700 7350 50  0001 L CNN "peak pulse current"
-F 20 "yes" H 2700 7450 50  0001 L CNN "rohs"
-F 21 "+105°C" H 2700 7550 50  0001 L CNN "temperature range high"
-F 22 "-55°C" H 2700 7650 50  0001 L CNN "temperature range low"
-	1    2700 5150
-	0    1    1    0   
-$EndComp
-$Comp
-L 0603ESDA2-TR2:0603ESDA2-TR2 D1
-U 1 1 60415093
-P 2000 5150
-F 0 "D1" V 2150 5200 50  0000 L CNN
-F 1 "0603ESDA2-TR2" H 2050 4950 50  0000 L CNN
-F 2 "0603ESDA2-TR2:Eaton-0603ESDA-0-0-0" H 2000 5650 50  0001 L CNN
-F 3 "http://www.cooperindustries.com/content/dam/public/bussmann/Electronics/Resources/product-datasheets/bus-elx-ds-4419-0603esda2-tr2.pdf" H 2000 5750 50  0001 L CNN
-F 4 "Diode" H 2000 5850 50  0001 L CNN "category"
-F 5 "35V" H 2000 5950 50  0001 L CNN "clamping voltage"
-F 6 "Circuit Protection" H 2000 6050 50  0001 L CNN "device class L1"
-F 7 "TVS Diodes" H 2000 6150 50  0001 L CNN "device class L2"
-F 8 "unset" H 2000 6250 50  0001 L CNN "device class L3"
-F 9 "SUPPRESSOR ESD 30VDC 0603 SMD" H 2000 6350 50  0001 L CNN "digikey description"
-F 10 "283-4156-1-ND" H 2000 6450 50  0001 L CNN "digikey part number"
-F 11 "Bidirectional" H 2000 6550 50  0001 L CNN "direction"
-F 12 "0.7mm" H 2000 6650 50  0001 L CNN "height"
-F 13 "yes" H 2000 6750 50  0001 L CNN "lead free"
-F 14 "b9b7301627e297c3" H 2000 6850 50  0001 L CNN "library id"
-F 15 "Eaton" H 2000 6950 50  0001 L CNN "manufacturer"
-F 16 "MLP Series 60 V 0.1 pF Bi-Directional 0603 Surface Mount ESD Suppressor" H 2000 7050 50  0001 L CNN "mouser description"
-F 17 "504-0603ESDA2-TR2" H 2000 7150 50  0001 L CNN "mouser part number"
-F 18 "0603 (1608 metric)" H 2000 7250 50  0001 L CNN "package"
-F 19 "30A" H 2000 7350 50  0001 L CNN "peak pulse current"
-F 20 "yes" H 2000 7450 50  0001 L CNN "rohs"
-F 21 "+105°C" H 2000 7550 50  0001 L CNN "temperature range high"
-F 22 "-55°C" H 2000 7650 50  0001 L CNN "temperature range low"
-	1    2000 5150
-	0    1    1    0   
-$EndComp
-$Comp
-L TTGO-32-MICRO:ttgo-32-micro-symbols U8
-U 1 1 60419F8F
-P 9850 1600
-F 0 "U8" H 9850 2565 50  0000 C CNN
-F 1 "ttgo-32-micro-symbols" H 9850 2474 50  0000 C CNN
-F 2 "ttgo-32-micro:TTGO-32-MICRO" H 9450 2200 50  0001 C CNN
-F 3 "" H 9450 2200 50  0001 C CNN
-	1    9850 1600
-	1    0    0    -1  
-$EndComp
 NoConn ~ 10500 1000
 NoConn ~ 10500 1100
 $Comp
@@ -2292,4 +2161,135 @@ Wire Wire Line
 	4500 3150 4700 3150
 Wire Wire Line
 	5050 650  5050 900 
+$Comp
+L 0603ESDA2:0603ESDA2-TR2 D?
+U 1 1 6069A429
+P 3350 5150
+F 0 "D?" V 3500 5200 50  0000 L CNN
+F 1 "0603ESDA2-TR2" H 3400 5000 50  0000 L CNN
+F 2 "0603ESDA2-TR2:Eaton-0603ESDA-0-0-0" H 3350 5650 50  0001 L CNN
+F 3 "http://www.cooperindustries.com/content/dam/public/bussmann/Electronics/Resources/product-datasheets/bus-elx-ds-4419-0603esda2-tr2.pdf" H 3350 5750 50  0001 L CNN
+F 4 "Diode" H 3350 5850 50  0001 L CNN "category"
+F 5 "35V" H 3350 5950 50  0001 L CNN "clamping voltage"
+F 6 "Circuit Protection" H 3350 6050 50  0001 L CNN "device class L1"
+F 7 "TVS Diodes" H 3350 6150 50  0001 L CNN "device class L2"
+F 8 "unset" H 3350 6250 50  0001 L CNN "device class L3"
+F 9 "SUPPRESSOR ESD 30VDC 0603 SMD" H 3350 6350 50  0001 L CNN "digikey description"
+F 10 "283-4156-1-ND" H 3350 6450 50  0001 L CNN "digikey part number"
+F 11 "Bidirectional" H 3350 6550 50  0001 L CNN "direction"
+F 12 "0.7mm" H 3350 6650 50  0001 L CNN "height"
+F 13 "yes" H 3350 6750 50  0001 L CNN "lead free"
+F 14 "b9b7301627e297c3" H 3350 6850 50  0001 L CNN "library id"
+F 15 "Eaton" H 3350 6950 50  0001 L CNN "manufacturer"
+F 16 "MLP Series 60 V 0.1 pF Bi-Directional 0603 Surface Mount ESD Suppressor" H 3350 7050 50  0001 L CNN "mouser description"
+F 17 "504-0603ESDA2-TR2" H 3350 7150 50  0001 L CNN "mouser part number"
+F 18 "0603 (1608 metric)" H 3350 7250 50  0001 L CNN "package"
+F 19 "30A" H 3350 7350 50  0001 L CNN "peak pulse current"
+F 20 "yes" H 3350 7450 50  0001 L CNN "rohs"
+F 21 "+105°C" H 3350 7550 50  0001 L CNN "temperature range high"
+F 22 "-55°C" H 3350 7650 50  0001 L CNN "temperature range low"
+	1    3350 5150
+	0    1    1    0   
+$EndComp
+$Comp
+L 0603ESDA2:0603ESDA2-TR2 D?
+U 1 1 6069F24E
+P 2700 5150
+F 0 "D?" V 2850 5150 50  0000 L CNN
+F 1 "0603ESDA2-TR2" H 2750 5000 50  0000 L CNN
+F 2 "0603ESDA2-TR2:Eaton-0603ESDA-0-0-0" H 2700 5650 50  0001 L CNN
+F 3 "http://www.cooperindustries.com/content/dam/public/bussmann/Electronics/Resources/product-datasheets/bus-elx-ds-4419-0603esda2-tr2.pdf" H 2700 5750 50  0001 L CNN
+F 4 "Diode" H 2700 5850 50  0001 L CNN "category"
+F 5 "35V" H 2700 5950 50  0001 L CNN "clamping voltage"
+F 6 "Circuit Protection" H 2700 6050 50  0001 L CNN "device class L1"
+F 7 "TVS Diodes" H 2700 6150 50  0001 L CNN "device class L2"
+F 8 "unset" H 2700 6250 50  0001 L CNN "device class L3"
+F 9 "SUPPRESSOR ESD 30VDC 0603 SMD" H 2700 6350 50  0001 L CNN "digikey description"
+F 10 "283-4156-1-ND" H 2700 6450 50  0001 L CNN "digikey part number"
+F 11 "Bidirectional" H 2700 6550 50  0001 L CNN "direction"
+F 12 "0.7mm" H 2700 6650 50  0001 L CNN "height"
+F 13 "yes" H 2700 6750 50  0001 L CNN "lead free"
+F 14 "b9b7301627e297c3" H 2700 6850 50  0001 L CNN "library id"
+F 15 "Eaton" H 2700 6950 50  0001 L CNN "manufacturer"
+F 16 "MLP Series 60 V 0.1 pF Bi-Directional 0603 Surface Mount ESD Suppressor" H 2700 7050 50  0001 L CNN "mouser description"
+F 17 "504-0603ESDA2-TR2" H 2700 7150 50  0001 L CNN "mouser part number"
+F 18 "0603 (1608 metric)" H 2700 7250 50  0001 L CNN "package"
+F 19 "30A" H 2700 7350 50  0001 L CNN "peak pulse current"
+F 20 "yes" H 2700 7450 50  0001 L CNN "rohs"
+F 21 "+105°C" H 2700 7550 50  0001 L CNN "temperature range high"
+F 22 "-55°C" H 2700 7650 50  0001 L CNN "temperature range low"
+	1    2700 5150
+	0    1    1    0   
+$EndComp
+$Comp
+L 0603ESDA2:0603ESDA2-TR2 D?
+U 1 1 606A12D2
+P 2000 5150
+F 0 "D?" V 2150 5200 50  0000 L CNN
+F 1 "0603ESDA2-TR2" H 2050 5000 50  0000 L CNN
+F 2 "0603ESDA2-TR2:Eaton-0603ESDA-0-0-0" H 2000 5650 50  0001 L CNN
+F 3 "http://www.cooperindustries.com/content/dam/public/bussmann/Electronics/Resources/product-datasheets/bus-elx-ds-4419-0603esda2-tr2.pdf" H 2000 5750 50  0001 L CNN
+F 4 "Diode" H 2000 5850 50  0001 L CNN "category"
+F 5 "35V" H 2000 5950 50  0001 L CNN "clamping voltage"
+F 6 "Circuit Protection" H 2000 6050 50  0001 L CNN "device class L1"
+F 7 "TVS Diodes" H 2000 6150 50  0001 L CNN "device class L2"
+F 8 "unset" H 2000 6250 50  0001 L CNN "device class L3"
+F 9 "SUPPRESSOR ESD 30VDC 0603 SMD" H 2000 6350 50  0001 L CNN "digikey description"
+F 10 "283-4156-1-ND" H 2000 6450 50  0001 L CNN "digikey part number"
+F 11 "Bidirectional" H 2000 6550 50  0001 L CNN "direction"
+F 12 "0.7mm" H 2000 6650 50  0001 L CNN "height"
+F 13 "yes" H 2000 6750 50  0001 L CNN "lead free"
+F 14 "b9b7301627e297c3" H 2000 6850 50  0001 L CNN "library id"
+F 15 "Eaton" H 2000 6950 50  0001 L CNN "manufacturer"
+F 16 "MLP Series 60 V 0.1 pF Bi-Directional 0603 Surface Mount ESD Suppressor" H 2000 7050 50  0001 L CNN "mouser description"
+F 17 "504-0603ESDA2-TR2" H 2000 7150 50  0001 L CNN "mouser part number"
+F 18 "0603 (1608 metric)" H 2000 7250 50  0001 L CNN "package"
+F 19 "30A" H 2000 7350 50  0001 L CNN "peak pulse current"
+F 20 "yes" H 2000 7450 50  0001 L CNN "rohs"
+F 21 "+105°C" H 2000 7550 50  0001 L CNN "temperature range high"
+F 22 "-55°C" H 2000 7650 50  0001 L CNN "temperature range low"
+	1    2000 5150
+	0    1    1    0   
+$EndComp
+$Comp
+L 0603ESDA2:0603ESDA2-TR2 D?
+U 1 1 606A2A83
+P 2850 6550
+F 0 "D?" V 3000 6600 50  0000 L CNN
+F 1 "0603ESDA2-TR2" H 2900 6400 50  0000 L CNN
+F 2 "0603ESDA2-TR2:Eaton-0603ESDA-0-0-0" H 2850 7050 50  0001 L CNN
+F 3 "http://www.cooperindustries.com/content/dam/public/bussmann/Electronics/Resources/product-datasheets/bus-elx-ds-4419-0603esda2-tr2.pdf" H 2850 7150 50  0001 L CNN
+F 4 "Diode" H 2850 7250 50  0001 L CNN "category"
+F 5 "35V" H 2850 7350 50  0001 L CNN "clamping voltage"
+F 6 "Circuit Protection" H 2850 7450 50  0001 L CNN "device class L1"
+F 7 "TVS Diodes" H 2850 7550 50  0001 L CNN "device class L2"
+F 8 "unset" H 2850 7650 50  0001 L CNN "device class L3"
+F 9 "SUPPRESSOR ESD 30VDC 0603 SMD" H 2850 7750 50  0001 L CNN "digikey description"
+F 10 "283-4156-1-ND" H 2850 7850 50  0001 L CNN "digikey part number"
+F 11 "Bidirectional" H 2850 7950 50  0001 L CNN "direction"
+F 12 "0.7mm" H 2850 8050 50  0001 L CNN "height"
+F 13 "yes" H 2850 8150 50  0001 L CNN "lead free"
+F 14 "b9b7301627e297c3" H 2850 8250 50  0001 L CNN "library id"
+F 15 "Eaton" H 2850 8350 50  0001 L CNN "manufacturer"
+F 16 "MLP Series 60 V 0.1 pF Bi-Directional 0603 Surface Mount ESD Suppressor" H 2850 8450 50  0001 L CNN "mouser description"
+F 17 "504-0603ESDA2-TR2" H 2850 8550 50  0001 L CNN "mouser part number"
+F 18 "0603 (1608 metric)" H 2850 8650 50  0001 L CNN "package"
+F 19 "30A" H 2850 8750 50  0001 L CNN "peak pulse current"
+F 20 "yes" H 2850 8850 50  0001 L CNN "rohs"
+F 21 "+105°C" H 2850 8950 50  0001 L CNN "temperature range high"
+F 22 "-55°C" H 2850 9050 50  0001 L CNN "temperature range low"
+	1    2850 6550
+	0    1    1    0   
+$EndComp
+$Comp
+L ttgo-32-micro:ttgo-32-micro-symbols U?
+U 1 1 606A549E
+P 9850 1600
+F 0 "U?" H 9850 2565 50  0000 C CNN
+F 1 "ttgo-32-micro-symbols" H 9850 2474 50  0000 C CNN
+F 2 "" H 9450 2200 50  0001 C CNN
+F 3 "" H 9450 2200 50  0001 C CNN
+	1    9850 1600
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC
