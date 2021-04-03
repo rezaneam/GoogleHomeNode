@@ -133,6 +133,7 @@ float EnvironmentSensor::readAirQuality(SensorCalibrationStatus *status)
     {
         Measurments.gas_resistance = bme680.gasResistance;
         Measurments.VOC = bme680.breathVocEquivalent;
+        Measurments.CO2 = bme680.co2Equivalent;
         *status = (SensorCalibrationStatus)bme680.iaqAccuracy;
         return bme680.iaq;
     }

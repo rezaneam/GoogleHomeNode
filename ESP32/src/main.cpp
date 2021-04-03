@@ -263,11 +263,13 @@ void loop()
             printf(" Humidity: %2.1f%%(%2.1f-%2.1f)[%2.1f] ",
                    humidity, Sensor.Measurments.min_humidity, Sensor.Measurments.max_humidity, Sensor.Measurments.ave_humidity);
           if (airQuality >= 0)
+          {
             printf("AirQuality: %2.1f(%2.1f-%2.1f)[%2.1f]",
                    airQuality, Sensor.Measurments.min_air_quality, Sensor.Measurments.max_air_quality, Sensor.Measurments.ave_airQuality);
+            printf(" VOC: %2.1f%% CO2: %2.1f",
+                   Sensor.Measurments.VOC, Sensor.Measurments.CO2);
+          }
           printf("\r\n");
-
-          ;
         }
         BluetoothLE.UpdateSensorValues(temperature, humidity, pressure, airQuality);
       }

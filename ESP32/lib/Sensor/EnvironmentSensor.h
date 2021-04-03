@@ -29,6 +29,7 @@ typedef struct
     SensorCalibrationStatus calibrationStatus;
     float gas_resistance;
     float VOC;
+    float CO2;
     uint16_t total_readgings;
     uint16_t total_airQuality_readings;
 } EnvironmentMeasurement;
