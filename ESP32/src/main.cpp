@@ -1,5 +1,9 @@
 #include <main.h>
 
+// TODO: Showing the last status save
+// TODO: Take actions when WiFi connection is lost => Disconnect
+// TODO: Reconnect attempts after disconnect 1, 2, 4, 8, 16, 32, 64 mins
+// TODO: Auto Detect different sensor address
 // TODO: Adding Support for handling wider Azure commands
 // TODO: Improving the memory consumption & remove memory leaks
 // TODO: Support for internet conenction
@@ -78,7 +82,7 @@ void loop()
   if (tryStartBLE)
   {
     tryStartBLE = false;
-    if (!isBLEadvertising)
+    if (!connectionStatus.isBLEAdvertising)
       EnqueueEvent(CustomEvents::EVENT_BLE_TRY_START_ADV);
   }
 
@@ -88,24 +92,24 @@ void loop()
   switch (DequeueEvent())
   {
   case CustomEvents::EVENT_BLE_CONNECTED:
-    isBLEconnected = true;
+    connectionStatus.isBLEConnected = true;
     UpdateStatus(false, true);
     break;
   case CustomEvents::EVENT_BLE_DISCONNECT:
-    isBLEconnected = false;
+    connectionStatus.isBLEConnected = false;
     ble_advertize_timeOut = BLE_ADVERTISE_TIMEOUT_MS;
     UpdateStatus(false, true);
     break;
   case CustomEvents::EVENT_BLE_TRY_STOP_ADV:
     BluetoothLE.StopAdvertise();
     digitalWrite(BLE_ADVERTISE_LED_PIN, LOW);
-    isBLEadvertising = false;
+    connectionStatus.isBLEAdvertising = false;
     ble_advertize_timeOut = BLE_ADVERTISE_TIMEOUT_MS;
     UpdateStatus(false, true);
     break;
   case CustomEvents::EVENT_BLE_TRY_START_ADV:
     BluetoothLE.StartAdvertise();
-    isBLEadvertising = true;
+    connectionStatus.isBLEAdvertising = true;
     ble_advertize_timeOut = BLE_ADVERTISE_TIMEOUT_MS;
     UpdateStatus(false, true);
     break;
@@ -119,7 +123,7 @@ void loop()
     wireless.TryConnect(GetFlashValue(EEPROM_VALUE::WiFi_SSID), GetFlashValue(EEPROM_VALUE::WiFi_Password));
     break;
   case CustomEvents::EVENT_WIFI_CONNECTED:
-    isWiFiconnected = true;
+    connectionStatus.isWiFiConnected = true;
     BluetoothLE.SetSSID(GetFlashValue(EEPROM_VALUE::WiFi_SSID));
     ssid = GetFlashValue(EEPROM_VALUE::WiFi_SSID);
     UpdateStatus(true, true);
@@ -128,7 +132,7 @@ void loop()
     EnqueueEvent(CustomEvents::EVENT_GOOGLE_HOME_TRY_CONNECT);
     break;
   case CustomEvents::EVENT_WIFI_DISCONNECTED:
-    isWiFiconnected = false;
+    connectionStatus.isWiFiConnected = false;
     ssid = "";
     UpdateStatus(true, true);
     break;
@@ -140,23 +144,23 @@ void loop()
     EnqueueEvent(CustomEvents::EVENT_AZURE_IOT_HUB_TRY_CONNECT);
     break;
   case CustomEvents::EVENT_GOOGLE_HOME_TRY_CONNECT:
-    if (isWiFiconnected && HasValidHome())
+    if (connectionStatus.isWiFiConnected && HasValidHome())
       googleHome.TryConnect(GetFlashValue(EEPROM_VALUE::Google_Home_Name));
     break;
   case CustomEvents::EVENT_GOOGLE_HOME_CONNECTED:
-    isHomeConnected = true;
+    connectionStatus.isHomeConnected = true;
     BluetoothLE.SetGoogleHomeName(GetFlashValue(EEPROM_VALUE::Google_Home_Name));
     UpdateStatus(true, true);
     break;
   case CustomEvents::EVENT_GOOGLE_REPORT_TEMPERATURE:
     UpdateStatus(false, true, true);
-    if (isHomeConnected)
+    if (connectionStatus.isHomeConnected)
       googleHome.NotifyTemperature((int)Sensor.Measurments.cur_temperature, azureIoT.GetLanguage());
     UpdateStatus(false, true);
     break;
   case CustomEvents::EVENT_GOOGLE_REPORT_TEMPERATURE_SUMMARY:
     UpdateStatus(false, true, true);
-    if (isHomeConnected)
+    if (connectionStatus.isHomeConnected)
       googleHome.NotifyTemperatureSummary(
           (int)Sensor.Measurments.ave_temperature,
           (int)Sensor.Measurments.min_temperature,
@@ -166,13 +170,13 @@ void loop()
     break;
   case CustomEvents::EVENT_GOOGLE_REPORT_HUMIDITY:
     UpdateStatus(false, true, true);
-    if (isHomeConnected)
+    if (connectionStatus.isHomeConnected)
       googleHome.NotifyHumidity((int)Sensor.Measurments.cur_humidity, azureIoT.GetLanguage());
     UpdateStatus(false, true);
     break;
   case CustomEvents::EVENT_GOOGLE_REPORT_HUMIDITY_SUMMARY:
     UpdateStatus(false, true, true);
-    if (isHomeConnected)
+    if (connectionStatus.isHomeConnected)
       googleHome.NotifyHumiditySummary(
           (int)Sensor.Measurments.ave_humidity,
           (int)Sensor.Measurments.min_humidity,
@@ -182,7 +186,7 @@ void loop()
     break;
     break;
   case CustomEvents::EVENT_AZURE_IOT_HUB_TRY_CONNECT:
-    if (!HasValidAzure() | !isWiFiconnected)
+    if (!HasValidAzure() | !connectionStatus.isWiFiConnected)
       return;
     struct tm timeinfo;
     if (getLocalTime(&timeinfo))
@@ -194,11 +198,11 @@ void loop()
           VERBOSE);
     break;
   case CustomEvents::EVENT_AZURE_IOT_HUB_CONNECTED:
-    isCloudconnected = true;
+    connectionStatus.isCloudConnected = true;
     UpdateStatus(true, true);
     break;
   case CustomEvents::EVENT_AZURE_IOT_HUB_DISCONNECTED:
-    isCloudconnected = false;
+    connectionStatus.isCloudConnected = false;
     UpdateStatus(true, true);
     break;
   case CustomEvents::EVENT_FACTORY_RESET:
@@ -227,18 +231,18 @@ void loop()
     char buffer[100] = "";
     unsigned long t1, t2, t3, t4;
     t1 = millis();
-    isWiFiconnected = wireless.IsConnected();
-    if (isWiFiconnected)
+    connectionStatus.isWiFiConnected = wireless.IsConnected();
+    if (connectionStatus.isWiFiConnected)
     {
-      isInternetConnected = wireless.IsOnline();
-      if (isInternetConnected)
+      connectionStatus.isInternetConnected = wireless.IsOnline();
+      if (connectionStatus.isInternetConnected)
       {
         getTimeString(&buffer[0]);
       }
     }
     else
     {
-      isInternetConnected = false;
+      connectionStatus.isInternetConnected = false;
     }
 
     UpdateStatus(true, true);
@@ -350,9 +354,9 @@ void ConfigureTime()
 void UpdateStatus(bool BLE, bool OLED, bool isNotifying)
 {
   if (OLED)
-    Oled.ReferessStatusArea(isBLEadvertising, isBLEconnected, isHomeConnected, isWiFiconnected, ssid, isInternetConnected, isCloudconnected, isNotifying);
+    Oled.ReferessStatusArea(connectionStatus, ssid, isNotifying);
   if (BLE)
-    BluetoothLE.UpdateConnectionStatus(isWiFiconnected, isHomeConnected, isCloudconnected);
+    BluetoothLE.UpdateConnectionStatus(connectionStatus);
 }
 
 void RefreshOLED()
@@ -418,7 +422,7 @@ void RefreshOLED()
     break;
   }
 
-  if (Oled.CurrentShow != DisplayStatus::Time && isWiFiconnected)
+  if (Oled.CurrentShow != DisplayStatus::Time && connectionStatus.isWiFiConnected)
   {
     time_t now;
     time(&now);

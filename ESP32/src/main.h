@@ -11,6 +11,7 @@
 #include <BLElite.h>
 #include <config.h>
 #include <HTTPClient.h>
+#include <ConnectionStatus.h>
 
 #define BLE_ADVERTISE_TIMEOUT_MS 1000 * BLE_ADVERTISE_TIMEOUT_S                         // BLE advertising timeout
 #define MinimumAllowHeapSize 20                                                         // Mininum Allow Heap size that triggers MPU restart
@@ -25,12 +26,7 @@ bool readSenor = true;
 bool secondFlag = false;
 bool fireIoT = false;
 
-bool isHomeConnected = false;
-bool isBLEadvertising = false;
-bool isBLEconnected = false;
-bool isWiFiconnected = false;
-bool isInternetConnected = false;
-bool isCloudconnected = false;
+ConnectionStatus connectionStatus;
 
 std::vector<CustomEvents> eventQueue;
 
@@ -72,7 +68,7 @@ void IRAM_ATTR onReadSensor()
         fireIoT = true;
     if (timerCalls % 1000 == 0)
         secondFlag = true;
-    if (isBLEadvertising)
+    if (connectionStatus.isBLEAdvertising)
     {
         if (timerCalls % 1000 == 0)
             digitalWrite(BLE_ADVERTISE_LED_PIN, HIGH);
@@ -85,7 +81,7 @@ void IRAM_ATTR onReadSensor()
         timerCalls = 0;
     }
 
-    if (isBLEadvertising && !isBLEconnected)
+    if (connectionStatus.isBLEAdvertising && !connectionStatus.isBLEConnected)
         ble_advertize_timeOut--;
 
     portEXIT_CRITICAL_ISR(&sensorReadtimerMux);

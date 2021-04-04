@@ -302,29 +302,25 @@ void OLEDDisplayExtended::drawSensorIcon(bool isBME280, bool isBME680)
 }
 
 void OLEDDisplayExtended::ReferessStatusArea(
-    bool isBLEadvertising, bool isBLEconnected,
-    bool isHomeConencted,
-    bool isWiFiconnected,
+    ConnectionStatus status,
     std::string ssid,
-    bool isCloudConencted,
-    bool isInternetConnected,
     bool isNotifying)
 {
     this->clearArea(Status_Area[0], Status_Area[1], Status_Area[2], Status_Area[3]);
     offset = 0;
-    if (isBLEconnected)
+    if (status.isBLEConnected)
         this->drawIcon(OLEDDISPLAY_ICONS::BLE_CONNECTED_ICON);
-    else if (isBLEadvertising)
+    else if (status.isBLEAdvertising)
         this->drawIcon(OLEDDISPLAY_ICONS::BLE_ADVERTISING_ICON);
-    if (isHomeConencted)
+    if (status.isHomeConnected)
         this->drawIcon(OLEDDISPLAY_ICONS::GOOGLE_HOME);
-    if (isCloudConencted)
+    if (status.isCloudConnected)
         this->drawIcon(OLEDDISPLAY_ICONS::CLOUD);
     if (isNotifying)
         this->drawIcon(OLEDDISPLAY_ICONS::NOTIFYING);
-    if (isInternetConnected)
+    if (status.isInternetConnected)
         this->drawIcon(OLEDDISPLAY_ICONS::INTERNET);
-    if (isWiFiconnected)
+    if (status.isWiFiConnected)
     {
         this->drawIcon(OLEDDISPLAY_ICONS::WIFI_ICON);
         setTextAlignment(TEXT_ALIGN_LEFT);

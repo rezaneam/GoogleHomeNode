@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <OLEDDisplay.h>
 #include <enums.h>
+#include <ConnectionStatus.h>
 
 const unsigned char Arrow_Down_icon_img[] PROGMEM = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF,
@@ -180,13 +181,8 @@ public:
     void ShowMSummary(float average, float min, float max, DisplayStatus status, SensorCalibrationStatus calib = SensorCalibrationStatus::UNRELIABLE);
     void ShowAirQualitySummary(float airQualityIndex, float voc);
     void ReferessStatusArea(
-        bool isBLEadvertising,
-        bool isBLEconnected,
-        bool isHomeConencted,
-        bool isWiFiconnected,
+        ConnectionStatus status,
         std::string ssid,
-        bool isInternetConnected,
-        bool isCloudConencted,
         bool isNotifying = false);
 
     void ShowMessage(String title, String subtitle, String detail = "Please wait.");

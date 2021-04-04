@@ -8,6 +8,7 @@
 #include <BLEuuids.h>
 #include <ServerCallbacks.h>
 #include <CharacteristicCallbacks.h>
+#include <ConnectionStatus.h>
 
 class BLElite
 {
@@ -17,7 +18,7 @@ public:
     void StartAdvertise();
     void StopAdvertise();
     void SetGoogleHomeName(std::string value);
-    void UpdateConnectionStatus(bool isWiFiConnected, bool isGoogleHomeConnected, bool isAzureConnected);
+    void UpdateConnectionStatus(ConnectionStatus status);
     void UpdateSensorValues(float temperature, float humidity, float pressure, float airQuality);
     void SetSSID(std::string value);
     void SetSSIDs(std::string SSIDs);

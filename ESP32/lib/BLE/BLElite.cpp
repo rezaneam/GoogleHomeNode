@@ -183,12 +183,12 @@ void BLElite::UpdateSensorValues(float temperature, float humidity, float pressu
     setCharacteristicValue(BLEUUID((uint16_t)SERVICE_UUID_ENVIROMENTAL_SENSING), BLEUUID((uint16_t)CHARACTERISTIC_UUID_AIR_QUALITY), airQuality >= 0 ? convertToString(airQuality) : "N.A.");
 }
 
-void BLElite::UpdateConnectionStatus(bool isWiFiConnected, bool isGoogleHomeConnected, bool isAzureConnected)
+void BLElite::UpdateConnectionStatus(ConnectionStatus connectionStatusstatus)
 {
     std::string status;
-    status.push_back(isWiFiConnected ? '2' : '0');
-    status.push_back(isGoogleHomeConnected ? '2' : '0');
-    status.push_back(isAzureConnected ? '2' : '0');
+    status.push_back(connectionStatusstatus.isWiFiConnected ? '2' : '0');
+    status.push_back(connectionStatusstatus.isHomeConnected ? '2' : '0');
+    status.push_back(connectionStatusstatus.isCloudConnected ? '2' : '0');
     setCharacteristicValue(BLEUUID((uint16_t)SERVICE_UUID_USER_DATA), BLEUUID((uint16_t)CHARACTERISTIC_UUID_CONNECTION_STAT), status);
 }
 
