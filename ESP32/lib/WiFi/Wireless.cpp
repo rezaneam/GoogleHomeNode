@@ -42,6 +42,13 @@ bool Wireless::ScanNodes()
         return true;
     }
 }
+
+void Wireless::Disconnect()
+{
+    WiFi.disconnect();
+    isConnected = false;
+}
+
 bool Wireless::TryConnect(std::string ssid, std::string password)
 {
     if (isVerbose)
@@ -75,14 +82,23 @@ bool Wireless::IsOnline(uint8_t iterations)
 {
     if (!isConnected)
         return false;
-    return Ping.ping("www.google.com", iterations);
+    if (Ping.ping("www.google.com", iterations))
+        return true;
+    if (Ping.ping("www.google.com"))
+        return true;
+    return false;
 }
 
 bool Wireless::IsConnected(uint8_t iterations)
 {
     if (!isConnected)
         return false;
-    return Ping.ping(gatewayIP, iterations);
+    if (Ping.ping(gatewayIP, iterations))
+        return true;
+    if (Ping.ping(gatewayIP))
+        return true;
+    queueEventWiFi(CustomEvents::EVENT_WIFI_TRY_DISCONNECT);
+    return false;
 }
 
 String Wireless::translateEncryptionType(wifi_auth_mode_t encryptionType)

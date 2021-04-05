@@ -12,6 +12,7 @@ public:
     void Initialize(void (*event_queue_method)(CustomEvents), char *hostname = "Google-Home-Node", bool verbose = false);
     bool ScanNodes();
     bool TryConnect(std::string SSID, std::string Password);
+    void Disconnect();
     bool IsOnline(uint8_t iterations = 1);
     bool IsConnected(uint8_t iterations = 1);
     std::string SSIDs;
