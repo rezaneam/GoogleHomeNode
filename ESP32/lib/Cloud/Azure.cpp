@@ -259,3 +259,8 @@ void AzureIoTHub::HeartBeat()
     if (device_ll_handle != NULL)
         IoTHubDeviceClient_LL_DoWork(device_ll_handle);
 }
+
+void AzureIoTHub::Distroy()
+{
+    IoTHub_Deinit();
+}

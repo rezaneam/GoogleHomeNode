@@ -19,6 +19,7 @@ public:
         bool verbose = false);
     void HeartBeat();
     Languages GetLanguage();
+    void Distroy();
 
 private:
     IOTHUB_DEVICE_CLIENT_LL_HANDLE device_ll_handle;
