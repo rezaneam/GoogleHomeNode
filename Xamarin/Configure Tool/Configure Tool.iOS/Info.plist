@@ -7,6 +7,22 @@
         <integer>1</integer>
         <integer>2</integer>
     </array>
+  <key>UIBackgroundModes</key>
+  <array>
+    <!--for connecting to devices (client)-->
+    <string>bluetooth-central</string>
+
+    <!--for server configurations if needed-->
+    <string>bluetooth-peripheral</string>
+  </array>
+
+  <!--Description of the Bluetooth request message (required on iOS 10, deprecated)-->
+  <key>NSBluetoothPeripheralUsageDescription</key>
+  <string>Please grant the permission to have accesss to Bluetooth</string>
+
+  <!--Description of the Bluetooth request message (required on iOS 13)-->
+  <key>NSBluetoothAlwaysUsageDescription</key>
+  <string>Please grant the permission to have accesss to Bluetooth</string>
     <key>UISupportedInterfaceOrientations</key>
     <array>
         <string>UIInterfaceOrientationPortrait</string>
