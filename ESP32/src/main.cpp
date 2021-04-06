@@ -1,5 +1,6 @@
 #include <main.h>
 
+// TODO: Converting the Bluetooth Stack value to digits
 // TODO: Showing the last status save
 // TODO: Take actions when WiFi connection is lost => Disconnect
 // TODO: Reconnect attempts after disconnect 1, 2, 4, 8, 16, 32, 64 mins
@@ -75,7 +76,8 @@ void loop()
 {
   if (fireIoT)
   {
-    azureIoT.HeartBeat();
+    if (connectionStatus.isInternetConnected)
+      azureIoT.HeartBeat();
     fireIoT = false;
   }
 
@@ -121,6 +123,11 @@ void loop()
     break;
   case CustomEvents::EVENT_WIFI_TRY_CONNECT:
     wireless.TryConnect(GetFlashValue(EEPROM_VALUE::WiFi_SSID), GetFlashValue(EEPROM_VALUE::WiFi_Password));
+    break;
+  case CustomEvents::EVENT_WIFI_TRY_DISCONNECT:
+    wireless.Disconnect();
+    EnqueueEvent(CustomEvents::EVENT_WIFI_DISCONNECTED);
+    EnqueueEvent(CustomEvents::EVENT_AZURE_IOT_HUB_TRY_DISCONNECT);
     break;
   case CustomEvents::EVENT_WIFI_CONNECTED:
     connectionStatus.isWiFiConnected = true;
@@ -201,6 +208,10 @@ void loop()
     connectionStatus.isCloudConnected = true;
     UpdateStatus(true, true);
     break;
+  case CustomEvents::EVENT_AZURE_IOT_HUB_TRY_DISCONNECT:
+    azureIoT.Distroy();
+    EnqueueEvent(CustomEvents::EVENT_AZURE_IOT_HUB_DISCONNECTED);
+    break;
   case CustomEvents::EVENT_AZURE_IOT_HUB_DISCONNECTED:
     connectionStatus.isCloudConnected = false;
     UpdateStatus(true, true);
@@ -229,12 +240,11 @@ void loop()
   {
     uint8_t freeHeap = 100 * ESP.getFreeHeap() / ESP.getHeapSize();
     char buffer[100] = "";
-    unsigned long t1, t2, t3, t4;
-    t1 = millis();
     connectionStatus.isWiFiConnected = wireless.IsConnected();
     if (connectionStatus.isWiFiConnected)
     {
       connectionStatus.isInternetConnected = wireless.IsOnline();
+      connectionStatus.isCloudConnected = connectionStatus.isInternetConnected;
       if (connectionStatus.isInternetConnected)
       {
         getTimeString(&buffer[0]);
@@ -243,6 +253,7 @@ void loop()
     else
     {
       connectionStatus.isInternetConnected = false;
+      connectionStatus.isHomeConnected = false;
     }
 
     UpdateStatus(true, true);
