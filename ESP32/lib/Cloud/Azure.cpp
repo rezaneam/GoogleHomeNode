@@ -263,4 +263,5 @@ void AzureIoTHub::HeartBeat()
 void AzureIoTHub::Distroy()
 {
     IoTHub_Deinit();
+    device_ll_handle = NULL;
 }
