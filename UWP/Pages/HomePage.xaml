@@ -40,7 +40,8 @@
             </Grid>
         </DataTemplate>
     </Page.Resources>
-    <Grid>
+    <StackPanel VerticalAlignment="Center">
+        <TextBlock x:Name="StatusMsgTextBox" HorizontalAlignment="Center" />
         <Button Click="OnSearchNodes" CornerRadius="16" x:Name="FindNodeButton"
                 HorizontalAlignment="Center"
                     Margin="8" BorderBrush="DarkBlue" BorderThickness="1" IsEnabled="True">
@@ -65,5 +66,5 @@
                 </StackPanel>
             </StackPanel>
         </ContentDialog>
-    </Grid>
+    </StackPanel>
 </Page>

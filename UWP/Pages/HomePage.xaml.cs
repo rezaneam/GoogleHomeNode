@@ -8,6 +8,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Devices.Enumeration;
+using Windows.Devices.Radios;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Core;
@@ -34,6 +35,36 @@ namespace Config_Tool___Google_Home_Node.Pages
         public HomePage()
         {
             this.InitializeComponent();
+            Loaded += HomePage_Loaded;
+        }
+
+        private async void HomePage_Loaded(object sender, RoutedEventArgs e)
+        {
+            IReadOnlyList<Radio> radios = await Radio.GetRadiosAsync();
+            Radio bluetoothRadio = radios.FirstOrDefault(radio => radio.Kind == RadioKind.Bluetooth);
+            if (bluetoothRadio == null)
+            {
+                StatusMsgTextBox.Text = "Your device doesn't equipped with Bluetooth";
+                return;
+            }
+            if (bluetoothRadio.State != RadioState.On)
+                StatusMsgTextBox.Text = "Please turn on your Bluetooth";
+
+            FindNodeButton.IsEnabled = bluetoothRadio.State == RadioState.On;
+            bluetoothRadio.StateChanged += BluetoothRadio_StateChanged;
+        }
+
+        private void BluetoothRadio_StateChanged(Radio sender, object args)
+        {
+            _ = Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+            {
+                FindNodeButton.IsEnabled = sender.State == RadioState.On;
+                if (sender.State == RadioState.On)
+                    StatusMsgTextBox.Text = "Ready to scan";
+                else
+                    StatusMsgTextBox.Text = "Please turn on your Bluetooth";
+            });
+            
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
