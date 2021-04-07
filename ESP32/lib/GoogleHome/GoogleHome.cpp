@@ -14,19 +14,22 @@ bool GoogleHome::TryConnect(std::string deviceName)
         return true;
 
     if (isVerbose)
-        printf("connecting to Google Home: %s \r\n", deviceName.c_str());
+        printf("Connecting to a Google Home Speaker: %s \r\n", deviceName.c_str());
     if (googleHomeNotifier.device(deviceName.c_str(), "en") != true)
     {
         if (isVerbose)
-            printf("Google Home connection error: %s\r\n", googleHomeNotifier.getLastError());
+            printf("Failed to connect to the Google Home Speaker. Error: %s\r\n", googleHomeNotifier.getLastError());
         return false;
     }
     else
     {
         Connected = true;
         if (isVerbose)
-            printf("Found Google Home(%s : %d).\r\n",
-                   googleHomeNotifier.getIPAddress().toString().c_str(),
+            printf("Found the Google Home Speaker. %s (%s:%d).\r\n",
+                   deviceName.c_str(),
+                   googleHomeNotifier.getIPAddress()
+                       .toString()
+                       .c_str(),
                    googleHomeNotifier.getPort());
 
         // char buffer[200];
