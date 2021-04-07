@@ -11,7 +11,8 @@ void Wireless::Initialize(void (*event_queue_method)(CustomEvents), char *hostna
 
 bool Wireless::ScanNodes()
 {
-
+    WiFi.mode(WIFI_STA);
+    delay(100);
     int n = WiFi.scanNetworks();
     SSIDs.clear();
     if (n == 0)
@@ -46,11 +47,23 @@ bool Wireless::ScanNodes()
 void Wireless::Disconnect()
 {
     WiFi.disconnect();
+    WiFi.mode(WIFI_MODE_NULL);
     isConnected = false;
 }
 
-bool Wireless::TryConnect(std::string ssid, std::string password)
+bool Wireless::TryConnect(std::string ssid, std::string password, bool isForced)
 {
+
+    if (isForced)
+    {
+        failedConnectionAttemptes = 0;
+        connectAttemptBypass = 0;
+    }
+    if (connectAttemptBypass-- > 0)
+        return false;
+
+    WiFi.mode(WIFI_STA);
+    delay(100);
     if (isVerbose)
         printf("Trying to connect to %s\r\n", ssid.c_str());
     WiFi.begin(ssid.c_str(), password.c_str());
@@ -59,21 +72,30 @@ bool Wireless::TryConnect(std::string ssid, std::string password)
     {
         queueEventWiFi(CustomEvents::EVENT_WIFI_CONNECTED);
         if (isVerbose)
-            printf("IP: %s   Hostname: %s   Gateway IP: %s\r\n", WiFi.localIP().toString().c_str(), WiFi.getHostname(), WiFi.gatewayIP().toString().c_str());
+            printf("Connected to %s IP: %s   Hostname: %s   Gateway IP: %s\r\n",
+                   ssid.c_str(),
+                   WiFi.localIP().toString().c_str(),
+                   WiFi.getHostname(), WiFi.gatewayIP().toString().c_str());
         gatewayIP = WiFi.gatewayIP();
         localIP = WiFi.localIP();
         isConnected = true;
+        failedConnectionAttemptes = 0;
+        connectAttemptBypass = 0;
         return true;
     }
     if (isVerbose)
     {
         if (connectionStatus == WL_NO_SSID_AVAIL)
-            printf("WiFi connection failed. SSID is not available.\r\n");
+            printf("WiFi connection failed. %s is not available.\r\n", ssid.c_str());
         else
             printf("WiFi Connection failed. Code %d\r\n", connectionStatus);
     }
+    if (failedConnectionAttemptes < MAXIMUM_CONNECTION_ATTEMPT_BYPASS)
+        failedConnectionAttemptes++;
+    connectAttemptBypass = (uint8_t)pow(2, failedConnectionAttemptes);
     queueEventWiFi(CustomEvents::EVENT_WIFI_DISCONNECTED);
     WiFi.disconnect();
+    WiFi.mode(WIFI_MODE_NULL);
     isConnected = false;
     return false;
 }
