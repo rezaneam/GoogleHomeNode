@@ -2,10 +2,9 @@
 
 // TODO: Converting the Bluetooth Stack value to digits
 // TODO: Showing the last status save
-// TODO: Take actions when WiFi connection is lost => Disconnect
-// TODO: Reconnect attempts after disconnect 1, 2, 4, 8, 16, 32, 64 mins
 // TODO: Auto Detect different sensor address
 // TODO: Adding Support for handling wider Azure commands
+// TODO: Azure IoT Memory leak issue after de_init
 // TODO: Improving the memory consumption & remove memory leaks
 // TODO: Support for internet conenction
 // TODO: Support for continues WiFi connectivity & pinging the gateway
@@ -124,6 +123,9 @@ void loop()
   case CustomEvents::EVENT_WIFI_TRY_CONNECT:
     wireless.TryConnect(GetFlashValue(EEPROM_VALUE::WiFi_SSID), GetFlashValue(EEPROM_VALUE::WiFi_Password));
     break;
+  case CustomEvents::EVENT_WIFI_FORCE_CONNECT:
+    wireless.TryConnect(GetFlashValue(EEPROM_VALUE::WiFi_SSID), GetFlashValue(EEPROM_VALUE::WiFi_Password), true);
+    break;
   case CustomEvents::EVENT_WIFI_TRY_DISCONNECT:
     wireless.Disconnect();
     EnqueueEvent(CustomEvents::EVENT_WIFI_DISCONNECTED);
@@ -194,15 +196,18 @@ void loop()
     break;
   case CustomEvents::EVENT_AZURE_IOT_HUB_TRY_CONNECT:
     if (!HasValidAzure() | !connectionStatus.isWiFiConnected)
-      return;
+      break;
     struct tm timeinfo;
     if (getLocalTime(&timeinfo))
-      azureIoT.Initialize(
+    {
+      bool result = azureIoT.Initialize(
           (GetFlashValue(EEPROM_VALUE::Azure_IoT_Hub)).c_str(),
           &EnqueueEvent,
           (GetFlashValue(EEPROM_VALUE::User_Name)).c_str(),
           (GetFlashValue(EEPROM_VALUE::Device_Location)).c_str(),
           VERBOSE);
+      EnqueueEvent(result ? CustomEvents::EVENT_AZURE_IOT_HUB_CONNECTED : CustomEvents::EVENT_AZURE_IOT_HUB_DISCONNECTED);
+    }
     break;
   case CustomEvents::EVENT_AZURE_IOT_HUB_CONNECTED:
     connectionStatus.isCloudConnected = true;
@@ -218,18 +223,31 @@ void loop()
     break;
   case CustomEvents::EVENT_FACTORY_RESET:
     Oled.ShowMessage("Factory Reset", "Ereasing...");
+    if (VERBOSE)
+      printf("Factory Reset triggered by user\r\n");
     EraseFlash();
     delay(5000);
     ESP.restart();
     break;
   case CustomEvents::EVENT_FACTORY_RESET_SAFE:
     Oled.ShowMessage("Factory Reset", "Safe earsing...");
+    if (VERBOSE)
+      printf("Factory Reset [Safe] triggered by user\r\n");
     EraseFlash(true);
     delay(5000);
     ESP.restart();
     break;
   case CustomEvents::EVENT_RESTART:
-    Oled.ShowMessage("Restarting...", "");
+    Oled.ShowMessage("Restarting...", "Please wait.");
+    if (VERBOSE)
+      printf("Rebooting triggered by user\r\n");
+    delay(5000);
+    ESP.restart();
+    break;
+  case CustomEvents::EVENT_LOW_RAM_RESTART:
+    Oled.ShowMessage("Restarting...", "Low Memory!");
+    if (VERBOSE)
+      printf("Rebooting due to low memeory\r\n");
     delay(5000);
     ESP.restart();
     break;
@@ -254,6 +272,8 @@ void loop()
     {
       connectionStatus.isInternetConnected = false;
       connectionStatus.isHomeConnected = false;
+      if (HasValidWiFi())
+        EnqueueEvent(CustomEvents::EVENT_WIFI_TRY_CONNECT);
     }
 
     UpdateStatus(true, true);
@@ -297,7 +317,7 @@ void loop()
     readSenor = false;
 
     if (freeHeap <= MinimumAllowHeapSize)
-      EnqueueEvent(CustomEvents::EVENT_RESTART);
+      EnqueueEvent(CustomEvents::EVENT_LOW_RAM_RESTART);
   }
   if (secondFlag)
   {
