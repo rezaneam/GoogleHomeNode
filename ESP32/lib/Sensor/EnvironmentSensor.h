@@ -2,6 +2,7 @@
 #include <BME280.h>
 #include <enums.h>
 #include <StoreHub.h>
+#include <HDC1080.h>
 
 #define SENSRO_MAX_AVERAGE_SAMPLES 60 * 24 // Maximum samples included in the calculating the average
 const uint8_t bsec_config[] = {
@@ -49,6 +50,8 @@ public:
 
 private:
     bool isVerbose;
+    bool isHDC1080Exist;
+    HDC1080 hdc1080;
     BME280 bmx280;
     Bsec bme680;
 
@@ -67,6 +70,7 @@ private:
 
     bool initializeBMx280();
     bool initializeBME680();
+    void initializeHDC1080();
     bool checkIaqSensorStatus(void);
     bool TakeSample();
     float readTemperature();

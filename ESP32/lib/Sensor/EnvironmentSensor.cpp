@@ -3,6 +3,14 @@
 bool EnvironmentSensor::Initialize(TwoWire &i2c, bool verboseMode)
 {
     isVerbose = verboseMode;
+    isHDC1080Exist = hdc1080.Initialize(&i2c);
+    if (isHDC1080Exist)
+    {
+        if (isVerbose)
+            printf(">> Sensor : HDC1080 sensor found.\r\n");
+        initializeHDC1080();
+    }
+
     bme680.begin(BME680_I2C_ADDR_SECONDARY, i2c);
     ;
     if (bme680.bme680Status == 0)
@@ -159,6 +167,12 @@ bool EnvironmentSensor::initializeBMx280()
     return true;
 }
 
+void EnvironmentSensor::initializeHDC1080()
+{
+    hdc1080.Setup(
+        HDC1080::HDC1080_MeasurementResolution::HDC1080_RESOLUTION_11BIT,
+        HDC1080::HDC1080_MeasurementResolution::HDC1080_RESOLUTION_11BIT);
+}
 // Helper function definitions
 bool EnvironmentSensor::checkIaqSensorStatus(void)
 {
@@ -205,7 +219,13 @@ bool EnvironmentSensor::UpdateMeasurments()
         return false;
 
     SensorCalibrationStatus status;
-    Measurments.cur_temperature = readTemperature();
+    if (isHDC1080Exist)
+    {
+        Measurments.cur_temperature = (float)hdc1080.ReadTemperature();
+        printf(">> Sensor. TI: HDC1080 %2.3f Bosch %2.3f\r\n", Measurments.cur_temperature, readTemperature());
+    }
+    else
+        Measurments.cur_temperature = readTemperature();
     Measurments.cur_humidity = readHumidity();
     Measurments.cur_pressure = readPressure();
     Measurments.cur_airQuality = readAirQuality(&status);
