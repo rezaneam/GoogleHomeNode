@@ -2282,14 +2282,14 @@ F 22 "-55°C" H 2850 9050 50  0001 L CNN "temperature range low"
 	0    1    1    0   
 $EndComp
 $Comp
-L ttgo-32-micro:ttgo-32-micro-symbols U?
-U 1 1 606A549E
-P 9850 1600
-F 0 "U?" H 9850 2565 50  0000 C CNN
-F 1 "ttgo-32-micro-symbols" H 9850 2474 50  0000 C CNN
-F 2 "" H 9450 2200 50  0001 C CNN
-F 3 "" H 9450 2200 50  0001 C CNN
-	1    9850 1600
+L ttgo-32-micro:ttgo-32-micro U?
+U 1 1 60725496
+P 10100 1800
+F 0 "U?" H 9850 2968 50  0000 C CNN
+F 1 "ttgo-32-micro" H 9850 2877 50  0000 C CNN
+F 2 "open-Smartwatch:ttgo-32-micro" H 9800 2950 50  0001 C CNN
+F 3 "" H 9450 2600 50  0001 C CNN
+	1    10100 1800
 	1    0    0    -1  
 $EndComp
 $EndSCHEMATC
