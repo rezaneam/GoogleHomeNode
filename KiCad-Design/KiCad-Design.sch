@@ -612,17 +612,6 @@ F 3 "" H 4900 3700 50  0001 C CNN
 	1    4900 3700
 	1    0    0    -1  
 $EndComp
-$Comp
-L power:+VSW #PWR013
-U 1 1 6042BF54
-P 4050 4250
-F 0 "#PWR013" H 4050 4100 50  0001 C CNN
-F 1 "+VSW" V 4065 4378 50  0000 L CNN
-F 2 "" H 4050 4250 50  0001 C CNN
-F 3 "" H 4050 4250 50  0001 C CNN
-	1    4050 4250
-	0    -1   -1   0   
-$EndComp
 Wire Wire Line
 	4900 3950 4900 3800
 Wire Wire Line
@@ -633,9 +622,7 @@ Connection ~ 4900 3800
 Wire Wire Line
 	4900 3800 4900 3700
 Wire Wire Line
-	4400 4250 4050 4250
-Wire Wire Line
-	4050 4450 4400 4450
+	4050 4450 4250 4450
 Wire Wire Line
 	4150 4750 4400 4750
 Wire Wire Line
@@ -905,377 +892,8 @@ F 3 "" H 9150 6100 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	9150 5850 9150 6100
-$Comp
-L Diode:1N5819 D7
-U 1 1 60527472
-P 9950 5750
-F 0 "D7" V 9996 5670 50  0000 R CNN
-F 1 "1N5819" H 10100 5850 50  0000 R CNN
-F 2 "Diode_SMD:D_SOD-123" H 9950 5575 50  0001 C CNN
-F 3 "http://www.vishay.com/docs/88525/1n5817.pdf" H 9950 5750 50  0001 C CNN
-	1    9950 5750
-	0    -1   -1   0   
-$EndComp
-$Comp
-L power:+BATT #PWR045
-U 1 1 60547D20
-P 10800 6050
-F 0 "#PWR045" H 10800 5900 50  0001 C CNN
-F 1 "+BATT" V 10815 6178 50  0000 L CNN
-F 2 "" H 10800 6050 50  0001 C CNN
-F 3 "" H 10800 6050 50  0001 C CNN
-	1    10800 6050
-	0    1    1    0   
-$EndComp
-$Comp
-L power:+5V #PWR039
-U 1 1 60548B75
-P 9750 5450
-F 0 "#PWR039" H 9750 5300 50  0001 C CNN
-F 1 "+5V" V 9765 5577 50  0000 L CNN
-F 2 "" H 9750 5450 50  0001 C CNN
-F 3 "" H 9750 5450 50  0001 C CNN
-	1    9750 5450
-	0    -1   -1   0   
-$EndComp
-$Comp
-L power:+VSW #PWR040
-U 1 1 6054C969
-P 9750 6050
-F 0 "#PWR040" H 9750 5900 50  0001 C CNN
-F 1 "+VSW" V 9765 6178 50  0000 L CNN
-F 2 "" H 9750 6050 50  0001 C CNN
-F 3 "" H 9750 6050 50  0001 C CNN
-	1    9750 6050
-	0    -1   -1   0   
-$EndComp
-Wire Wire Line
-	9750 5450 9950 5450
-Wire Wire Line
-	9950 5450 9950 5600
-Wire Wire Line
-	10050 6050 9950 6050
-Wire Wire Line
-	9950 5900 9950 6050
-Connection ~ 9950 6050
-Wire Wire Line
-	9950 6050 9750 6050
-Wire Wire Line
-	10450 6050 10800 6050
-Wire Wire Line
-	9950 5450 10250 5450
-Wire Wire Line
-	10250 5450 10250 5750
-Connection ~ 9950 5450
-$Comp
-L SI2301:SI2301CDS-T1-GE3 Q1
-U 1 1 60599B5C
-P 1350 2400
-F 0 "Q1" V 1878 2446 50  0000 L CNN
-F 1 "SI2301" V 1900 2150 50  0000 L CNN
-F 2 "SI2301:Vishay-S-03946-07_2001-K-0" H 1350 2900 50  0001 L CNN
-F 3 "http://www.vishay.com/docs/68741/si2301cd.pdf" H 1350 3000 50  0001 L CNN
-F 4 "Trans" H 1350 3100 50  0001 L CNN "category"
-F 5 "-3.1A" H 1350 3200 50  0001 L CNN "continuous drain current"
-F 6 "Discrete Semiconductors" H 1350 3300 50  0001 L CNN "device class L1"
-F 7 "Transistors" H 1350 3400 50  0001 L CNN "device class L2"
-F 8 "MOSFETs" H 1350 3500 50  0001 L CNN "device class L3"
-F 9 "MOSFET P-CH 20V 3.1A SOT23-3" H 1350 3600 50  0001 L CNN "digikey description"
-F 10 "SI2301CDS-T1-GE3CT-ND" H 1350 3700 50  0001 L CNN "digikey part number"
-F 11 "-20V" H 1350 3800 50  0001 L CNN "drain to source breakdown voltage"
-F 12 "0.09Ω" H 1350 3900 50  0001 L CNN "drain to source resistance"
-F 13 "-20V" H 1350 4000 50  0001 L CNN "drain to source voltage"
-F 14 "8V" H 1350 4100 50  0001 L CNN "gate to source voltage"
-F 15 "1.12mm" H 1350 4200 50  0001 L CNN "height"
-F 16 "405pF @ -10V" H 1350 4300 50  0001 L CNN "input capacitace at vds"
-F 17 "yes" H 1350 4400 50  0001 L CNN "lead free"
-F 18 "d91d86240bdc24a2" H 1350 4500 50  0001 L CNN "library id"
-F 19 "Vishay" H 1350 4600 50  0001 L CNN "manufacturer"
-F 20 "+150°C" H 1350 4700 50  0001 L CNN "max junction temp"
-F 21 "MOSFET 20V 3.1A 1.6W 112 mohms @ 4.5V" H 1350 4800 50  0001 L CNN "mouser description"
-F 22 "781-SI2301CDS-T1-GE3" H 1350 4900 50  0001 L CNN "mouser part number"
-F 23 "1" H 1350 5000 50  0001 L CNN "number of P channels"
-F 24 "1" H 1350 5100 50  0001 L CNN "number of channels"
-F 25 "SOT23-3" H 1350 5200 50  0001 L CNN "package"
-F 26 "1.6W" H 1350 5300 50  0001 L CNN "power dissipation"
-F 27 "yes" H 1350 5400 50  0001 L CNN "rohs"
-F 28 "0.01mm" H 1350 5500 50  0001 L CNN "standoff height"
-F 29 "MOSFET" H 1350 5600 50  0001 L CNN "technology"
-F 30 "+150°C" H 1350 5700 50  0001 L CNN "temperature range high"
-F 31 "-55°C" H 1350 5800 50  0001 L CNN "temperature range low"
-F 32 "-1V" H 1350 5900 50  0001 L CNN "threshold vgs"
-F 33 "30ns" H 1350 6000 50  0001 L CNN "turn off delay time"
-F 34 "11ns" H 1350 6100 50  0001 L CNN "turn on delay time"
-	1    1350 2400
-	-1   0    0    -1  
-$EndComp
-$Comp
-L PMBT3904:PMBT3904,215 U1
-U 1 1 6059C7D1
-P 2300 2700
-F 0 "U1" V 2450 2600 50  0000 C CNN
-F 1 "PMBT3904" V 2700 2700 50  0000 C CNN
-F 2 "PMBT3904:NXP-PMBT3904,215-0" H 2300 3200 50  0001 L CNN
-F 3 "https://assets.nexperia.com/documents/data-sheet/PMBT3904.pdf" H 2300 3300 50  0001 L CNN
-F 4 "IC" H 2300 3400 50  0001 L CNN "category"
-F 5 "1727-2959-1-ND" H 2300 3500 50  0001 L CNN "digikey description"
-F 6 "TRANS NPN 40V 0.2A SOT23" H 2300 3600 50  0001 L CNN "digikey part number"
-F 7 "yes" H 2300 3700 50  0001 L CNN "lead free"
-F 8 "8914a4d47db56a77" H 2300 3800 50  0001 L CNN "library id"
-F 9 "NXP" H 2300 3900 50  0001 L CNN "manufacturer"
-F 10 "771-PMBT3904-T/R" H 2300 4000 50  0001 L CNN "mouser part number"
-F 11 "SOT-23-3" H 2300 4100 50  0001 L CNN "package"
-F 12 "yes" H 2300 4200 50  0001 L CNN "rohs"
-F 13 "+150°C" H 2300 4300 50  0001 L CNN "temperature range high"
-F 14 "-65°C" H 2300 4400 50  0001 L CNN "temperature range low"
-	1    2300 2700
-	0    -1   -1   0   
-$EndComp
-$Comp
-L Device:R R1
-U 1 1 6059F27A
-P 1350 2650
-F 0 "R1" V 1250 2650 50  0000 C CNN
-F 1 "100K" V 1450 2650 50  0000 C CNN
-F 2 "Resistor_SMD:R_0805_2012Metric" V 1280 2650 50  0001 C CNN
-F 3 "~" H 1350 2650 50  0001 C CNN
-	1    1350 2650
-	1    0    0    -1  
-$EndComp
-$Comp
-L Device:R R3
-U 1 1 6059FF27
-P 1700 2400
-F 0 "R3" V 1600 2400 50  0000 C CNN
-F 1 "1K" V 1750 2600 50  0000 C CNN
-F 2 "Resistor_SMD:R_0805_2012Metric" V 1630 2400 50  0001 C CNN
-F 3 "~" H 1700 2400 50  0001 C CNN
-	1    1700 2400
-	0    1    1    0   
-$EndComp
-$Comp
-L SI2301:SI2301CDS-T1-GE3 Q2
-U 1 1 605D3D93
-P 1700 2750
-F 0 "Q2" V 2228 2796 50  0000 L CNN
-F 1 "SI2301" V 2250 2500 50  0000 L CNN
-F 2 "SI2301:Vishay-S-03946-07_2001-K-0" H 1700 3250 50  0001 L CNN
-F 3 "http://www.vishay.com/docs/68741/si2301cd.pdf" H 1700 3350 50  0001 L CNN
-F 4 "Trans" H 1700 3450 50  0001 L CNN "category"
-F 5 "-3.1A" H 1700 3550 50  0001 L CNN "continuous drain current"
-F 6 "Discrete Semiconductors" H 1700 3650 50  0001 L CNN "device class L1"
-F 7 "Transistors" H 1700 3750 50  0001 L CNN "device class L2"
-F 8 "MOSFETs" H 1700 3850 50  0001 L CNN "device class L3"
-F 9 "MOSFET P-CH 20V 3.1A SOT23-3" H 1700 3950 50  0001 L CNN "digikey description"
-F 10 "SI2301CDS-T1-GE3CT-ND" H 1700 4050 50  0001 L CNN "digikey part number"
-F 11 "-20V" H 1700 4150 50  0001 L CNN "drain to source breakdown voltage"
-F 12 "0.09Ω" H 1700 4250 50  0001 L CNN "drain to source resistance"
-F 13 "-20V" H 1700 4350 50  0001 L CNN "drain to source voltage"
-F 14 "8V" H 1700 4450 50  0001 L CNN "gate to source voltage"
-F 15 "1.12mm" H 1700 4550 50  0001 L CNN "height"
-F 16 "405pF @ -10V" H 1700 4650 50  0001 L CNN "input capacitace at vds"
-F 17 "yes" H 1700 4750 50  0001 L CNN "lead free"
-F 18 "d91d86240bdc24a2" H 1700 4850 50  0001 L CNN "library id"
-F 19 "Vishay" H 1700 4950 50  0001 L CNN "manufacturer"
-F 20 "+150°C" H 1700 5050 50  0001 L CNN "max junction temp"
-F 21 "MOSFET 20V 3.1A 1.6W 112 mohms @ 4.5V" H 1700 5150 50  0001 L CNN "mouser description"
-F 22 "781-SI2301CDS-T1-GE3" H 1700 5250 50  0001 L CNN "mouser part number"
-F 23 "1" H 1700 5350 50  0001 L CNN "number of P channels"
-F 24 "1" H 1700 5450 50  0001 L CNN "number of channels"
-F 25 "SOT23-3" H 1700 5550 50  0001 L CNN "package"
-F 26 "1.6W" H 1700 5650 50  0001 L CNN "power dissipation"
-F 27 "yes" H 1700 5750 50  0001 L CNN "rohs"
-F 28 "0.01mm" H 1700 5850 50  0001 L CNN "standoff height"
-F 29 "MOSFET" H 1700 5950 50  0001 L CNN "technology"
-F 30 "+150°C" H 1700 6050 50  0001 L CNN "temperature range high"
-F 31 "-55°C" H 1700 6150 50  0001 L CNN "temperature range low"
-F 32 "-1V" H 1700 6250 50  0001 L CNN "threshold vgs"
-F 33 "30ns" H 1700 6350 50  0001 L CNN "turn off delay time"
-F 34 "11ns" H 1700 6450 50  0001 L CNN "turn on delay time"
-	1    1700 2750
-	0    -1   1    0   
-$EndComp
-$Comp
-L power:VCC #PWR02
-U 1 1 605D9973
-P 950 3000
-F 0 "#PWR02" H 950 2850 50  0001 C CNN
-F 1 "VCC" H 965 3173 50  0000 C CNN
-F 2 "" H 950 3000 50  0001 C CNN
-F 3 "" H 950 3000 50  0001 C CNN
-	1    950  3000
-	-1   0    0    1   
-$EndComp
-$Comp
-L power:+VSW #PWR04
-U 1 1 605DA8D4
-P 1400 3150
-F 0 "#PWR04" H 1400 3000 50  0001 C CNN
-F 1 "+VSW" V 1415 3278 50  0000 L CNN
-F 2 "" H 1400 3150 50  0001 C CNN
-F 3 "" H 1400 3150 50  0001 C CNN
-	1    1400 3150
-	0    -1   -1   0   
-$EndComp
-Wire Wire Line
-	1550 2400 1450 2400
-Wire Wire Line
-	1350 2400 1350 2500
-Connection ~ 1350 2400
-Wire Wire Line
-	1350 2400 1250 2400
-Wire Wire Line
-	1350 2800 1350 2900
-Wire Wire Line
-	1350 2900 950  2900
-Wire Wire Line
-	950  2900 950  3000
-Wire Wire Line
-	950  2600 950  2900
-Connection ~ 950  2900
-Wire Wire Line
-	1450 2400 1450 2500
-Wire Wire Line
-	1450 2500 1700 2500
-Wire Wire Line
-	1700 2500 1700 2850
-Connection ~ 1450 2400
-Wire Wire Line
-	1450 2400 1350 2400
-$Comp
-L power:+BATT #PWR01
-U 1 1 606059BD
-P 950 2000
-F 0 "#PWR01" H 950 1850 50  0001 C CNN
-F 1 "+BATT" H 965 2173 50  0000 C CNN
-F 2 "" H 950 2000 50  0001 C CNN
-F 3 "" H 950 2000 50  0001 C CNN
-	1    950  2000
-	1    0    0    -1  
-$EndComp
-$Comp
-L power:+3.3V #PWR07
-U 1 1 60606450
-P 2000 3150
-F 0 "#PWR07" H 2000 3000 50  0001 C CNN
-F 1 "+3.3V" V 2015 3278 50  0000 L CNN
-F 2 "" H 2000 3150 50  0001 C CNN
-F 3 "" H 2000 3150 50  0001 C CNN
-	1    2000 3150
-	0    1    1    0   
-$EndComp
-$Comp
-L power:GND #PWR011
-U 1 1 60606BFC
-P 3000 3250
-F 0 "#PWR011" H 3000 3000 50  0001 C CNN
-F 1 "GND" H 3005 3077 50  0000 C CNN
-F 2 "" H 3000 3250 50  0001 C CNN
-F 3 "" H 3000 3250 50  0001 C CNN
-	1    3000 3250
-	1    0    0    -1  
-$EndComp
-$Comp
-L power:GND #PWR08
-U 1 1 60607795
-P 2600 1950
-F 0 "#PWR08" H 2600 1700 50  0001 C CNN
-F 1 "GND" H 2605 1777 50  0000 C CNN
-F 2 "" H 2600 1950 50  0001 C CNN
-F 3 "" H 2600 1950 50  0001 C CNN
-	1    2600 1950
-	-1   0    0    1   
-$EndComp
-Wire Wire Line
-	2000 3150 1900 3150
-Wire Wire Line
-	1500 3150 1400 3150
-Wire Wire Line
-	1850 2400 2100 2400
-$Comp
-L Device:R R8
-U 1 1 6063C9FA
-P 2600 2750
-F 0 "R8" V 2500 2750 50  0000 C CNN
-F 1 "10K" V 2650 2950 50  0000 C CNN
-F 2 "Resistor_SMD:R_0805_2012Metric" V 2530 2750 50  0001 C CNN
-F 3 "~" H 2600 2750 50  0001 C CNN
-	1    2600 2750
-	0    1    1    0   
-$EndComp
-$Comp
-L Diode:1N4148WS D4
-U 1 1 6063DF47
-P 3000 2150
-F 0 "D4" V 3046 2070 50  0000 R CNN
-F 1 "1N4148WS" H 3200 2250 50  0000 R CNN
-F 2 "Diode_SMD:D_SOD-323" H 3000 1975 50  0001 C CNN
-F 3 "https://www.vishay.com/docs/85751/1n4148ws.pdf" H 3000 2150 50  0001 C CNN
-	1    3000 2150
-	0    -1   -1   0   
-$EndComp
-$Comp
-L Diode:1N4148WS D5
-U 1 1 6063F3D1
-P 3350 2150
-F 0 "D5" V 3396 2070 50  0000 R CNN
-F 1 "1N4148WS" H 3550 2250 50  0000 R CNN
-F 2 "Diode_SMD:D_SOD-323" H 3350 1975 50  0001 C CNN
-F 3 "https://www.vishay.com/docs/85751/1n4148ws.pdf" H 3350 2150 50  0001 C CNN
-	1    3350 2150
-	0    -1   -1   0   
-$EndComp
-$Comp
-L power:+5V #PWR010
-U 1 1 6063FACD
-P 3000 1750
-F 0 "#PWR010" H 3000 1600 50  0001 C CNN
-F 1 "+5V" H 3015 1923 50  0000 C CNN
-F 2 "" H 3000 1750 50  0001 C CNN
-F 3 "" H 3000 1750 50  0001 C CNN
-	1    3000 1750
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	3000 2300 3000 2750
-Wire Wire Line
-	2750 2750 3000 2750
-Connection ~ 3000 2750
-Wire Wire Line
-	2450 2750 2300 2750
-Wire Wire Line
-	2300 2750 2300 2600
-Wire Wire Line
-	2500 2400 2600 2400
-Wire Wire Line
-	2600 2400 2600 1950
-Wire Wire Line
-	3000 1750 3000 2000
-Wire Wire Line
-	950  2000 950  2200
-Wire Wire Line
-	3350 2300 3350 2750
-Wire Wire Line
-	3350 2750 3000 2750
-Text GLabel 3350 1800 1    50   BiDi Italic 0
+Text GLabel 1050 1900 0    50   BiDi Italic 0
 MCU_EN
-$Comp
-L Device:R R9
-U 1 1 6067DCE8
-P 3000 3000
-F 0 "R9" V 2900 3000 50  0000 C CNN
-F 1 "100K" V 3100 3000 50  0000 C CNN
-F 2 "Resistor_SMD:R_0805_2012Metric" V 2930 3000 50  0001 C CNN
-F 3 "~" H 3000 3000 50  0001 C CNN
-	1    3000 3000
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	3000 2750 3000 2850
-Wire Wire Line
-	3000 3150 3000 3250
-Wire Wire Line
-	3350 1800 3350 2000
 NoConn ~ 5800 5150
 NoConn ~ 5800 5350
 NoConn ~ 5800 5450
@@ -1544,17 +1162,6 @@ F 3 "" H 10350 4000 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:+VSW #PWR041
-U 1 1 608054F6
-P 10100 4000
-F 0 "#PWR041" H 10100 3850 50  0001 C CNN
-F 1 "+VSW" H 10115 4173 50  0000 C CNN
-F 2 "" H 10100 4000 50  0001 C CNN
-F 3 "" H 10100 4000 50  0001 C CNN
-	1    10100 4000
-	1    0    0    -1  
-$EndComp
-$Comp
 L Device:R R19
 U 1 1 60806173
 P 10100 4200
@@ -1750,7 +1357,6 @@ NoConn ~ 9200 1800
 NoConn ~ 9200 1700
 NoConn ~ 9200 1600
 NoConn ~ 9200 1500
-NoConn ~ 9200 1400
 NoConn ~ 9200 1200
 NoConn ~ 10500 1400
 NoConn ~ 10500 1600
@@ -1811,59 +1417,6 @@ Wire Wire Line
 	9450 3450 9250 3450
 NoConn ~ 10500 1000
 NoConn ~ 10500 1100
-$Comp
-L SI2307:SI2307CDS-T1-GE3 Q4
-U 1 1 60455242
-P 10250 5650
-F 0 "Q4" V 10823 5650 50  0000 C CNN
-F 1 "SI2307CDS-T1-GE3" V 10914 5650 50  0000 C CNN
-F 2 "SI2307:Vishay-S-03946-07_2001-K-IPC_B" H 10250 6050 50  0001 L CNN
-F 3 "http://www.vishay.com/docs/68768/si2307cd.pdf" H 10250 6150 50  0001 L CNN
-F 4 "No" H 10250 6250 50  0001 L CNN "automotive"
-F 5 "Trans" H 10250 6350 50  0001 L CNN "category"
-F 6 "-2.7A" H 10250 6450 50  0001 L CNN "continuous drain current"
-F 7 "False" H 10250 6550 50  0001 L CNN "depletion mode"
-F 8 "Discrete Semiconductors" H 10250 6650 50  0001 L CNN "device class L1"
-F 9 "Transistors" H 10250 6750 50  0001 L CNN "device class L2"
-F 10 "MOSFETs" H 10250 6850 50  0001 L CNN "device class L3"
-F 11 "MOSFET P-CH 30V 3.5A SOT23-3" H 10250 6950 50  0001 L CNN "digikey description"
-F 12 "SI2307CDS-T1-GE3CT-ND" H 10250 7050 50  0001 L CNN "digikey part number"
-F 13 "-30V" H 10250 7150 50  0001 L CNN "drain to source breakdown voltage"
-F 14 "0.073Ω" H 10250 7250 50  0001 L CNN "drain to source resistance"
-F 15 "-30V" H 10250 7350 50  0001 L CNN "drain to source voltage"
-F 16 "4.1nC @ -4.5V" H 10250 7450 50  0001 L CNN "gate charge at vgs"
-F 17 "20V" H 10250 7550 50  0001 L CNN "gate to source voltage"
-F 18 "1.12mm" H 10250 7650 50  0001 L CNN "height"
-F 19 "340pF @ -15V" H 10250 7750 50  0001 L CNN "input capacitace at vds"
-F 20 "SOT95P237X100-3" H 10250 7850 50  0001 L CNN "ipc land pattern name"
-F 21 "Yes" H 10250 7950 50  0001 L CNN "lead free"
-F 22 "ca5464a930309813" H 10250 8050 50  0001 L CNN "library id"
-F 23 "Vishay" H 10250 8150 50  0001 L CNN "manufacturer"
-F 24 "-1.2V" H 10250 8250 50  0001 L CNN "max forward diode voltage"
-F 25 "+150°C" H 10250 8350 50  0001 L CNN "max junction temp"
-F 26 "Single P-Channel 30 V 88 mOhms Surface Mount Power Mosfet - SOT-23-3" H 10250 8450 50  0001 L CNN "mouser description"
-F 27 "781-SI2307CDS-T1-GE3" H 10250 8550 50  0001 L CNN "mouser part number"
-F 28 "1" H 10250 8650 50  0001 L CNN "number of P channels"
-F 29 "1" H 10250 8750 50  0001 L CNN "number of channels"
-F 30 "SOT23-3" H 10250 8850 50  0001 L CNN "package"
-F 31 "1.1W" H 10250 8950 50  0001 L CNN "power dissipation"
-F 32 "-12A" H 10250 9050 50  0001 L CNN "pulse drain current"
-F 33 "11nC" H 10250 9150 50  0001 L CNN "reverse recovery charge"
-F 34 "17ns" H 10250 9250 50  0001 L CNN "reverse recovery time"
-F 35 "Yes" H 10250 9350 50  0001 L CNN "rohs"
-F 36 "90°C/W" H 10250 9450 50  0001 L CNN "rthja max"
-F 37 "0.01mm" H 10250 9550 50  0001 L CNN "standoff height"
-F 38 "+150°C" H 10250 9650 50  0001 L CNN "temperature range high"
-F 39 "-55°C" H 10250 9750 50  0001 L CNN "temperature range low"
-F 40 "-3V" H 10250 9850 50  0001 L CNN "threshold vgs max"
-F 41 "-1V" H 10250 9950 50  0001 L CNN "threshold vgs min"
-F 42 "7S" H 10250 10050 50  0001 L CNN "transconductance"
-F 43 "17ns" H 10250 10150 50  0001 L CNN "turn off delay time"
-F 44 "5.5ns" H 10250 10250 50  0001 L CNN "turn on delay time"
-F 45 "-0.8V" H 10250 10350 50  0001 L CNN "typ forward diode voltage"
-	1    10250 5650
-	0    1    1    0   
-$EndComp
 Wire Wire Line
 	5100 5850 5100 5900
 Wire Wire Line
@@ -2290,6 +1843,305 @@ F 1 "ttgo-32-micro" H 9850 2877 50  0000 C CNN
 F 2 "open-Smartwatch:ttgo-32-micro" H 9800 2950 50  0001 C CNN
 F 3 "" H 9450 2600 50  0001 C CNN
 	1    10100 1800
+	1    0    0    -1  
+$EndComp
+$Comp
+L Regulator_Linear:AP2112K-3.3 U?
+U 1 1 607663FB
+P 2350 1750
+F 0 "U?" H 2200 1500 50  0000 C CNN
+F 1 "AP2112K-3.3" H 2350 2001 50  0000 C CNN
+F 2 "Package_TO_SOT_SMD:SOT-23-5" H 2350 2075 50  0001 C CNN
+F 3 "https://www.diodes.com/assets/Datasheets/AP2112.pdf" H 2350 1850 50  0001 C CNN
+	1    2350 1750
+	1    0    0    -1  
+$EndComp
+$Comp
+L TPS2115A:TPS2115A U?
+U 1 1 607C18D5
+P 1450 3150
+F 0 "U?" H 1200 3600 50  0000 C CNN
+F 1 "TPS2115A" H 1600 3600 50  0000 C CNN
+F 2 "TPS2115A:SON-8" H 1450 3700 50  0001 C CNN
+F 3 "" H 1450 3700 50  0001 L BNN
+	1    1450 3150
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4400 4250 4250 4250
+Wire Wire Line
+	4250 4250 4250 4450
+Connection ~ 4250 4450
+Wire Wire Line
+	4250 4450 4400 4450
+$Comp
+L power:+5V #PWR?
+U 1 1 607D9DBB
+P 900 2950
+F 0 "#PWR?" H 900 2800 50  0001 C CNN
+F 1 "+5V" V 915 3077 50  0000 L CNN
+F 2 "" H 900 2950 50  0001 C CNN
+F 3 "" H 900 2950 50  0001 C CNN
+	1    900  2950
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 607DAA86
+P 900 3450
+F 0 "#PWR?" H 900 3200 50  0001 C CNN
+F 1 "GND" V 905 3323 50  0000 R CNN
+F 2 "" H 900 3450 50  0001 C CNN
+F 3 "" H 900 3450 50  0001 C CNN
+	1    900  3450
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 607DAEEF
+P 900 3250
+F 0 "#PWR?" H 900 3000 50  0001 C CNN
+F 1 "GND" V 905 3123 50  0000 R CNN
+F 2 "" H 900 3250 50  0001 C CNN
+F 3 "" H 900 3250 50  0001 C CNN
+	1    900  3250
+	0    1    1    0   
+$EndComp
+$Comp
+L power:+BATT #PWR?
+U 1 1 607DEE0B
+P 900 3150
+F 0 "#PWR?" H 900 3000 50  0001 C CNN
+F 1 "+BATT" V 900 3250 50  0000 L CNN
+F 2 "" H 900 3150 50  0001 C CNN
+F 3 "" H 900 3150 50  0001 C CNN
+	1    900  3150
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:+BATT #PWR?
+U 1 1 607E1212
+P 900 2850
+F 0 "#PWR?" H 900 2700 50  0001 C CNN
+F 1 "+BATT" V 900 2950 50  0000 L CNN
+F 2 "" H 900 2850 50  0001 C CNN
+F 3 "" H 900 2850 50  0001 C CNN
+	1    900  2850
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:VCC #PWR?
+U 1 1 607E212E
+P 2000 2850
+F 0 "#PWR?" H 2000 2700 50  0001 C CNN
+F 1 "VCC" H 2015 3023 50  0000 C CNN
+F 2 "" H 2000 2850 50  0001 C CNN
+F 3 "" H 2000 2850 50  0001 C CNN
+	1    2000 2850
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 607E44EA
+P 2050 3450
+F 0 "R?" V 2100 3300 50  0000 C CNN
+F 1 "1K" V 2100 3600 50  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 1980 3450 50  0001 C CNN
+F 3 "~" H 2050 3450 50  0001 C CNN
+	1    2050 3450
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 607FA807
+P 2050 3700
+F 0 "#PWR?" H 2050 3450 50  0001 C CNN
+F 1 "GND" V 2055 3573 50  0000 R CNN
+F 2 "" H 2050 3700 50  0001 C CNN
+F 3 "" H 2050 3700 50  0001 C CNN
+	1    2050 3700
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1850 3250 2050 3250
+Wire Wire Line
+	2050 3250 2050 3300
+Wire Wire Line
+	2050 3600 2050 3700
+Wire Wire Line
+	1050 2850 900  2850
+Wire Wire Line
+	1050 2950 900  2950
+Wire Wire Line
+	1050 3150 900  3150
+Wire Wire Line
+	900  3250 1050 3250
+Wire Wire Line
+	1050 3450 900  3450
+Wire Wire Line
+	1850 2850 2000 2850
+$Comp
+L Device:R R?
+U 1 1 60897049
+P 2200 3450
+F 0 "R?" V 2250 3300 50  0000 C CNN
+F 1 "10K" V 2250 3650 50  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 2130 3450 50  0001 C CNN
+F 3 "~" H 2200 3450 50  0001 C CNN
+	1    2200 3450
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VCC #PWR?
+U 1 1 60899174
+P 2200 3700
+F 0 "#PWR?" H 2200 3550 50  0001 C CNN
+F 1 "VCC" H 2215 3873 50  0000 C CNN
+F 2 "" H 2200 3700 50  0001 C CNN
+F 3 "" H 2200 3700 50  0001 C CNN
+	1    2200 3700
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	1850 3050 2200 3050
+Wire Wire Line
+	2200 3050 2200 3300
+Wire Wire Line
+	2200 3600 2200 3700
+Text GLabel 2350 3100 3    50   BiDi Italic 0
+MCU_POWER_MODE
+Wire Wire Line
+	2200 3050 2350 3050
+Wire Wire Line
+	2350 3050 2350 3100
+Connection ~ 2200 3050
+Text GLabel 9100 1400 0    50   BiDi Italic 0
+MCU_POWER_MODE
+Wire Wire Line
+	9200 1400 9100 1400
+$Comp
+L power:VCC #PWR?
+U 1 1 60937D73
+P 2350 2150
+F 0 "#PWR?" H 2350 2000 50  0001 C CNN
+F 1 "VCC" H 2365 2323 50  0000 C CNN
+F 2 "" H 2350 2150 50  0001 C CNN
+F 3 "" H 2350 2150 50  0001 C CNN
+	1    2350 2150
+	-1   0    0    1   
+$EndComp
+$Comp
+L power:+VSW #PWR?
+U 1 1 60956F6D
+P 1050 1750
+F 0 "#PWR?" H 1050 1600 50  0001 C CNN
+F 1 "+VSW" V 1050 2000 50  0000 C CNN
+F 2 "" H 1050 1750 50  0001 C CNN
+F 3 "" H 1050 1750 50  0001 C CNN
+	1    1050 1750
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Diode:1N4148WS D?
+U 1 1 6096E414
+P 1500 1750
+F 0 "D?" H 1350 1700 50  0000 C CNN
+F 1 "1N4148WS" H 1750 1700 50  0000 C CNN
+F 2 "Diode_SMD:D_SOD-323" H 1500 1575 50  0001 C CNN
+F 3 "https://www.vishay.com/docs/85751/1n4148ws.pdf" H 1500 1750 50  0001 C CNN
+	1    1500 1750
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	1050 1750 1350 1750
+$Comp
+L power:VCC #PWR?
+U 1 1 6099DFCE
+P 1050 1650
+F 0 "#PWR?" H 1050 1500 50  0001 C CNN
+F 1 "VCC" V 1050 1850 50  0000 C CNN
+F 2 "" H 1050 1650 50  0001 C CNN
+F 3 "" H 1050 1650 50  0001 C CNN
+	1    1050 1650
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Diode:1N4148WS D?
+U 1 1 609B55F5
+P 1500 1900
+F 0 "D?" H 1350 1850 50  0000 C CNN
+F 1 "1N4148WS" H 1750 1850 50  0000 C CNN
+F 2 "Diode_SMD:D_SOD-323" H 1500 1725 50  0001 C CNN
+F 3 "https://www.vishay.com/docs/85751/1n4148ws.pdf" H 1500 1900 50  0001 C CNN
+	1    1500 1900
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	1050 1650 2050 1650
+Wire Wire Line
+	1650 1750 1850 1750
+Wire Wire Line
+	1650 1900 1850 1900
+Wire Wire Line
+	1850 1900 1850 1750
+Connection ~ 1850 1750
+Wire Wire Line
+	1850 1750 2050 1750
+$Comp
+L power:GND #PWR?
+U 1 1 60A15744
+P 1050 2000
+F 0 "#PWR?" H 1050 1750 50  0001 C CNN
+F 1 "GND" V 1055 1873 50  0000 R CNN
+F 2 "" H 1050 2000 50  0001 C CNN
+F 3 "" H 1050 2000 50  0001 C CNN
+	1    1050 2000
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 60A16343
+P 1500 2000
+F 0 "R?" V 1550 1850 50  0000 C CNN
+F 1 "33K" V 1550 2200 50  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 1430 2000 50  0001 C CNN
+F 3 "~" H 1500 2000 50  0001 C CNN
+	1    1500 2000
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	1350 1900 1050 1900
+Wire Wire Line
+	1050 2000 1350 2000
+Wire Wire Line
+	1650 2000 1850 2000
+Wire Wire Line
+	1850 2000 1850 1900
+Connection ~ 1850 1900
+Wire Wire Line
+	2350 2050 2350 2150
+$Comp
+L power:+3.3VA #PWR?
+U 1 1 60A99936
+P 2850 1650
+F 0 "#PWR?" H 2850 1500 50  0001 C CNN
+F 1 "+3.3VA" V 2865 1778 50  0000 L CNN
+F 2 "" H 2850 1650 50  0001 C CNN
+F 3 "" H 2850 1650 50  0001 C CNN
+	1    2850 1650
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	2850 1650 2650 1650
+$Comp
+L power:+3.3VA #PWR?
+U 1 1 60AB66D2
+P 10100 4000
+F 0 "#PWR?" H 10100 3850 50  0001 C CNN
+F 1 "+3.3VA" H 10115 4173 50  0000 C CNN
+F 2 "" H 10100 4000 50  0001 C CNN
+F 3 "" H 10100 4000 50  0001 C CNN
+	1    10100 4000
 	1    0    0    -1  
 $EndComp
 $EndSCHEMATC
