@@ -4,4 +4,5 @@
   (lib (name PMBT3904)(type Legacy)(uri ${KIPRJMOD}/Libraries/IC_NXP_PMBT3904,215/eec.lib)(options "")(descr ""))
   (lib (name 0603ESDA2)(type Legacy)(uri ${KIPRJMOD}/Libraries/Diode_Eaton_0603ESDA2-TR2/eec.lib)(options "")(descr ""))
   (lib (name ttgo-32-micro)(type Legacy)(uri ${KIPRJMOD}/Libraries/TTGO-32/ttgo-32-micro.lib)(options "")(descr ""))
+  (lib (name TPS2115A)(type Legacy)(uri ${KIPRJMOD}/Libraries/TPS2115A/TPS2115A.lib)(options "")(descr ""))
 )
