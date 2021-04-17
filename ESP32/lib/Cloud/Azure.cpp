@@ -135,8 +135,8 @@ int static device_method_callback(
 
     if (strcmp(AzureMethodName, method_name) == 0)
     {
-        char *buffer;
-        buffer = (char *)malloc(sizeof(char) * (size + 1));
+        char *buffer = new char[size + 1];
+        //buffer = (char *)malloc(sizeof(char) * (size + 1));
         strncpy(buffer, (char *)payload, size);
         buffer[size] = '\0';
         if (isVerbose)
@@ -180,6 +180,8 @@ int static device_method_callback(
             result = 200;
             return result;
         }
+
+        free(buffer);
     }
     // All other entries are ignored.
     const char deviceMethodResponse[] = "{ }";
