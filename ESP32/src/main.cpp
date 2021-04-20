@@ -18,6 +18,8 @@ void setup()
   if (VERBOSE)
     printf("ESP-IDF version is : %s\r\n", esp_get_idf_version());
 
+  eventQueue.reserve(3);
+
   EEPROM.begin(EEPROM_SIZE);
   ReadFlash();
 
@@ -344,10 +346,10 @@ void getTimeString(char *buffer)
     Sensor.ResetReport();
 }
 
-void EnqueueEvent(CustomEvents newEvent)
+void EnqueueEvent(const CustomEvents &newEvent)
 {
   if (std::find(eventQueue.begin(), eventQueue.end(), newEvent) == eventQueue.end())
-    eventQueue.push_back(newEvent);
+    eventQueue.emplace_back(newEvent);
 }
 
 CustomEvents DequeueEvent()

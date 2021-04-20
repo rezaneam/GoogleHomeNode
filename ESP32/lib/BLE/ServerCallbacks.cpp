@@ -1,6 +1,6 @@
 #include <ServerCallbacks.h>
 
-ServerCallbacks::ServerCallbacks(void (*event_queue_method)(CustomEvents), bool *connectionStatus, bool verbose)
+ServerCallbacks::ServerCallbacks(void (*event_queue_method)(const CustomEvents &), bool *connectionStatus, bool verbose)
 {
     queueEvent = event_queue_method;
     isConnected = connectionStatus;

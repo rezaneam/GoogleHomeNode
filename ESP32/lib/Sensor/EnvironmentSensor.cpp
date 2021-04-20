@@ -12,7 +12,7 @@ bool EnvironmentSensor::Initialize(TwoWire &i2c, bool verboseMode)
     }
 
     bme680.begin(BME680_I2C_ADDR_SECONDARY, i2c);
-    ;
+
     if (bme680.bme680Status == 0)
     {
         if (isVerbose)
@@ -35,6 +35,12 @@ bool EnvironmentSensor::Initialize(TwoWire &i2c, bool verboseMode)
     sensorType = SensorType::No_Sensor;
     if (isVerbose)
         printf(">> Sensor : No sensor found.\r\n");
+    return false;
+}
+
+bool EnvironmentSensor::tryFindBME680(TwoWire &i2c)
+{
+
     return false;
 }
 

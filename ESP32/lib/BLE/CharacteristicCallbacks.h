@@ -8,12 +8,12 @@
 class CharacteristicCallbacks : public NimBLECharacteristicCallbacks
 {
 public:
-    CharacteristicCallbacks(void (*event_queue_method)(CustomEvents), bool verbose = false);
+    CharacteristicCallbacks(void (*event_queue_method)(const CustomEvents &), bool verbose = false);
 
 private:
     const char *returnCodeToString(int rc);
     const char *returnStatusToString(Status status);
-    void (*queueEvent)(CustomEvents);
+    void (*queueEvent)(const CustomEvents &);
     bool isVerbose;
 
     void onRead(NimBLECharacteristic *pCharacteristic);

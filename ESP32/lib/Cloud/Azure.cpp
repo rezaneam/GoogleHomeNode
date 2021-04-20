@@ -1,6 +1,6 @@
 #include <Azure.h>
 
-void static (*queueEvent)(CustomEvents);
+void static (*queueEvent)(const CustomEvents &);
 const char *device_location;
 const char *username;
 static bool isVerbose;
@@ -199,7 +199,7 @@ Languages AzureIoTHub::GetLanguage()
 
 bool AzureIoTHub::Initialize(
     const char *securityKey,
-    void (*event_queue_method)(CustomEvents),
+    void (*event_queue_method)(const CustomEvents &),
     const char *userId,
     const char *devicelocation,
     bool verbose)

@@ -13,7 +13,7 @@
 class BLElite
 {
 public:
-    void Initialize(std::string deviceName, void (*event_queue_method)(CustomEvents), bool verbose = false);
+    void Initialize(std::string deviceName, void (*event_queue_method)(const CustomEvents &), bool verbose = false);
     void Setup();
     void StartAdvertise();
     void StopAdvertise();
@@ -29,7 +29,7 @@ private:
     bool IsAdvertising;
     bool IsConnected;
     bool IsVerbose;
-    void (*queueEvent)(CustomEvents);
+    void (*queueEvent)(const CustomEvents &);
     NimBLEServer *pServer;
     std::string getSSIDs();
     std::string getSSID();

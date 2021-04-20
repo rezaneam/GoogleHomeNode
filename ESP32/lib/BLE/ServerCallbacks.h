@@ -8,10 +8,10 @@
 class ServerCallbacks : public NimBLEServerCallbacks
 {
 public:
-    ServerCallbacks(void (*event_queue_method)(CustomEvents), bool *connectionStatus, bool verbose = false);
+    ServerCallbacks(void (*event_queue_method)(const CustomEvents &), bool *connectionStatus, bool verbose = false);
 
 private:
-    void (*queueEvent)(CustomEvents);
+    void (*queueEvent)(const CustomEvents &);
     bool isVerbose;
     bool *isConnected;
 

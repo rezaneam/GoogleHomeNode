@@ -68,6 +68,7 @@ private:
         BSEC_OUTPUT_SENSOR_HEAT_COMPENSATED_HUMIDITY,
     };
 
+    bool tryFindBME680(TwoWire &i2c);
     bool initializeBMx280();
     bool initializeBME680();
     void initializeHDC1080();

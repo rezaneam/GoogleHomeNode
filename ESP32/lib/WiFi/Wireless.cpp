@@ -1,6 +1,6 @@
 #include <Wireless.h>
 
-void Wireless::Initialize(void (*event_queue_method)(CustomEvents), char *hostname, bool verbose)
+void Wireless::Initialize(void (*event_queue_method)(const CustomEvents &), char *hostname, bool verbose)
 {
     queueEventWiFi = event_queue_method;
     isVerbose = verbose;

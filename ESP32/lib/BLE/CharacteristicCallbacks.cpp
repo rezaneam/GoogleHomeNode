@@ -1,5 +1,5 @@
 #include <CharacteristicCallbacks.h>
-CharacteristicCallbacks::CharacteristicCallbacks(void (*event_queue_method)(CustomEvents), bool verbose)
+CharacteristicCallbacks::CharacteristicCallbacks(void (*event_queue_method)(const CustomEvents &), bool verbose)
 {
     queueEvent = event_queue_method;
     isVerbose = verbose;

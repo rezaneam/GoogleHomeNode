@@ -11,7 +11,7 @@
 class Wireless
 {
 public:
-    void Initialize(void (*event_queue_method)(CustomEvents), char *hostname = "Google-Home-Node", bool verbose = false);
+    void Initialize(void (*event_queue_method)(const CustomEvents &), char *hostname = "Google-Home-Node", bool verbose = false);
     bool ScanNodes();
     bool TryConnect(std::string SSID, std::string Password, bool isForced = false);
     void Disconnect();
@@ -20,7 +20,7 @@ public:
     std::string SSIDs;
 
 private:
-    void (*queueEventWiFi)(CustomEvents);
+    void (*queueEventWiFi)(const CustomEvents &);
     uint8_t connectAttemptBypass = 0;
     uint8_t failedConnectionAttemptes = 0;
     String translateEncryptionType(wifi_auth_mode_t encryptionType);

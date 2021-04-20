@@ -1,6 +1,6 @@
 #include <GoogleHome.h>
 
-bool GoogleHome::Initialize(void (*event_queue_method)(CustomEvents), bool verbose)
+bool GoogleHome::Initialize(void (*event_queue_method)(const CustomEvents &), bool verbose)
 {
     isVerbose = verbose;
     queueEvent = event_queue_method;

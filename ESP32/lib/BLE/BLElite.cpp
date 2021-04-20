@@ -28,7 +28,7 @@ bool BLElite::hasNotifier(BLEUUID uuid)
     return false;
 }
 
-void BLElite::Initialize(std::string deviceName, void (*event_queue_method)(CustomEvents), bool verbose)
+void BLElite::Initialize(std::string deviceName, void (*event_queue_method)(const CustomEvents &), bool verbose)
 {
     queueEvent = event_queue_method;
     IsVerbose = verbose;

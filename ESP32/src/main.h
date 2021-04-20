@@ -32,7 +32,7 @@ std::vector<CustomEvents> eventQueue;
 
 std::string ssid;
 
-void EnqueueEvent(CustomEvents newEvent);
+void EnqueueEvent(const CustomEvents &newEvent);
 CustomEvents DequeueEvent();
 void ConfigureTime();
 void UpdateStatus(bool BLE, bool OLED, bool isNofiying = false);
