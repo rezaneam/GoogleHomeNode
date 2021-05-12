@@ -4,28 +4,25 @@ void static (*queueEvent)(const CustomEvents &);
 const char *device_location;
 const char *username;
 static bool isVerbose;
-static char *azure_language;
+static char *azure_language = new char[3];
 
 const char *USERID = "\"UserID\"";
 const char *KEY = "\"Key\"";
 const char *LANGUAGE = "\"Language\"";
 
-char *resolveValue(char *text, char const *key)
+void resolveValue(char *text, char const *key, char *result)
 {
     char *pch = strstr(text, key);
-    uint8_t pos1, pos2;
     pch += strlen(key);
     pch = strchr(pch, '"');
-    pos1 = pch - text + 1;
-    pch = strchr(pch + 1, '"');
-    pos2 = pch - text + 1;
-    char *returnValue = new char[pos2 - pos1 - 1];
-
-    for (size_t i = 0; i < (pos2 - pos1 - 1); i++)
-        returnValue[i] = text[pos1 + i];
-    returnValue[pos2 - pos1 - 1] = '\0';
-
-    return returnValue;
+    uint8_t i = 0;
+    uint8_t pos = pch - text + 1;
+    while (text[pos + i] != '"')
+    {
+        result[i] = text[pos + i];
+        i++;
+    }
+    result[i] = '\0';
 }
 
 const char *resolveAzureKey(AzureKeys key, Languages lang)
@@ -133,6 +130,16 @@ int static device_method_callback(
     if (isVerbose)
         printf(">> Azure Log >> %s is called [%d] payload size\r\n", method_name, size);
 
+    if (size > 320)
+    {
+        const char deviceMethodResponse[] = "{}";
+        *response_size = sizeof(deviceMethodResponse) - 1;
+        *response = (unsigned char *)malloc(*response_size);
+        (void)memcpy(*response, deviceMethodResponse, *response_size);
+        result = -1;
+        return result;
+    }
+
     if (strcmp(AzureMethodName, method_name) == 0)
     {
         char *buffer = new char[size + 1];
@@ -142,13 +149,15 @@ int static device_method_callback(
         if (isVerbose)
             printf(">> Azure Log >> Payload: %s\r\n", buffer);
 
-        char *userId = resolveValue(buffer, USERID);
+        char *userId = new char[32];
+        resolveValue(buffer, USERID, userId);
 
-        azure_language = resolveValue(buffer, LANGUAGE);
+        resolveValue(buffer, LANGUAGE, azure_language);
 
         if (strlen(username) == 0 || strstr(userId, username)) // if user name doesn't exist or username matches
         {
-            char *message = resolveValue(buffer, KEY);
+            char *message = new char[size + 1];
+            resolveValue(buffer, KEY, message);
             if (isVerbose)
             {
                 printf(">> Azure Log >> UserId: %S\r\n", userId);
@@ -172,19 +181,21 @@ int static device_method_callback(
             else if (strstr(message, resolveAzureKey(AzureKeys::Pressure, getLanguage())))
                 queueEvent(isSummary ? CustomEvents::EVENT_GOOGLE_REPORT_AIR_QUALITY_SUMMARY : CustomEvents::EVENT_GOOGLE_REPORT_AIR_QUALITY);
 
+            free(userId);
             free(buffer);
-            const char deviceMethodResponse[] = "{ \"Response\": \"GoogleHomeResponse\" }";
+            free(message);
+            const char deviceMethodResponse[] = "{ \"Response\": \"Successful\" }";
             *response_size = sizeof(deviceMethodResponse) - 1;
             *response = (unsigned char *)malloc(*response_size);
             (void)memcpy(*response, deviceMethodResponse, *response_size);
             result = 200;
             return result;
         }
-
+        free(userId);
         free(buffer);
     }
     // All other entries are ignored.
-    const char deviceMethodResponse[] = "{ }";
+    const char deviceMethodResponse[] = "{}";
     *response_size = sizeof(deviceMethodResponse) - 1;
     *response = (unsigned char *)malloc(*response_size);
     (void)memcpy(*response, deviceMethodResponse, *response_size);

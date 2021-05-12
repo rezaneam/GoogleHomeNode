@@ -3,7 +3,7 @@
 bool EnvironmentSensor::Initialize(TwoWire &i2c, bool verboseMode)
 {
     isVerbose = verboseMode;
-    isHDC1080Exist = hdc1080.Initialize(&i2c);
+    isHDC1080Exist = hdc1080.Initialize(i2c);
     if (isHDC1080Exist)
     {
         if (isVerbose)

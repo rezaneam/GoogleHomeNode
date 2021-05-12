@@ -1,8 +1,7 @@
-# Smart IoT Sensor (Google Home Speaker) - Lite Version of [sAmbiente](https://github.com/rezaneam/sAmbiente)
+# Smart IoT Sensor - Lite Version of [sAmbiente](https://github.com/rezaneam/sAmbiente)
 
 This project introduces proof of concept for a Smart Home Device/Sensor/Monitoring with a different approach.
 In this project, Bosch & TI environment sensors (BMP280, BME280, BME680, HDC1080) were utilized to monitor the temperature, humidity, pressure, and air quality.
-
 
 <p align="center">
   <img width="430px" src="assets/Demo.gif">
@@ -64,9 +63,6 @@ PCB layout
   <img src="assets/KiCad-Design-Back.jpg" width="450px">
 </span>
 
-
-
-
 - Azure IoT Hub
 
 After creating the `Azure` account the first step is to make a new `IoT Hub` service in your Azure account. To do so just type in IoT Hub and create a new account (you pick F1 which is entirely free). Then Navigate to the IoT Hub service you created and make an IoT Device.
@@ -74,10 +70,10 @@ Click on the IoT Device that you have just created and copy the connection strin
 To test if this part is working properly just send a direct method with the following payload and check the logs in your serial port.
 
 {
-  "Action": "Google Home",
-  "UserID": "`YourUserID`",
-  "Language": "en",
-  "Key": "temperature"
+"Action": "Google Home",
+"UserID": "`YourUserID`",
+"Language": "en",
+"Key": "temperature"
 }
 
 So, now you are done with this part.
@@ -89,10 +85,10 @@ Open Azure project repository and update the _IoTHubName_, _IoTDeviceName_, and 
 To test this step just copy the Function App **URL** and use postman to send a post message with the following body.
 
 {
-  "Action": "Google Home",
-  "UserID": "`YourUserID`",
-  "Language": "en",
-  "Key": "temperature"
+"Action": "Google Home",
+"UserID": "`YourUserID`",
+"Language": "en",
+"Key": "temperature"
 }
 
 - IFTTT
@@ -103,15 +99,16 @@ Type in your preferred keywords followed by $ sign and provide a response for th
 Then pick `Webhooks` (web request) as the service. So copy and paste the `Azure Function App` URL from the previous step in URL field. You pick either Get or Post request and for the content type choose JSON. paste the following structure there.
 
 {
-  "Action": "Google Home",
-  "Language": "en",
-  "UserID": "`YourUserID`",
-  "Key": "TextField"
+"Action": "Google Home",
+"Language": "en",
+"UserID": "`YourUserID`",
+"Key": "TextField"
 }
 
 ## How it is working
 
 The following figure shows the overal concept of the project.
+
 <p align="center">
   <img width="800px" src="assets/Diagram.png">
 </p>
