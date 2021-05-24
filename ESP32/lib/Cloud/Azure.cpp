@@ -181,8 +181,8 @@ int static device_method_callback(
             else if (strstr(message, resolveAzureKey(AzureKeys::Pressure, getLanguage())))
                 queueEvent(isSummary ? CustomEvents::EVENT_GOOGLE_REPORT_AIR_QUALITY_SUMMARY : CustomEvents::EVENT_GOOGLE_REPORT_AIR_QUALITY);
 
-            free(userId);
-            free(buffer);
+            delete[] userId;
+            delete[] buffer;
             free(message);
             const char deviceMethodResponse[] = "{ \"Response\": \"Successful\" }";
             *response_size = sizeof(deviceMethodResponse) - 1;
@@ -191,8 +191,8 @@ int static device_method_callback(
             result = 200;
             return result;
         }
-        free(userId);
-        free(buffer);
+        delete[] userId;
+        delete[] buffer;
     }
     // All other entries are ignored.
     const char deviceMethodResponse[] = "{}";
