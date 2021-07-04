@@ -14,6 +14,7 @@ public:
     bool Initialize(
         const char *securityKey,
         void (*event_queue_method)(const CustomEvents &),
+        void (*google_notify_method)(std::string phrase, Languages language),
         const char *username,
         const char *devicelocation,
         bool verbose = false);

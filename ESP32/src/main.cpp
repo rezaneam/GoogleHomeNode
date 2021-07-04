@@ -169,6 +169,11 @@ void loop()
       googleHome.NotifyTemperature((int)Sensor.Measurments.cur_temperature, azureIoT.GetLanguage());
     UpdateStatus(false, true);
     break;
+
+  case CustomEvents::EVENT_GOOGLE_PHRASE:
+    //printf("Phrase message received: %d\r\b", azureIoT.phrase);
+    break;
+
   case CustomEvents::EVENT_GOOGLE_REPORT_TEMPERATURE_SUMMARY:
     UpdateStatus(false, true, true);
     if (connectionStatus.isHomeConnected)
@@ -204,7 +209,7 @@ void loop()
     {
       bool result = azureIoT.Initialize(
           (GetFlashValue(EEPROM_VALUE::Azure_IoT_Hub)).c_str(),
-          &EnqueueEvent,
+          &EnqueueEvent, &NotifyPhrase,
           (GetFlashValue(EEPROM_VALUE::User_Name)).c_str(),
           (GetFlashValue(EEPROM_VALUE::Device_Location)).c_str(),
           VERBOSE);
@@ -258,7 +263,7 @@ void loop()
   }
   if (readSenor)
   {
-    uint8_t freeHeap = 100 * ESP.getFreeHeap() / ESP.getHeapSize();
+    float freeHeap = 100.0 * ESP.getFreeHeap() / ESP.getHeapSize();
     char buffer[100] = "";
     connectionStatus.isWiFiConnected = wireless.IsConnected();
     if (connectionStatus.isWiFiConnected)
@@ -291,7 +296,7 @@ void loop()
         if (VERBOSE)
         {
 
-          printf(">> Free Heap %d%% %s [%d]", freeHeap, buffer, Sensor.Measurments.total_readgings);
+          printf(">> Free Heap %2.2f%% %s [%d]", freeHeap, buffer, Sensor.Measurments.total_readgings);
           printf(" Temperature: %2.1fc(%2.1f-%2.1f)[%2.1f]",
                  temperature, Sensor.Measurments.min_temperature, Sensor.Measurments.max_temperature, Sensor.Measurments.ave_temperature);
           printf(" Pressure: %2.2fatm(%2.2f-%2.2f)[%2.2f]",
@@ -305,6 +310,13 @@ void loop()
                    airQuality, Sensor.Measurments.min_air_quality, Sensor.Measurments.max_air_quality, Sensor.Measurments.ave_airQuality);
             printf(" VOC: %2.1f%% CO2: %2.1f",
                    Sensor.Measurments.VOC, Sensor.Measurments.CO2);
+            if (airQuality > 200 & !isHighAQI)
+            {
+              NotifyPhrase("Warning. Very poor air quality detected.", Languages::English);
+              isHighAQI = true;
+            }
+            else
+              isHighAQI = false;
           }
           printf("\r\n");
         }
@@ -314,7 +326,7 @@ void loop()
     else
     {
       if (VERBOSE)
-        printf(">> Free Heap %d%% %s\r\n", buffer, freeHeap);
+        printf(">> Free Heap %2.2f%% %s\r\n", buffer, freeHeap);
     }
     readSenor = false;
 
@@ -344,6 +356,11 @@ void getTimeString(char *buffer)
 
   if (ltm->tm_min == START_OF_DAY_MIN & ltm->tm_hour == START_OF_DAY_HOUR)
     Sensor.ResetReport();
+}
+
+void NotifyPhrase(std::string phrase, Languages language)
+{
+  googleHome.NofityPhrase(phrase, language);
 }
 
 void EnqueueEvent(const CustomEvents &newEvent)

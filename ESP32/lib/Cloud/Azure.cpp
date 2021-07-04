@@ -1,6 +1,7 @@
 #include <Azure.h>
 
 void static (*queueEvent)(const CustomEvents &);
+void static (*google_notify)(std::string phrase, Languages language);
 const char *device_location;
 const char *username;
 static bool isVerbose;
@@ -9,6 +10,7 @@ static char *azure_language = new char[3];
 const char *USERID = "\"UserID\"";
 const char *KEY = "\"Key\"";
 const char *LANGUAGE = "\"Language\"";
+const char *COMMAND = "COMMAND:";
 
 void resolveValue(char *text, char const *key, char *result)
 {
@@ -181,9 +183,22 @@ int static device_method_callback(
             else if (strstr(message, resolveAzureKey(AzureKeys::Pressure, getLanguage())))
                 queueEvent(isSummary ? CustomEvents::EVENT_GOOGLE_REPORT_AIR_QUALITY_SUMMARY : CustomEvents::EVENT_GOOGLE_REPORT_AIR_QUALITY);
 
+            else if (strstr(message, COMMAND)) // Has command in the message string.
+            {
+
+                uint8_t const command_len = strlen(COMMAND);
+                uint8_t msg_len = strlen(message) - command_len + 1;
+                char *phrase = new char[msg_len];
+                strncpy(phrase, (char *)strstr(message, COMMAND) + command_len, msg_len);
+                phrase[msg_len - 1] = '\0';
+                printf(">> Azure Log >> COMMAND: %S\r\n", std::string(phrase).c_str());
+                printf(">> Azure Log >> COMMAND: %S\r\n", phrase);
+                google_notify(std::string(phrase),getLanguage());
+            }
+
             delete[] userId;
             delete[] buffer;
-            free(message);
+            delete[] message;
             const char deviceMethodResponse[] = "{ \"Response\": \"Successful\" }";
             *response_size = sizeof(deviceMethodResponse) - 1;
             *response = (unsigned char *)malloc(*response_size);
@@ -211,12 +226,14 @@ Languages AzureIoTHub::GetLanguage()
 bool AzureIoTHub::Initialize(
     const char *securityKey,
     void (*event_queue_method)(const CustomEvents &),
+    void (*google_notify_method)(std::string phrase, Languages language),
     const char *userId,
     const char *devicelocation,
     bool verbose)
 {
     isVerbose = verbose;
     queueEvent = event_queue_method;
+    google_notify = google_notify_method;
     device_location = devicelocation;
     username = userId;
 

@@ -25,6 +25,7 @@ bool tryStartBLE = false;
 bool readSenor = true;
 bool secondFlag = false;
 bool fireIoT = false;
+bool isHighAQI = false;
 
 ConnectionStatus connectionStatus;
 
@@ -38,6 +39,7 @@ void ConfigureTime();
 void UpdateStatus(bool BLE, bool OLED, bool isNofiying = false);
 void RefreshOLED();
 void getTimeString(char *buffer);
+void NotifyPhrase(std::string phrase, Languages language);
 
 AzureIoTHub azureIoT;
 Wireless wireless;

@@ -8,6 +8,7 @@ class GoogleHome
 public:
     bool Initialize(void (*event_queue_method)(const CustomEvents &), bool verbose = false);
     bool TryConnect(std::string deviceName);
+    bool NofityPhrase(std::string phrase, Languages language = Languages::English);
     bool NotifyTemperature(int temperature, Languages language = Languages::English);
     bool NotifyTemperatureSummary(int average, int min, int max, Languages language = Languages::English);
     bool NotifyHumidity(int humidity, Languages language = Languages::English);

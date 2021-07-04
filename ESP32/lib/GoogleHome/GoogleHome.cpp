@@ -32,14 +32,14 @@ bool GoogleHome::TryConnect(std::string deviceName)
                        .c_str(),
                    googleHomeNotifier.getPort());
 
-        // char buffer[200];
-        // sprintf(buffer, "Hey there. Sensor is now connected to %s!\r\n", deviceName.c_str());
-        // if (!googleHomeNotifier.notify(buffer))
-        // {
-        //     if (isVerbose)
-        //         printf("Google Home notify error: %s\r\n", googleHomeNotifier.getLastError());
-        //     Connected = false;
-        // }
+        char buffer[200];
+        sprintf(buffer, "Home monitoring system is initialized.\r\n", deviceName.c_str());
+        if (!googleHomeNotifier.notify(buffer))
+        {
+            if (isVerbose)
+                printf("Google Home notify error: %s\r\n", googleHomeNotifier.getLastError());
+            Connected = false;
+        }
     }
 
     if (Connected)
@@ -76,6 +76,11 @@ bool GoogleHome::notify(std::string deviceName, std::string message, Languages l
         return false;
     }
     return true;
+}
+
+bool GoogleHome::NofityPhrase(std::string phrase, Languages language)
+{
+    return notify(this->deviceName, phrase, language);
 }
 
 bool GoogleHome::NotifyTemperature(int temperature, Languages language)
