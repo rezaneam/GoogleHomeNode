@@ -1,0 +1,10 @@
+(fp_lib_table
+  (lib (name TTGO-32)(type KiCad)(uri ${KIPRJMOD}/Libraries/TTGO-32)(options "")(descr ""))
+  (lib (name Trans_Vishay_SI2307CDS-T1-GE3)(type KiCad)(uri ${KIPRJMOD}/Libraries/Trans_Vishay_SI2307CDS-T1-GE3)(options "")(descr ""))
+  (lib (name Trans_Vishay_SI2301CDS-T1-GE3)(type KiCad)(uri ${KIPRJMOD}/Libraries/Trans_Vishay_SI2301CDS-T1-GE3)(options "")(descr ""))
+  (lib (name IC_NXP_PMBT3904,215)(type KiCad)(uri ${KIPRJMOD}/Libraries/IC_NXP_PMBT3904,215)(options "")(descr ""))
+  (lib (name Diode_Eaton_0603ESDA2-TR2)(type KiCad)(uri ${KIPRJMOD}/Libraries/Diode_Eaton_0603ESDA2-TR2)(options "")(descr ""))
+  (lib (name ttgo-32-micro)(type KiCad)(uri ${KIPRJMOD}/Libraries/TTGO-32/ttgo-32-micro.pretty)(options "")(descr ""))
+  (lib (name TPS2115A)(type KiCad)(uri ${KIPRJMOD}/Libraries/TPS2115A/TPS2115A.pretty)(options "")(descr ""))
+  (lib (name Eaton_0603ESDA2-TR2)(type KiCad)(uri ${KIPRJMOD}/Libraries/Diode_Eaton_0603ESDA2-TR2/eec.pretty)(options "")(descr ""))
+)
